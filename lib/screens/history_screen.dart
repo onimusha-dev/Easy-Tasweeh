@@ -51,9 +51,9 @@ class HistoryScreen extends ConsumerWidget {
         title: Text(
           'HISTORY LOG',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.5,
-              ),
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+          ),
         ),
         actions: [
           IconButton(
@@ -86,8 +86,8 @@ class HistoryScreen extends ConsumerWidget {
                     Text(
                       'No sessions documented.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -100,8 +100,12 @@ class HistoryScreen extends ConsumerWidget {
             itemCount: historyList.length,
             itemBuilder: (context, index) {
               final history = historyList[index];
-              final dateStr = DateFormat('MMM d, yyyy • HH:mm').format(history.createdAt);
-              final isSuccess = history.targetCount > 0 && history.currentCount >= history.targetCount;
+              final dateStr = DateFormat(
+                'MMM d, yyyy • HH:mm',
+              ).format(history.createdAt);
+              final isSuccess =
+                  history.targetCount > 0 &&
+                  history.currentCount >= history.targetCount;
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -121,7 +125,8 @@ class HistoryScreen extends ConsumerWidget {
                       children: [
                         Text(
                           '${history.currentCount}',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
                                 fontWeight: FontWeight.w900,
                                 color: isSuccess
                                     ? Theme.of(context).colorScheme.primary
@@ -131,7 +136,8 @@ class HistoryScreen extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           dateStr,
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
                                 color: Theme.of(context).colorScheme.outline,
                               ),
                         ),
@@ -140,16 +146,23 @@ class HistoryScreen extends ConsumerWidget {
                     const Spacer(),
                     if (history.targetCount > 0)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: isSuccess
-                              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-                              : Theme.of(context).colorScheme.outlineVariant.withOpacity(0.3),
+                              ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.1)
+                              : Theme.of(context).colorScheme.outlineVariant
+                                    .withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           'GOAL: ${history.targetCount}',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
                                 fontWeight: FontWeight.w900,
                                 color: isSuccess
                                     ? Theme.of(context).colorScheme.primary

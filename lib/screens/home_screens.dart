@@ -1,4 +1,5 @@
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
+import 'package:easy_tasweeh/screens/analytics_screen.dart';
 import 'package:easy_tasweeh/screens/history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,16 +14,25 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ensure the counter session is initialized when the screen loads to show 0
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(countRepositoryProvider).getOrCreateCurrentCount();
+    });
+  }
+
   Future<void> _incrementCounter() async {
     HapticFeedback.vibrate();
     final repo = ref.read(countRepositoryProvider);
-    final countData = await repo.getOrCreateCurrentCount();
-
+    // Directly increment; repo handles initialization if needed
     await repo.increment();
 
+    final countData = await repo.getOrCreateCurrentCount();
     // Auto-save logic
     if (countData.targetCount > 0 &&
-        (countData.currentCount + 1) >= countData.targetCount) {
+        countData.currentCount >= countData.targetCount) {
       await repo.saveAndReset();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -111,6 +121,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  void _showAnalytics() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,37 +141,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         actions: [
           IconButton(
+            onPressed: _showAnalytics,
+            icon: const Icon(Icons.graphic_eq_rounded),
+            tooltip: 'Analytics',
+          ),
+          IconButton(
             onPressed: () {
               _showSetTargetSheet();
             },
             icon: const Icon(Icons.gps_fixed_rounded),
+            tooltip: 'Set Target',
           ),
           IconButton(
             onPressed: _showHistory,
             icon: const Icon(Icons.history_toggle_off_rounded),
+            tooltip: 'History',
           ),
           const SizedBox(width: 8),
         ],
       ),
-
       body: StreamBuilder(
         stream: ref.watch(countRepositoryProvider).watchCurrentCount(),
         builder: (context, snapshot) {
           final countData = snapshot.data;
           final current = countData?.currentCount ?? 0;
           final target = countData?.targetCount ?? 0;
-          final progress = target > 0
-              ? (current / target).clamp(0.0, 1.0)
+
+          // Dot logic: If there's a target and current is 0, show a tiny segment (looks like a dot)
+          // Otherwise show the actual progress.
+          final displayProgress = target > 0
+              ? (current == 0 ? 0.001 : (current / target).clamp(0.0, 1.0))
               : 0.0;
 
           return Column(
             children: [
               const SizedBox(height: 40),
-
-              // Target and Reset Row
               const Spacer(flex: 1),
-
-              // Progress and Counter
               Stack(
                 alignment: Alignment.center,
                 children: [
@@ -162,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     height: 180,
                     width: 180,
                     child: CircularProgressIndicator(
-                      value: target > 0 ? progress : 0,
+                      value: displayProgress,
                       strokeWidth: 4,
                       strokeCap: StrokeCap.round,
                       backgroundColor: Theme.of(
@@ -181,8 +203,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   fontWeight: FontWeight.w900,
                                 ),
                           )
-                          .animate(target: current.toDouble())
-                          .scale(duration: 80.ms),
+                          .animate(key: ValueKey(current))
+                          .scale(
+                            duration: 150.ms,
+                            curve: Curves.easeOutBack,
+                            begin: const Offset(0.9, 0.9),
+                            end: const Offset(1, 1),
+                          ),
                       if (target > 0)
                         Text(
                           'OF $target',
@@ -196,7 +223,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ],
               ),
-
               const Spacer(flex: 2),
 
               // Tactical Tap Button

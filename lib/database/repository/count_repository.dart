@@ -92,4 +92,9 @@ class CountRepository {
       ),
     );
   }
+
+  // Watch all history records
+  Stream<List<CountHistoryTableData>> watchAllHistory() {
+    return _countHistoryDao.watchAllHistory();
+  }
 }
