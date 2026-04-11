@@ -88,7 +88,6 @@ class AnalyticsScreen extends ConsumerWidget {
                     child: _StatCard(
                       label: 'BEST SESSION',
                       value: '$maxSession',
-                      icon: Icons.functions_rounded,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
@@ -97,7 +96,6 @@ class AnalyticsScreen extends ConsumerWidget {
                     child: _StatCard(
                       label: 'SESSIONS',
                       value: '$totalSessions',
-                      icon: Icons.history_rounded,
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
@@ -105,32 +103,31 @@ class AnalyticsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               _StatCard(
-                label: 'MAX COUNT',
+                label: 'TOTAL COUNT',
                 value: '$totalCount',
-                icon: Icons.emoji_events_rounded,
                 color: Colors.orange,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 48),
 
               Text(
                 'WEEKLY ACTIVITY',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w900,
-                  letterSpacing: 1.5,
+                  letterSpacing: 2,
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ),
               const SizedBox(height: 24),
 
-              // Bar Chart
+              // Enhanced Bar Chart
               Container(
-                height: 250,
-                padding: const EdgeInsets.all(20),
+                height: 300,
+                padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,
-                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(24),
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(32),
                   border: Border.all(
                     color: Theme.of(
                       context,
@@ -145,7 +142,24 @@ class AnalyticsScreen extends ConsumerWidget {
                             .reduce((a, b) => a > b ? a : b)
                             .toDouble() *
                         1.2,
-                    barTouchData: BarTouchData(enabled: true),
+                    barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                        getTooltipColor: (_) =>
+                            Theme.of(context).colorScheme.surface,
+                        tooltipBorder: BorderSide(
+                          color: Theme.of(context).colorScheme.outlineVariant,
+                        ),
+                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                          return BarTooltipItem(
+                            '${rod.toY.toInt()}',
+                            TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                     titlesData: FlTitlesData(
                       show: true,
                       bottomTitles: AxisTitles(
@@ -160,14 +174,23 @@ class AnalyticsScreen extends ConsumerWidget {
                             final date = DateFormat(
                               'yyyy-MM-dd',
                             ).parse(dateStr);
+                            final isToday =
+                                DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(DateTime.now()) ==
+                                dateStr;
+
                             return Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
+                              padding: const EdgeInsets.only(top: 12.0),
                               child: Text(
-                                DateFormat('E').format(date).substring(0, 1),
+                                DateFormat('E').format(date).toUpperCase(),
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.outline,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  color: isToday
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.outline,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 10,
+                                  letterSpacing: 1,
                                 ),
                               ),
                             );
@@ -184,17 +207,52 @@ class AnalyticsScreen extends ConsumerWidget {
                         sideTitles: SideTitles(showTitles: false),
                       ),
                     ),
-                    gridData: const FlGridData(show: false),
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: 100, // Adjust based on data range
+                      getDrawingHorizontalLine: (value) => FlLine(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.outlineVariant.withValues(alpha: 0.2),
+                        strokeWidth: 1,
+                      ),
+                    ),
                     borderData: FlBorderData(show: false),
                     barGroups: List.generate(chartData.length, (index) {
+                      final value = chartData[index].value.toDouble();
                       return BarChartGroupData(
                         x: index,
                         barRods: [
                           BarChartRodData(
-                            toY: chartData[index].value.toDouble(),
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 16,
-                            borderRadius: BorderRadius.circular(4),
+                            toY: value,
+                            gradient: LinearGradient(
+                              colors: [
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.7),
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                            width: 20,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(6),
+                              bottom: Radius.circular(2),
+                            ),
+                            backDrawRodData: BackgroundBarChartRodData(
+                              show: true,
+                              toY:
+                                  dailyTotals.values
+                                      .reduce((a, b) => a > b ? a : b)
+                                      .toDouble() *
+                                  1.2,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest
+                                  .withValues(alpha: 0.3),
+                            ),
                           ),
                         ],
                       );
@@ -214,23 +272,21 @@ class AnalyticsScreen extends ConsumerWidget {
 class _StatCard extends StatelessWidget {
   final String label;
   final String value;
-  final IconData icon;
   final Color color;
 
   const _StatCard({
     required this.label,
     required this.value,
-    required this.icon,
     required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         border: Border.all(
           color: Theme.of(
             context,
@@ -240,21 +296,20 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 4),
           Text(
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.5,
               color: Theme.of(context).colorScheme.outline,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1,
             ),
           ),
         ],
