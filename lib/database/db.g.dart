@@ -1,0 +1,1223 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'db.dart';
+
+// ignore_for_file: type=lint
+class $CurrentCountTableTable extends CurrentCountTable
+    with TableInfo<$CurrentCountTableTable, CurrentCountTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CurrentCountTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _targetCountMeta = const VerificationMeta(
+    'targetCount',
+  );
+  @override
+  late final GeneratedColumn<int> targetCount = GeneratedColumn<int>(
+    'target_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _currentCountMeta = const VerificationMeta(
+    'currentCount',
+  );
+  @override
+  late final GeneratedColumn<int> currentCount = GeneratedColumn<int>(
+    'current_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    targetCount,
+    currentCount,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'current_count_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CurrentCountTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('target_count')) {
+      context.handle(
+        _targetCountMeta,
+        targetCount.isAcceptableOrUnknown(
+          data['target_count']!,
+          _targetCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_count')) {
+      context.handle(
+        _currentCountMeta,
+        currentCount.isAcceptableOrUnknown(
+          data['current_count']!,
+          _currentCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CurrentCountTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CurrentCountTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      targetCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_count'],
+      )!,
+      currentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CurrentCountTableTable createAlias(String alias) {
+    return $CurrentCountTableTable(attachedDatabase, alias);
+  }
+}
+
+class CurrentCountTableData extends DataClass
+    implements Insertable<CurrentCountTableData> {
+  final int id;
+  final int targetCount;
+  final int currentCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CurrentCountTableData({
+    required this.id,
+    required this.targetCount,
+    required this.currentCount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['target_count'] = Variable<int>(targetCount);
+    map['current_count'] = Variable<int>(currentCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CurrentCountTableCompanion toCompanion(bool nullToAbsent) {
+    return CurrentCountTableCompanion(
+      id: Value(id),
+      targetCount: Value(targetCount),
+      currentCount: Value(currentCount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CurrentCountTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CurrentCountTableData(
+      id: serializer.fromJson<int>(json['id']),
+      targetCount: serializer.fromJson<int>(json['targetCount']),
+      currentCount: serializer.fromJson<int>(json['currentCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'targetCount': serializer.toJson<int>(targetCount),
+      'currentCount': serializer.toJson<int>(currentCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CurrentCountTableData copyWith({
+    int? id,
+    int? targetCount,
+    int? currentCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CurrentCountTableData(
+    id: id ?? this.id,
+    targetCount: targetCount ?? this.targetCount,
+    currentCount: currentCount ?? this.currentCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CurrentCountTableData copyWithCompanion(CurrentCountTableCompanion data) {
+    return CurrentCountTableData(
+      id: data.id.present ? data.id.value : this.id,
+      targetCount: data.targetCount.present
+          ? data.targetCount.value
+          : this.targetCount,
+      currentCount: data.currentCount.present
+          ? data.currentCount.value
+          : this.currentCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CurrentCountTableData(')
+          ..write('id: $id, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('currentCount: $currentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, targetCount, currentCount, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CurrentCountTableData &&
+          other.id == this.id &&
+          other.targetCount == this.targetCount &&
+          other.currentCount == this.currentCount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CurrentCountTableCompanion
+    extends UpdateCompanion<CurrentCountTableData> {
+  final Value<int> id;
+  final Value<int> targetCount;
+  final Value<int> currentCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const CurrentCountTableCompanion({
+    this.id = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.currentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  CurrentCountTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.currentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<CurrentCountTableData> custom({
+    Expression<int>? id,
+    Expression<int>? targetCount,
+    Expression<int>? currentCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (targetCount != null) 'target_count': targetCount,
+      if (currentCount != null) 'current_count': currentCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  CurrentCountTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? targetCount,
+    Value<int>? currentCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return CurrentCountTableCompanion(
+      id: id ?? this.id,
+      targetCount: targetCount ?? this.targetCount,
+      currentCount: currentCount ?? this.currentCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (targetCount.present) {
+      map['target_count'] = Variable<int>(targetCount.value);
+    }
+    if (currentCount.present) {
+      map['current_count'] = Variable<int>(currentCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CurrentCountTableCompanion(')
+          ..write('id: $id, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('currentCount: $currentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CountHistoryTableTable extends CountHistoryTable
+    with TableInfo<$CountHistoryTableTable, CountHistoryTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CountHistoryTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _targetCountMeta = const VerificationMeta(
+    'targetCount',
+  );
+  @override
+  late final GeneratedColumn<int> targetCount = GeneratedColumn<int>(
+    'target_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _currentCountMeta = const VerificationMeta(
+    'currentCount',
+  );
+  @override
+  late final GeneratedColumn<int> currentCount = GeneratedColumn<int>(
+    'current_count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    targetCount,
+    currentCount,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'count_history_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CountHistoryTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('target_count')) {
+      context.handle(
+        _targetCountMeta,
+        targetCount.isAcceptableOrUnknown(
+          data['target_count']!,
+          _targetCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('current_count')) {
+      context.handle(
+        _currentCountMeta,
+        currentCount.isAcceptableOrUnknown(
+          data['current_count']!,
+          _currentCountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CountHistoryTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CountHistoryTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      targetCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_count'],
+      )!,
+      currentCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_count'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CountHistoryTableTable createAlias(String alias) {
+    return $CountHistoryTableTable(attachedDatabase, alias);
+  }
+}
+
+class CountHistoryTableData extends DataClass
+    implements Insertable<CountHistoryTableData> {
+  final int id;
+  final int targetCount;
+  final int currentCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CountHistoryTableData({
+    required this.id,
+    required this.targetCount,
+    required this.currentCount,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['target_count'] = Variable<int>(targetCount);
+    map['current_count'] = Variable<int>(currentCount);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CountHistoryTableCompanion toCompanion(bool nullToAbsent) {
+    return CountHistoryTableCompanion(
+      id: Value(id),
+      targetCount: Value(targetCount),
+      currentCount: Value(currentCount),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CountHistoryTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CountHistoryTableData(
+      id: serializer.fromJson<int>(json['id']),
+      targetCount: serializer.fromJson<int>(json['targetCount']),
+      currentCount: serializer.fromJson<int>(json['currentCount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'targetCount': serializer.toJson<int>(targetCount),
+      'currentCount': serializer.toJson<int>(currentCount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CountHistoryTableData copyWith({
+    int? id,
+    int? targetCount,
+    int? currentCount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CountHistoryTableData(
+    id: id ?? this.id,
+    targetCount: targetCount ?? this.targetCount,
+    currentCount: currentCount ?? this.currentCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CountHistoryTableData copyWithCompanion(CountHistoryTableCompanion data) {
+    return CountHistoryTableData(
+      id: data.id.present ? data.id.value : this.id,
+      targetCount: data.targetCount.present
+          ? data.targetCount.value
+          : this.targetCount,
+      currentCount: data.currentCount.present
+          ? data.currentCount.value
+          : this.currentCount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CountHistoryTableData(')
+          ..write('id: $id, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('currentCount: $currentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, targetCount, currentCount, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CountHistoryTableData &&
+          other.id == this.id &&
+          other.targetCount == this.targetCount &&
+          other.currentCount == this.currentCount &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CountHistoryTableCompanion
+    extends UpdateCompanion<CountHistoryTableData> {
+  final Value<int> id;
+  final Value<int> targetCount;
+  final Value<int> currentCount;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const CountHistoryTableCompanion({
+    this.id = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.currentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  CountHistoryTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.targetCount = const Value.absent(),
+    this.currentCount = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  static Insertable<CountHistoryTableData> custom({
+    Expression<int>? id,
+    Expression<int>? targetCount,
+    Expression<int>? currentCount,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (targetCount != null) 'target_count': targetCount,
+      if (currentCount != null) 'current_count': currentCount,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  CountHistoryTableCompanion copyWith({
+    Value<int>? id,
+    Value<int>? targetCount,
+    Value<int>? currentCount,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+  }) {
+    return CountHistoryTableCompanion(
+      id: id ?? this.id,
+      targetCount: targetCount ?? this.targetCount,
+      currentCount: currentCount ?? this.currentCount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (targetCount.present) {
+      map['target_count'] = Variable<int>(targetCount.value);
+    }
+    if (currentCount.present) {
+      map['current_count'] = Variable<int>(currentCount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CountHistoryTableCompanion(')
+          ..write('id: $id, ')
+          ..write('targetCount: $targetCount, ')
+          ..write('currentCount: $currentCount, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $CurrentCountTableTable currentCountTable =
+      $CurrentCountTableTable(this);
+  late final $CountHistoryTableTable countHistoryTable =
+      $CountHistoryTableTable(this);
+  late final CurrentCountDao currentCountDao = CurrentCountDao(
+    this as AppDatabase,
+  );
+  late final CountHistoryDao countHistoryDao = CountHistoryDao(
+    this as AppDatabase,
+  );
+  @override
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    currentCountTable,
+    countHistoryTable,
+  ];
+}
+
+typedef $$CurrentCountTableTableCreateCompanionBuilder =
+    CurrentCountTableCompanion Function({
+      Value<int> id,
+      Value<int> targetCount,
+      Value<int> currentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$CurrentCountTableTableUpdateCompanionBuilder =
+    CurrentCountTableCompanion Function({
+      Value<int> id,
+      Value<int> targetCount,
+      Value<int> currentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$CurrentCountTableTableFilterComposer
+    extends Composer<_$AppDatabase, $CurrentCountTableTable> {
+  $$CurrentCountTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CurrentCountTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $CurrentCountTableTable> {
+  $$CurrentCountTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CurrentCountTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CurrentCountTableTable> {
+  $$CurrentCountTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CurrentCountTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CurrentCountTableTable,
+          CurrentCountTableData,
+          $$CurrentCountTableTableFilterComposer,
+          $$CurrentCountTableTableOrderingComposer,
+          $$CurrentCountTableTableAnnotationComposer,
+          $$CurrentCountTableTableCreateCompanionBuilder,
+          $$CurrentCountTableTableUpdateCompanionBuilder,
+          (
+            CurrentCountTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $CurrentCountTableTable,
+              CurrentCountTableData
+            >,
+          ),
+          CurrentCountTableData,
+          PrefetchHooks Function()
+        > {
+  $$CurrentCountTableTableTableManager(
+    _$AppDatabase db,
+    $CurrentCountTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CurrentCountTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CurrentCountTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CurrentCountTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<int> currentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CurrentCountTableCompanion(
+                id: id,
+                targetCount: targetCount,
+                currentCount: currentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<int> currentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CurrentCountTableCompanion.insert(
+                id: id,
+                targetCount: targetCount,
+                currentCount: currentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CurrentCountTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CurrentCountTableTable,
+      CurrentCountTableData,
+      $$CurrentCountTableTableFilterComposer,
+      $$CurrentCountTableTableOrderingComposer,
+      $$CurrentCountTableTableAnnotationComposer,
+      $$CurrentCountTableTableCreateCompanionBuilder,
+      $$CurrentCountTableTableUpdateCompanionBuilder,
+      (
+        CurrentCountTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $CurrentCountTableTable,
+          CurrentCountTableData
+        >,
+      ),
+      CurrentCountTableData,
+      PrefetchHooks Function()
+    >;
+typedef $$CountHistoryTableTableCreateCompanionBuilder =
+    CountHistoryTableCompanion Function({
+      Value<int> id,
+      Value<int> targetCount,
+      Value<int> currentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+typedef $$CountHistoryTableTableUpdateCompanionBuilder =
+    CountHistoryTableCompanion Function({
+      Value<int> id,
+      Value<int> targetCount,
+      Value<int> currentCount,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+    });
+
+class $$CountHistoryTableTableFilterComposer
+    extends Composer<_$AppDatabase, $CountHistoryTableTable> {
+  $$CountHistoryTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CountHistoryTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $CountHistoryTableTable> {
+  $$CountHistoryTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CountHistoryTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CountHistoryTableTable> {
+  $$CountHistoryTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get targetCount => $composableBuilder(
+    column: $table.targetCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get currentCount => $composableBuilder(
+    column: $table.currentCount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CountHistoryTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CountHistoryTableTable,
+          CountHistoryTableData,
+          $$CountHistoryTableTableFilterComposer,
+          $$CountHistoryTableTableOrderingComposer,
+          $$CountHistoryTableTableAnnotationComposer,
+          $$CountHistoryTableTableCreateCompanionBuilder,
+          $$CountHistoryTableTableUpdateCompanionBuilder,
+          (
+            CountHistoryTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $CountHistoryTableTable,
+              CountHistoryTableData
+            >,
+          ),
+          CountHistoryTableData,
+          PrefetchHooks Function()
+        > {
+  $$CountHistoryTableTableTableManager(
+    _$AppDatabase db,
+    $CountHistoryTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CountHistoryTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CountHistoryTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CountHistoryTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<int> currentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CountHistoryTableCompanion(
+                id: id,
+                targetCount: targetCount,
+                currentCount: currentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> targetCount = const Value.absent(),
+                Value<int> currentCount = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => CountHistoryTableCompanion.insert(
+                id: id,
+                targetCount: targetCount,
+                currentCount: currentCount,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CountHistoryTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CountHistoryTableTable,
+      CountHistoryTableData,
+      $$CountHistoryTableTableFilterComposer,
+      $$CountHistoryTableTableOrderingComposer,
+      $$CountHistoryTableTableAnnotationComposer,
+      $$CountHistoryTableTableCreateCompanionBuilder,
+      $$CountHistoryTableTableUpdateCompanionBuilder,
+      (
+        CountHistoryTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $CountHistoryTableTable,
+          CountHistoryTableData
+        >,
+      ),
+      CountHistoryTableData,
+      PrefetchHooks Function()
+    >;
+
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$CurrentCountTableTableTableManager get currentCountTable =>
+      $$CurrentCountTableTableTableManager(_db, _db.currentCountTable);
+  $$CountHistoryTableTableTableManager get countHistoryTable =>
+      $$CountHistoryTableTableTableManager(_db, _db.countHistoryTable);
+}
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(appDatabase)
+final appDatabaseProvider = AppDatabaseProvider._();
+
+final class AppDatabaseProvider
+    extends $FunctionalProvider<AppDatabase, AppDatabase, AppDatabase>
+    with $Provider<AppDatabase> {
+  AppDatabaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appDatabaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$appDatabaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<AppDatabase> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AppDatabase create(Ref ref) {
+    return appDatabase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppDatabase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppDatabase>(value),
+    );
+  }
+}
+
+String _$appDatabaseHash() => r'67f06207fff3a55949c4c4b67200f868a9b6acc8';
