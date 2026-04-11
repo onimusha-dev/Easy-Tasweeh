@@ -50,9 +50,9 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'EASY TASWEEH',
+                      'Easy Tasweeh',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -89,7 +89,7 @@ class HomeDrawer extends StatelessWidget {
                         'Become a member',
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.w600,
                               letterSpacing: 1.2,
                             ),
                       ),
@@ -181,7 +181,7 @@ class HomeDrawer extends StatelessWidget {
         title,
         style: Theme.of(
           context,
-        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
       ),
       onTap: onTap,
       dense: true, // Makes it more compact

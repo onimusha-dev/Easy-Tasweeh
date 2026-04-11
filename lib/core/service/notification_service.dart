@@ -1,6 +1,8 @@
 import 'package:easy_tasweeh/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -19,7 +21,8 @@ class NotificationService {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    // Use default small icon for Android
+    tz.initializeTimeZones();
+
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -60,14 +63,59 @@ class NotificationService {
             >();
 
     await androidImplementation?.requestNotificationsPermission();
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin
+        >()?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
-  /// NOTE: instant notification for backup and restore
-  /// arguments: id, title, body, payload
-  /// eg:  id = 1
-  ///      title = 'Backup saved'
-  ///      body = 'Backup saved successfully'
-  ///      payload = 'backup'
+  Future<void> scheduleDailyNotification({
+    required int id,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+  }) async {
+    if (!_isInitialized) await init();
+
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'daily_reminder_channel_id',
+          'Daily Reminders',
+          importance: Importance.max,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id: id);
+  }
+
   Future<void> showInstantBackupAndRestoreNotification({
     required int id,
     required String title,
@@ -75,9 +123,7 @@ class NotificationService {
     String? payload,
     bool showRestartButton = false,
   }) async {
-    if (!_isInitialized) {
-      await init();
-    }
+    if (!_isInitialized) await init();
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(

@@ -14,7 +14,7 @@ class AnalyticsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'ANALYTICS',
+          'Analytics',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w900,
             letterSpacing: 2,
@@ -79,7 +79,7 @@ class AnalyticsScreen extends ConsumerWidget {
           final chartData = dailyTotals.entries.toList().reversed.toList();
 
           return ListView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             children: [
               // Summary Cards Row
               Row(
@@ -91,7 +91,7 @@ class AnalyticsScreen extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: _StatCard(
                       label: 'SESSIONS',
@@ -101,14 +101,13 @@ class AnalyticsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               _StatCard(
                 label: 'TOTAL COUNT',
                 value: '$totalCount',
                 color: Colors.orange,
               ),
-              const SizedBox(height: 48),
-
+              const SizedBox(height: 32),
               Text(
                 'WEEKLY ACTIVITY',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -117,17 +116,17 @@ class AnalyticsScreen extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
 
               // Enhanced Bar Chart
               Container(
-                height: 300,
-                padding: const EdgeInsets.fromLTRB(16, 32, 16, 12),
+                height: 240,
+                padding: const EdgeInsets.fromLTRB(12, 24, 12, 12),
                 decoration: BoxDecoration(
                   color: Theme.of(
                     context,
                   ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(32),
+                  borderRadius: BorderRadius.circular(24),
                   border: Border.all(
                     color: Theme.of(
                       context,
@@ -236,7 +235,7 @@ class AnalyticsScreen extends ConsumerWidget {
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
                             ),
-                            width: 20,
+                            width: 16,
                             borderRadius: const BorderRadius.vertical(
                               top: Radius.circular(6),
                               bottom: Radius.circular(2),
@@ -283,10 +282,10 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: Theme.of(
             context,
@@ -304,10 +303,10 @@ class _StatCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.outline,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             value,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w900,
               letterSpacing: -1,
             ),

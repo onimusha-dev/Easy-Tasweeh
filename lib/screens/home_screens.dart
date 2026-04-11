@@ -111,7 +111,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           },
         ),
         title: Text(
-          'EASY TASWEEH',
+          'Easy Tasweeh',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w900,
             letterSpacing: 2,
@@ -149,7 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _archiveSession,
                         icon: const Icon(Icons.archive_outlined),
-                        label: const Text('ARCHIVE SESSION'),
+                        label: const Text('Archive Session'),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
