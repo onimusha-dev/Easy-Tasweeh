@@ -7,6 +7,7 @@ import 'package:easy_tasweeh/features/home/widgets/target_selector_sheet.dart';
 import 'package:easy_tasweeh/screens/analytics_screen.dart';
 import 'package:easy_tasweeh/screens/history_screen.dart';
 import 'package:easy_tasweeh/screens/settings_screen.dart';
+import 'package:easy_tasweeh/screens/tasweeh_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,6 +69,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  void _showTasweeh() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TasweehScreen()),
+    );
+  }
+
   void _showSettings() {
     Navigator.push(
       context,
@@ -90,6 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       drawer: HomeDrawer(
         onShowHistory: _showHistory,
         onShowAnalytics: _showAnalytics,
+        onShowTasweeh: _showTasweeh,
         onShowSettings: _showSettings,
       ),
       appBar: AppBar(
@@ -110,19 +119,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: _showAnalytics,
-            icon: const Icon(Icons.graphic_eq_rounded),
-            tooltip: 'Analytics',
-          ),
-          IconButton(
             onPressed: _showSetTargetSheet,
             icon: const Icon(Icons.gps_fixed_rounded),
             tooltip: 'Set Target',
-          ),
-          IconButton(
-            onPressed: _showHistory,
-            icon: const Icon(Icons.history_toggle_off_rounded),
-            tooltip: 'History',
           ),
           const SizedBox(width: 8),
         ],
