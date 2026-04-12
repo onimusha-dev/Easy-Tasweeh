@@ -7,7 +7,9 @@ class TargetSelectorSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<int> targets = [100, 200, 300, 500, 700, 1000];
+    // null = free mode (no target)
+    final List<int?> targets = [100, 200, 300, 500, 1000, null];
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -26,74 +28,86 @@ class TargetSelectorSheet extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           Text(
-            'Select Goal',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
+            'Set Goal',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
+            ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 4),
+          Text(
+            'How many counts per session?',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 24),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.5,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1.4,
             ),
             itemCount: targets.length,
             itemBuilder: (context, index) {
               final target = targets[index];
+              final isFree = target == null;
               return InkWell(
                 onTap: () {
-                  ref.read(countRepositoryProvider).setTarget(target);
+                  ref.read(countRepositoryProvider).setTarget(target ?? 0);
                   Navigator.pop(context);
                 },
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerHighest
-                        .withValues(alpha: 0.5),
+                    color: isFree
+                        ? Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withValues(alpha: 0.4)
+                        : Theme.of(context).colorScheme.surfaceContainerHighest
+                              .withValues(alpha: 0.5),
                     border: Border.all(
-                      color: Theme.of(context).colorScheme.outlineVariant,
+                      color: isFree
+                          ? Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.5)
+                          : Theme.of(context).colorScheme.outlineVariant,
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
-                    child: Text(
-                      '$target',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w900,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          isFree ? '∞' : '$target',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w900,
+                              ),
+                        ),
+                        if (isFree)
+                          Text(
+                            'Free',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: Theme.of(context).colorScheme.primary,
+                              letterSpacing: 1,
+                            ),
                           ),
+                      ],
                     ),
                   ),
                 ),
               );
             },
           ),
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton.tonal(
-              onPressed: () {
-                ref.read(countRepositoryProvider).setTarget(0);
-                Navigator.pop(context);
-              },
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child: const Text('No Target / Free Mode'),
-            ),
-          ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 28),
         ],
       ),
     );

@@ -27,22 +27,21 @@ class CounterDisplay extends StatelessWidget {
             value: displayProgress,
             strokeWidth: 4,
             strokeCap: StrokeCap.round,
-            backgroundColor: Theme.of(context)
-                .colorScheme
-                .outlineVariant
-                .withValues(alpha: 0.3),
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
         ),
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '$current',
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  '$current',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
                     fontSize: 80,
                     fontWeight: FontWeight.w900,
                   ),
-            )
+                )
                 .animate(key: ValueKey(current))
                 .scale(
                   duration: 150.ms,
@@ -54,9 +53,9 @@ class CounterDisplay extends StatelessWidget {
               Text(
                 'OF $target',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
           ],
         ),

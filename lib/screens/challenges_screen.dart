@@ -11,12 +11,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Challenges'),
-      ),
-      body: Center(
-        child: Text('Challenges'),
-      ),
+      appBar: AppBar(title: Text('Challenges')),
+      body: Center(child: Text('Comming soon...')),
     );
   }
 }
