@@ -1,4 +1,7 @@
+import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
+
 import 'package:easy_tasweeh/features/home/widgets/archive_dialog.dart';
 import 'package:easy_tasweeh/features/home/widgets/counter_display.dart';
 import 'package:easy_tasweeh/features/home/widgets/home_drawer.dart';
@@ -10,8 +13,8 @@ import 'package:easy_tasweeh/screens/history_screen.dart';
 import 'package:easy_tasweeh/screens/settings_screen.dart';
 import 'package:easy_tasweeh/screens/tasweeh_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,84 +24,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    // Ensure the counter session is initialized when the screen loads to show 0
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(countRepositoryProvider).getOrCreateCurrentCount();
-    });
-  }
-
-  Future<void> _incrementCounter() async {
-    await HapticFeedback.vibrate();
-    final repo = ref.read(countRepositoryProvider);
-    // Directly increment; repo handles initialization if needed
-    await repo.increment();
-
-    final countData = await repo.getOrCreateCurrentCount();
-    // Auto-save logic
-    if (countData.targetCount > 0 &&
-        countData.currentCount >= countData.targetCount) {
-      await repo.saveAndReset();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Target reached! Session saved to history.'),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    }
-  }
-
-  void _archiveSession() {
-    showDialog(context: context, builder: (context) => const ArchiveDialog());
-  }
-
-  void _showHistory() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HistoryScreen()),
-    );
-  }
-
-  void _showAnalytics() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
-    );
-  }
-
-  void _showChallenges() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ChallengesScreen()),
-    );
-  }
-
-  void _showTasweeh() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const TasweehScreen()),
-    );
-  }
-
-  void _showSettings() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SettingsScreen()),
-    );
-  }
-
-  void _showSetTargetSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const TargetSelectorSheet(),
-    );
-  }
+  bool _isFrozen = false;
 
   @override
   Widget build(BuildContext context) {
@@ -154,15 +80,111 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const Spacer(flex: 1),
                 CounterDisplay(current: current, target: target),
                 const Spacer(flex: 1),
-                TacticalTapButton(onTap: ()async{
-                    await _incrementCounter();
-                }),
+                TacticalTapButton(
+                  onTap: _isFrozen ? null : () => _incrementCounter(countData),
+                ),
                 const Spacer(flex: 1),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Future<void> _incrementCounter(CurrentCountTableData? countData) async {
+    if (_isFrozen) return;
+
+    // Freeze button for 1 sec, no rush inshallah
+    setState(() => _isFrozen = true);
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) setState(() => _isFrozen = false);
+    });
+
+    final repo = ref.read(countRepositoryProvider);
+    final hapticEnabled = ref.read(settingsProvider).hapticEnabled;
+
+    // Medium vibration on every count
+    if (hapticEnabled) {
+      Vibration.vibrate(duration: 50, amplitude: 50);
+    }
+
+    // Directly increment; repo handles initialization if needed
+    await repo.increment();
+
+    final nextCount = (countData?.currentCount ?? 0) + 1;
+    final target = countData?.targetCount ?? 0;
+
+    // Auto-save logic
+    if (target > 0 && nextCount >= target) {
+      if (mounted) {
+        await repo.saveAndReset();
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Target reached! Session saved to history.'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      // Completion vibration on target reached
+      if (hapticEnabled) {
+        _playCompletionVibration();
+      }
+    }
+  }
+
+  /// Plays a gentle affirmative vibration on target completion.
+  void _playCompletionVibration() {
+    Vibration.vibrate(duration: 2000, amplitude: 100);
+  }
+
+  void _archiveSession() {
+    showDialog(context: context, builder: (context) => const ArchiveDialog());
+  }
+
+  void _showHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HistoryScreen()),
+    );
+  }
+
+  void _showAnalytics() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AnalyticsScreen()),
+    );
+  }
+
+  void _showChallenges() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChallengesScreen()),
+    );
+  }
+
+  void _showTasweeh() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const TasweehScreen()),
+    );
+  }
+
+  void _showSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
+  }
+
+  void _showSetTargetSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const TargetSelectorSheet(),
     );
   }
 }
