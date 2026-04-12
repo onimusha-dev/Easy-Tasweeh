@@ -46,8 +46,8 @@ class _TacticalTapButtonState extends State<TacticalTapButton>
   Widget build(BuildContext context) {
     final bool isFrozen = widget.onTap == null;
     return AnimatedOpacity(
-      opacity: isFrozen ? 0.55 : 1.0,
-      duration: const Duration(milliseconds: 300),
+      opacity: 1.0,
+      duration: const Duration(milliseconds: 100),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTapDown: isFrozen ? null : _handleTapDown,
@@ -82,7 +82,7 @@ class _TacticalTapButtonState extends State<TacticalTapButton>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    isFrozen ? 'WAIT' : 'PRESS',
+                    'TAP',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.w900,

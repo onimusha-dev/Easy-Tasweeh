@@ -97,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // Freeze button for 1 sec, no rush inshallah
     setState(() => _isFrozen = true);
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) setState(() => _isFrozen = false);
     });
 
