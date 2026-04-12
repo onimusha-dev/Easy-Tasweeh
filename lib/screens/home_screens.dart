@@ -5,6 +5,7 @@ import 'package:easy_tasweeh/features/home/widgets/home_drawer.dart';
 import 'package:easy_tasweeh/features/home/widgets/tactical_tap_button.dart';
 import 'package:easy_tasweeh/features/home/widgets/target_selector_sheet.dart';
 import 'package:easy_tasweeh/screens/analytics_screen.dart';
+import 'package:easy_tasweeh/screens/challenges_screen.dart';
 import 'package:easy_tasweeh/screens/history_screen.dart';
 import 'package:easy_tasweeh/screens/settings_screen.dart';
 import 'package:easy_tasweeh/screens/tasweeh_screen.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _incrementCounter() async {
-    HapticFeedback.vibrate();
+    await HapticFeedback.vibrate();
     final repo = ref.read(countRepositoryProvider);
     // Directly increment; repo handles initialization if needed
     await repo.increment();
@@ -69,6 +70,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  void _showChallenges() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ChallengesScreen()),
+    );
+  }
+
   void _showTasweeh() {
     Navigator.push(
       context,
@@ -97,6 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       drawer: HomeDrawer(
         onShowHistory: _showHistory,
+        onShowChallenges: _showChallenges,
         onShowAnalytics: _showAnalytics,
         onShowTasweeh: _showTasweeh,
         onShowSettings: _showSettings,
@@ -119,6 +128,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         actions: [
           IconButton(
+            onPressed: _archiveSession,
+            icon: const Icon(Icons.archive_outlined),
+            tooltip: 'Archive Session',
+          ),
+          IconButton(
             onPressed: _showSetTargetSheet,
             icon: const Icon(Icons.gps_fixed_rounded),
             tooltip: 'Set Target',
@@ -133,36 +147,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           final current = countData?.currentCount ?? 0;
           final target = countData?.targetCount ?? 0;
 
-          return Column(
-            children: [
-              const SizedBox(height: 40),
-              const Spacer(flex: 1),
-              CounterDisplay(current: current, target: target),
-              const Spacer(flex: 2),
-              TacticalTapButton(onTap: _incrementCounter),
-              const Spacer(flex: 1),
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _archiveSession,
-                        icon: const Icon(Icons.archive_outlined),
-                        label: const Text('Archive Session'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
+          return SizedBox.expand(
+            child: Column(
+              children: [
+                const Spacer(flex: 1),
+                const Spacer(flex: 1),
+                CounterDisplay(current: current, target: target),
+                const Spacer(flex: 1),
+                TacticalTapButton(onTap: ()async{
+                    await _incrementCounter();
+                }),
+                const Spacer(flex: 1),
+              ],
+            ),
           );
         },
       ),

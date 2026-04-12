@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
   final VoidCallback onShowHistory;
+  final VoidCallback onShowChallenges;
   final VoidCallback onShowAnalytics;
   final VoidCallback onShowTasweeh;
   final VoidCallback onShowSettings;
@@ -9,6 +10,7 @@ class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
     super.key,
     required this.onShowHistory,
+    required this.onShowChallenges,
     required this.onShowAnalytics,
     required this.onShowSettings,
     required this.onShowTasweeh,
@@ -128,6 +130,15 @@ class HomeDrawer extends StatelessWidget {
                   onTap: () {
                     Navigator.pop(context);
                     onShowAnalytics();
+                  },
+                ),
+                _buildDrawerTile(
+                  context,
+                  icon: Icons.group_outlined,
+                  title: 'Challenges',
+                  onTap: () {
+                    Navigator.pop(context);
+                    onShowChallenges();
                   },
                 ),
                 _buildDrawerTile(
