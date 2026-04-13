@@ -1,14 +1,17 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasweeh/features/settings/screens/about_support_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/appearance_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/counter_defaults_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/data_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/reminders_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/sound_haptics_screen.dart';
+import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(settingsProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -23,141 +26,69 @@ class SettingsScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _buildSectionTitle(context, 'NOTIFICATIONS'),
-          ),
-          const SizedBox(height: 8),
-          _buildSettingTile(
+
+          // ── Sections ───────────────────────────────────────────────────────
+          buildSettingTile(
             context,
-            icon: Icons.notifications_active_outlined,
-            title: 'Permissions',
-            subtitle: 'Request system alerts',
-            onTap: () => ref
-                .read(settingsProvider.notifier)
-                .requestNotificationPermission(),
+            icon: Icons.brightness_6_outlined,
+            title: 'Appearance',
+            subtitle: 'Theme, accent, counter style, font size',
+            onTap: () => _push(context, const AppearanceScreen()),
           ),
-          _buildSettingTile(
-            context,
-            icon: Icons.wb_sunny_outlined,
-            title: 'Morning Reminder',
-            subtitle: 'Remind me at 08:00 AM',
-            trailing: Switch(
-              value: settings.morningReminder,
-              onChanged: (v) =>
-                  ref.read(settingsProvider.notifier).toggleMorningReminder(v),
-            ),
-          ),
-          _buildSettingTile(
-            context,
-            icon: Icons.nightlight_outlined,
-            title: 'Evening Reminder',
-            subtitle: 'Remind me at 08:00 PM',
-            trailing: Switch(
-              value: settings.eveningReminder,
-              onChanged: (v) =>
-                  ref.read(settingsProvider.notifier).toggleEveningReminder(v),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _buildSectionTitle(context, 'FEEDBACK'),
-          ),
-          const SizedBox(height: 8),
-          _buildSettingTile(
+          buildSettingTile(
             context,
             icon: Icons.vibration_rounded,
-            title: 'Haptic Feedback',
-            subtitle: 'Vibrate on click',
-            trailing: Switch(
-              value: settings.hapticEnabled,
-              onChanged: (v) =>
-                  ref.read(settingsProvider.notifier).toggleHaptic(v),
-            ),
+            title: 'Sound & Haptics',
+            subtitle: 'Tap sound, haptic feedback, intensity',
+            onTap: () => _push(context, const SoundHapticsScreen()),
           ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _buildSectionTitle(context, 'AESTHETIC'),
-          ),
-          const SizedBox(height: 8),
-          _buildSettingTile(
+          buildSettingTile(
             context,
-            icon: Icons.palette_outlined,
-            title: 'Theme',
-            subtitle: 'System default',
-            onTap: () {},
+            icon: Icons.notifications_active_outlined,
+            title: 'Reminders',
+            subtitle: 'Daily dhikr reminders & salah prompts',
+            onTap: () => _push(context, const RemindersScreen()),
           ),
-          const SizedBox(height: 24),
-          _buildSettingTile(
+          buildSettingTile(
+            context,
+            icon: Icons.gps_fixed_rounded,
+            title: 'Counter Defaults',
+            subtitle: 'Goal, dhikr, auto-reset, session resume',
+            onTap: () => _push(context, const CounterDefaultsScreen()),
+          ),
+          buildSettingTile(
             context,
             icon: Icons.info_outline_rounded,
-            title: 'About',
-            subtitle: 'Version 1.0.0',
-            onTap: () {},
+            title: 'About & Support',
+            subtitle: 'Version, donate, GitHub, feedback',
+            onTap: () => _push(context, const AboutSupportScreen()),
           ),
+          buildSettingTile(
+            context,
+            icon: Icons.storage_outlined,
+            title: 'Data',
+            subtitle: 'Export history, reset all data',
+            onTap: () => _push(context, const DataScreen()),
+          ),
+
+          // ── Footer ─────────────────────────────────────────────────────────
+          const SizedBox(height: 36),
+          Center(
+            child: Text(
+              'Easy Tasbeeh v1.0.0 · MIT License · Non-profit',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: Theme.of(context).colorScheme.outlineVariant,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
         ],
       ),
     );
   }
 
-  Widget _buildSectionTitle(BuildContext context, String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-        fontWeight: FontWeight.w900,
-        letterSpacing: 1.5,
-        color: Theme.of(context).colorScheme.outline,
-      ),
-    );
-  }
-
-  Widget _buildSettingTile(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      dense: true,
-      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-      contentPadding: const EdgeInsets.only(left: 24, right: 0),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(
-            context,
-          ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.primary,
-          size: 18,
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.outline,
-          fontSize: 10,
-        ),
-      ),
-      trailing:
-          trailing ??
-          Icon(
-            Icons.chevron_right_rounded,
-            size: 18,
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-      onTap: onTap,
-    );
+  void _push(BuildContext context, Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
   }
 }

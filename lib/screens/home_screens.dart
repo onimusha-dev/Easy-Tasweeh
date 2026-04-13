@@ -106,7 +106,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // Medium vibration on every count
     if (hapticEnabled) {
-      Vibration.vibrate(duration: 50, amplitude: 50);
+      final amplitude = ref.read(settingsProvider).vibrationAmplitude;
+      Vibration.vibrate(duration: 50, amplitude: amplitude);
     }
 
     // Directly increment; repo handles initialization if needed
@@ -137,7 +138,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   /// Plays a gentle affirmative vibration on target completion.
   void _playCompletionVibration() {
-    Vibration.vibrate(duration: 2000, amplitude: 100);
+    final amplitude = ref.read(settingsProvider).completionVibrationAmplitude;
+    Vibration.vibrate(duration: 2000, amplitude: amplitude);
   }
 
   void _archiveSession() {
