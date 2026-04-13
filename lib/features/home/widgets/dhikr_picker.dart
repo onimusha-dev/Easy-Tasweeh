@@ -1,95 +1,35 @@
+import 'package:easy_tasweeh/core/models/dhikr_model.dart';
+import 'package:easy_tasweeh/core/service/dhikr_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DhikrItem {
-  final String arabic;
-  final String transliteration;
-  final String translation;
-
-  const DhikrItem({
-    required this.arabic,
-    required this.transliteration,
-    required this.translation,
-  });
-}
-
-const _dhikrList = [
-  DhikrItem(
-    arabic: 'سُبْحَانَ اللَّهِ',
-    transliteration: 'SubhanAllah',
-    translation: 'Glory be to Allah',
-  ),
-  DhikrItem(
-    arabic: 'الْحَمْدُ لِلَّهِ',
-    transliteration: 'Alhamdulillah',
-    translation: 'All praise be to Allah',
-  ),
-  DhikrItem(
-    arabic: 'اللَّهُ أَكْبَرُ',
-    transliteration: 'Allahu Akbar',
-    translation: 'Allah is the Greatest',
-  ),
-  DhikrItem(
-    arabic: 'لَا إِلَٰهَ إِلَّا اللَّهُ',
-    transliteration: 'La ilaha illallah',
-    translation: 'There is no god but Allah',
-  ),
-  DhikrItem(
-    arabic: 'أَسْتَغْفِرُ اللَّهَ',
-    transliteration: 'Astaghfirullah',
-    translation: 'I seek forgiveness from Allah',
-  ),
-  DhikrItem(
-    arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ',
-    transliteration: 'La hawla wa la quwwata illa billah',
-    translation: 'There is no power except with Allah',
-  ),
-  DhikrItem(
-    arabic: 'صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ',
-    transliteration: 'Sallallahu Alayhi wa Sallam',
-    translation: 'May Allah bless him and grant him peace',
-  ),
-  DhikrItem(
-    arabic: 'بِسْمِ اللَّهِ',
-    transliteration: 'Bismillah',
-    translation: 'In the name of Allah',
-  ),
-];
-
-class DhikrPicker extends StatefulWidget {
+class DhikrPicker extends ConsumerWidget {
   const DhikrPicker({super.key});
 
   @override
-  State<DhikrPicker> createState() => _DhikrPickerState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentDhikr = ref.watch(currentDhikrProvider);
 
-class _DhikrPickerState extends State<DhikrPicker> {
-  int _selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text(
-            'DHIKR',
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
+          child: Text('DHIKR', style: Theme.of(context).textTheme.labelSmall),
         ),
         SizedBox(
           height: 100,
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: _dhikrList.length,
+            itemCount: dhikrList.length,
             separatorBuilder: (context, _) => const SizedBox(width: 10),
             itemBuilder: (context, index) {
-              final item = _dhikrList[index];
-              final isSelected = index == _selectedIndex;
+              final item = dhikrList[index];
+              final isSelected = item == currentDhikr;
               return GestureDetector(
-                onTap: () => setState(() => _selectedIndex = index),
+                onTap: () => ref.read(currentDhikrProvider.notifier).state = item,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeOut,
@@ -117,7 +57,8 @@ class _DhikrPickerState extends State<DhikrPicker> {
                     children: [
                       Text(
                         item.transliteration,
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(
                               color: isSelected
                                   ? Theme.of(context).colorScheme.onPrimary
                                   : Theme.of(context).colorScheme.onSurface,

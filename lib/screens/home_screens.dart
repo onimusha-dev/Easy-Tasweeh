@@ -63,29 +63,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      body: ref.watch(currentCountStreamProvider).when(
-        data: (countData) {
-          final current = countData?.currentCount ?? 0;
-          final target = countData?.targetCount ?? 0;
+      body: ref
+          .watch(currentCountStreamProvider)
+          .when(
+            data: (countData) {
+              final current = countData?.currentCount ?? 0;
+              final target = countData?.targetCount ?? 0;
 
-          return SizedBox.expand(
-            child: Column(
-              children: [
-                const Spacer(flex: 1),
-                const Spacer(flex: 1),
-                CounterDisplay(current: current, target: target),
-                const Spacer(flex: 1),
-                TacticalTapButton(
-                  onTap: _isFrozen ? null : () => _incrementCounter(countData),
+              return SizedBox.expand(
+                child: Column(
+                  children: [
+                    const Spacer(flex: 1),
+                    const Spacer(flex: 1),
+                    CounterDisplay(current: current, target: target),
+                    const Spacer(flex: 1),
+                    TacticalTapButton(
+                      onTap: _isFrozen
+                          ? null
+                          : () => _incrementCounter(countData),
+                    ),
+                    const Spacer(flex: 1),
+                  ],
                 ),
-                const Spacer(flex: 1),
-              ],
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
-      ),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
     );
   }
 
@@ -182,6 +186,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      enableDrag: false,
+      isDismissible: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const TargetSelectorSheet(),
     );
