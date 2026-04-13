@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/dao/current_count_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'count_repository.g.dart';
@@ -12,6 +13,10 @@ CountRepository countRepository(Ref ref) {
   final countHistoryDao = ref.watch(countHistoryDaoProvider);
   return CountRepository(currentCountDao, countHistoryDao);
 }
+
+final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((ref) {
+  return ref.watch(countRepositoryProvider).watchCurrentCount();
+});
 
 class CountRepository {
   final CurrentCountDao _currentCountDao;

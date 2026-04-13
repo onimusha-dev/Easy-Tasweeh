@@ -63,10 +63,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(width: 8),
         ],
       ),
-      body: StreamBuilder(
-        stream: ref.watch(countRepositoryProvider).watchCurrentCount(),
-        builder: (context, snapshot) {
-          final countData = snapshot.data;
+      body: ref.watch(currentCountStreamProvider).when(
+        data: (countData) {
           final current = countData?.currentCount ?? 0;
           final target = countData?.targetCount ?? 0;
 
@@ -85,6 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }

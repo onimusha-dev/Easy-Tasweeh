@@ -10,6 +10,14 @@ class TargetSelectorSheet extends ConsumerWidget {
     // null = free mode (no target)
     final List<int?> targets = [100, 200, 300, 500, 1000, null];
 
+    final countAsync = ref.watch(currentCountStreamProvider);
+    final currentTarget = countAsync.when(
+      data: (data) => data?.targetCount ?? 0,
+      loading: () =>
+          -1, // Use -1 to avoid accidental "0" (Infinity) selection during load
+      error: (_, _) => 0,
+    );
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -29,10 +37,7 @@ class TargetSelectorSheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 20),
-          Text(
-            'Set Goal',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Set Goal', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 4),
           Text(
             'How many counts per session?',
@@ -44,34 +49,35 @@ class TargetSelectorSheet extends ConsumerWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1.4,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 1.3,
             ),
             itemCount: targets.length,
             itemBuilder: (context, index) {
               final target = targets[index];
               final isFree = target == null;
+              final value = target ?? 0;
+              final isSelected = currentTarget == value;
+
               return InkWell(
                 onTap: () {
-                  ref.read(countRepositoryProvider).setTarget(target ?? 0);
+                  ref.read(countRepositoryProvider).setTarget(value);
                   Navigator.pop(context);
                 },
                 borderRadius: BorderRadius.circular(16),
-                child: Container(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
-                    color: isFree
-                        ? Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer.withValues(alpha: 0.4)
+                    color: isSelected
+                        ? Theme.of(context).colorScheme.primary
                         : Theme.of(context).colorScheme.surfaceContainerHighest
                               .withValues(alpha: 0.5),
                     border: Border.all(
-                      color: isFree
-                          ? Theme.of(
-                              context,
-                            ).colorScheme.primary.withValues(alpha: 0.5)
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.outlineVariant,
+                      width: isSelected ? 2 : 1,
                     ),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -81,16 +87,24 @@ class TargetSelectorSheet extends ConsumerWidget {
                       children: [
                         Text(
                           isFree ? '∞' : '$target',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: isSelected
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Theme.of(context).colorScheme.primary,
                               ),
                         ),
                         if (isFree)
                           Text(
                             'Free',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  fontSize: 10,
+                                  color: isSelected
+                                      ? Theme.of(context).colorScheme.onPrimary
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
                           ),
                       ],
                     ),
