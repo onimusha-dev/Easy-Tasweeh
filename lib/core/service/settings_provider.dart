@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/notification_service.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -50,6 +52,8 @@ class SettingsState {
   final bool afterSalahReminder;
   final bool autoResetOnGoal;
   final bool resumeLastSession;
+  final ThemeMode themeMode;
+  final AppColorScheme colorScheme;
 
   SettingsState({
     required this.morningReminder,
@@ -67,6 +71,8 @@ class SettingsState {
     required this.afterSalahReminder,
     required this.autoResetOnGoal,
     required this.resumeLastSession,
+    required this.themeMode,
+    required this.colorScheme,
   });
 
   SettingsState copyWith({
@@ -85,6 +91,8 @@ class SettingsState {
     bool? afterSalahReminder,
     bool? autoResetOnGoal,
     bool? resumeLastSession,
+    ThemeMode? themeMode,
+    AppColorScheme? colorScheme,
   }) {
     return SettingsState(
       morningReminder: morningReminder ?? this.morningReminder,
@@ -104,6 +112,8 @@ class SettingsState {
       afterSalahReminder: afterSalahReminder ?? this.afterSalahReminder,
       autoResetOnGoal: autoResetOnGoal ?? this.autoResetOnGoal,
       resumeLastSession: resumeLastSession ?? this.resumeLastSession,
+      themeMode: themeMode ?? this.themeMode,
+      colorScheme: colorScheme ?? this.colorScheme,
     );
   }
 }
@@ -126,6 +136,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           afterSalahReminder: false,
           autoResetOnGoal: true,
           resumeLastSession: false,
+          themeMode: ThemeMode.system,
+          colorScheme: AppColorScheme.teal,
         )) {
     _loadSettings();
   }
@@ -148,6 +160,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _afterSalahReminderKey = 'after_salah_reminder';
   static const _autoResetOnGoalKey = 'auto_reset_on_goal';
   static const _resumeLastSessionKey = 'resume_last_session';
+  static const _themeModeKey = 'theme_mode';
+  static const _colorSchemeKey = 'color_scheme';
 
   final NotificationService _notificationService = NotificationService();
 
@@ -178,6 +192,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       afterSalahReminder: prefs.getBool(_afterSalahReminderKey) ?? false,
       autoResetOnGoal: prefs.getBool(_autoResetOnGoalKey) ?? true,
       resumeLastSession: prefs.getBool(_resumeLastSessionKey) ?? false,
+      themeMode: ThemeMode.values[prefs.getInt(_themeModeKey) ?? ThemeMode.system.index],
+      colorScheme: AppColorScheme.values[prefs.getInt(_colorSchemeKey) ?? AppColorScheme.teal.index],
     );
   }
 
@@ -327,5 +343,17 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_resumeLastSessionKey, value);
     state = state.copyWith(resumeLastSession: value);
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_themeModeKey, mode.index);
+    state = state.copyWith(themeMode: mode);
+  }
+
+  Future<void> setColorScheme(AppColorScheme scheme) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_colorSchemeKey, scheme.index);
+    state = state.copyWith(colorScheme: scheme);
   }
 }

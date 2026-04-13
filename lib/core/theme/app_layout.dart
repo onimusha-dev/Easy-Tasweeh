@@ -14,6 +14,13 @@ class AppLayout {
   static final BorderRadius brExtraLarge = BorderRadius.circular(radiusExtraLarge);
   static final BorderRadius brChip = BorderRadius.circular(20.0);
 
+  // ─── Shapes ────────────────────────────────────────────────────────────────
+  static final OutlinedBorder shapeSmall = RoundedRectangleBorder(borderRadius: brSmall);
+  static final OutlinedBorder shapeMedium = RoundedRectangleBorder(borderRadius: brMedium);
+  static final OutlinedBorder shapeLarge = RoundedRectangleBorder(borderRadius: brLarge);
+  static final OutlinedBorder shapeExtraLarge = RoundedRectangleBorder(borderRadius: brExtraLarge);
+  static final OutlinedBorder shapeChip = RoundedRectangleBorder(borderRadius: brChip);
+
   // ─── Padding & Margins ──────────────────────────────────────────────────────
   static const double spaceXS = 4.0;
   static const double spaceSmall = 8.0;

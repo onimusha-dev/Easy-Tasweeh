@@ -1,0 +1,58 @@
+Analyzing easy_tasweeh...                                       
+
+  error • The function 'StateNotifierProvider' isn't defined • lib/core/service/settings_provider.dart:9:5 • undefined_function
+  error • Classes can only extend other classes • lib/core/service/settings_provider.dart:121:32 • extends_non_class
+  error • Too many positional arguments: 0 expected, but 1 found • lib/core/service/settings_provider.dart:123:15 • extra_positional_arguments
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:172:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:204:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:204:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:210:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:210:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:217:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:217:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:224:15 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:225:17 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:236:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:236:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:238:9 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:253:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:253:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:260:15 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:261:17 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:272:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:272:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:274:9 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:289:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:289:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:296:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:296:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:302:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:302:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:309:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:309:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:315:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:315:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:321:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:321:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:327:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:327:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:333:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:333:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:339:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:339:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:345:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:345:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:351:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:351:13 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:357:5 • undefined_identifier
+  error • Undefined name 'state' • lib/core/service/settings_provider.dart:357:13 • undefined_identifier
+   info • The import of 'app_layout.dart' is unnecessary because all of the used elements are also provided by the import of 'theme.dart' • lib/core/theme/app_theme.dart:3:8 • unnecessary_import
+   info • The import of 'app_typography.dart' is unnecessary because all of the used elements are also provided by the import of 'theme.dart' • lib/core/theme/app_theme.dart:4:8 • unnecessary_import
+   info • The import of 'schemes/base_scheme.dart' is unnecessary because all of the used elements are also provided by the import of 'theme.dart' • lib/core/theme/app_theme.dart:5:8 • unnecessary_import
+   info • The import of 'schemes/teal_scheme.dart' is unnecessary because all of the used elements are also provided by the import of 'theme.dart' • lib/core/theme/app_theme.dart:6:8 • unnecessary_import
+   info • The import of 'schemes/slate_scheme.dart' is unnecessary because all of the used elements are also provided by the import of 'theme.dart' • lib/core/theme/app_theme.dart:7:8 • unnecessary_import
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/settings/screens/appearance_screen.dart:92:15 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/settings/screens/appearance_screen.dart:93:15 • deprecated_member_use
+   info • 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/settings/screens/appearance_screen.dart:117:17 • deprecated_member_use
+   info • 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre • lib/features/settings/screens/appearance_screen.dart:118:17 • deprecated_member_use
+

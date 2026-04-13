@@ -1,18 +1,6 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-
-abstract class BaseColorScheme {
-  Brightness get brightness;
-  ColorScheme get colorScheme;
-  AppColors get appColors;
-  
-  Color get textPrimary;
-  Color get textSecondary;
-  Color get surface;
-  Color get card;
-  Color get border;
-  Color get divider;
-}
+import 'base_scheme.dart';
 
 class TealColorScheme extends BaseColorScheme {
   @override
@@ -23,7 +11,6 @@ class TealColorScheme extends BaseColorScheme {
   // ── Palette ────────────────────────────────────────────────────────────────
   static const _white = Color(0xFFFFFFFF);
   static const _teal50 = Color(0xFFE1F5EE);
-  static const _teal100 = Color(0xFF9FE1CB);
   static const _teal400 = Color(0xFF1D9E75);
   static const _teal600 = Color(0xFF0F6E56);
   static const _teal800 = Color(0xFF085041);
@@ -34,7 +21,6 @@ class TealColorScheme extends BaseColorScheme {
 
   static const _surfaceLight = Color(0xFFF2F2F7);
   static const _surfaceDark = Color(0xFF0E110E);
-  static const _surfaceDark2 = Color(0xFF161B16);
   static const _surfaceDark3 = Color(0xFF1E251E);
 
   @override
@@ -77,8 +63,15 @@ class TealColorScheme extends BaseColorScheme {
         onSurfaceVariant: Color(0xFF6B6E6A),
         error: Color(0xFFB00020),
         onError: _white,
+        errorContainer: Color(0xFFFFDAD6),
+        onErrorContainer: Color(0xFF410002),
         outline: Color(0xFFC0C4BE),
+        outlineVariant: Color(0xFFDDE1DC),
         shadow: Color(0x14000000),
+        scrim: Color(0xFF000000),
+        inverseSurface: Color(0xFF2D312D),
+        onInverseSurface: Color(0xFFEFF1ED),
+        inversePrimary: _tealD200,
       );
     } else {
       return const ColorScheme(
@@ -100,8 +93,15 @@ class TealColorScheme extends BaseColorScheme {
         onSurfaceVariant: Color(0xFF9A9E9A),
         error: Color(0xFFCF6679),
         onError: Color(0xFF690005),
+        errorContainer: Color(0xFF93000A),
+        onErrorContainer: Color(0xFFFFDAD6),
         outline: Color(0xFF3A3F3A),
+        outlineVariant: Color(0xFF2A302A),
         shadow: Color(0xFF000000),
+        scrim: Color(0xFF000000),
+        inverseSurface: Color(0xFFE2E5E2),
+        onInverseSurface: Color(0xFF2D312D),
+        inversePrimary: _teal600,
       );
     }
   }
@@ -136,7 +136,7 @@ class TealColorScheme extends BaseColorScheme {
         progressActive: _tealD400,
         progressTrack: _surfaceDark3,
         tapButtonFill: _tealD400,
-        tapButtonShadow: _tealD400.withOpacity(0.25),
+        tapButtonShadow: _tealD400.withValues(alpha: 0.25),
         cardBorder: const Color(0xFF262E26),
         subtleText: const Color(0xFF9A9E9A),
         sectionHeaderBg: _surfaceDark,
