@@ -78,15 +78,15 @@ class _TacticalTapButtonState extends State<TacticalTapButton>
                   Icon(
                     Icons.fingerprint_rounded,
                     color: Theme.of(context).colorScheme.onPrimary,
-                    size: 48,
+                    size: 64,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'TAP',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
+                  //   const SizedBox(height: 8),
+                  //   Text(
+                  //     'TAP',
+                  //     style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  //       color: Theme.of(context).colorScheme.onPrimary,
+                  //     ),
+                  //   ),
                 ],
               ),
             ),

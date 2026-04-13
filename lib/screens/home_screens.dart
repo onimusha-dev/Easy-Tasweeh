@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/service/dhikr_service.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
@@ -69,20 +70,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             data: (countData) {
               final current = countData?.currentCount ?? 0;
               final target = countData?.targetCount ?? 0;
+              final currentDhikr = ref.watch(currentDhikrProvider);
 
               return SizedBox.expand(
                 child: Column(
                   children: [
-                    const Spacer(flex: 1),
-                    const Spacer(flex: 1),
+                    const Spacer(flex: 3),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Column(
+                        key: ValueKey(currentDhikr.arabic),
+                        children: [
+                          Text(
+                            currentDhikr.arabic,
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 28,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            currentDhikr.transliteration.toUpperCase(),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  letterSpacing: 2.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.outline.withValues(alpha: 0.6),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
                     CounterDisplay(current: current, target: target),
-                    const Spacer(flex: 1),
+                    const Spacer(flex: 4),
                     TacticalTapButton(
                       onTap: _isFrozen
                           ? null
                           : () => _incrementCounter(countData),
                     ),
-                    const Spacer(flex: 1),
+                    const Spacer(flex: 2),
                   ],
                 ),
               );
