@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 Widget buildSectionTitle(BuildContext context, String title) {
-  return Text(
-    title,
-    style: Theme.of(context).textTheme.labelSmall,
-  );
+  return Text(title, style: Theme.of(context).textTheme.labelSmall);
 }
 
 Widget buildSettingTile(
@@ -12,6 +9,7 @@ Widget buildSettingTile(
   required IconData icon,
   required String title,
   required String subtitle,
+  Color? iconColor,
   Widget? trailing,
   String? trailingLabel,
   VoidCallback? onTap,
@@ -25,7 +23,7 @@ Widget buildSettingTile(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          padding: const EdgeInsets.fromLTRB(4, 4, 8, 4),
           decoration: BoxDecoration(
             color: Theme.of(
               context,
@@ -59,21 +57,13 @@ Widget buildSettingTile(
   return ListTile(
     dense: true,
     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    leading: Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 18),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+    leading: Icon(
+      icon,
+      color: iconColor ?? Theme.of(context).colorScheme.primary,
+      size: 22,
     ),
-    title: Text(
-      title,
-      style: Theme.of(context).textTheme.titleSmall,
-    ),
+    title: Text(title, style: Theme.of(context).textTheme.titleSmall),
     subtitle: Text(
       subtitle,
       style: TextStyle(

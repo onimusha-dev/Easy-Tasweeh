@@ -28,6 +28,7 @@ class AppearanceScreen extends ConsumerWidget {
             icon: Icons.brightness_6_outlined,
             title: 'Theme',
             subtitle: 'Light, Dark, or follow system',
+            iconColor: AppIconColors.purple(context),
             trailingLabel: settings.themeMode.name.toUpperCase(),
             onTap: () => _showThemeDialog(context, ref),
           ),
@@ -36,6 +37,7 @@ class AppearanceScreen extends ConsumerWidget {
             icon: Icons.color_lens_outlined,
             title: 'Accent colour',
             subtitle: 'Choose your app highlighting aesthetic',
+            iconColor: AppIconColors.pink(context),
             trailing: _ColourDot(),
             onTap: () => _showColorSchemeDialog(context, ref),
           ),
@@ -44,6 +46,7 @@ class AppearanceScreen extends ConsumerWidget {
             icon: Icons.touch_app_outlined,
             title: 'Counter style',
             subtitle: 'Circle, minimal, or full screen tap',
+            iconColor: AppIconColors.teal(context),
             trailingLabel: 'Circle',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -56,6 +59,7 @@ class AppearanceScreen extends ConsumerWidget {
             icon: Icons.text_fields_rounded,
             title: 'Font size',
             subtitle: 'Adjust counter number size',
+            iconColor: AppIconColors.blue(context),
             trailingLabel: 'Medium',
             onTap: () {},
           ),
@@ -64,6 +68,7 @@ class AppearanceScreen extends ConsumerWidget {
             icon: Icons.screen_lock_portrait_outlined,
             title: 'Keep screen on',
             subtitle: 'Prevent sleep while counting',
+            iconColor: AppIconColors.amber(context),
             trailing: Switch(
               value: settings.keepScreenOn,
               onChanged: (v) => notifier.toggleKeepScreenOn(v),

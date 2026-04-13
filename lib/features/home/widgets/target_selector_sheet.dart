@@ -95,7 +95,7 @@ class _TargetSelectorSheetState extends ConsumerState<TargetSelectorSheet> {
                           crossAxisCount: 3,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
-                          childAspectRatio: 1.4,
+                          childAspectRatio: 1.8,
                         ),
                     itemCount: targets.length,
                     itemBuilder: (context, index) {
@@ -145,7 +145,7 @@ class _TargetSelectorSheetState extends ConsumerState<TargetSelectorSheet> {
                                               ).colorScheme.onPrimary
                                             : Theme.of(
                                                 context,
-                                              ).colorScheme.primary,
+                                              ).colorScheme.onSurface,
                                       ),
                                 ),
                                 if (isFree)
@@ -160,9 +160,10 @@ class _TargetSelectorSheetState extends ConsumerState<TargetSelectorSheet> {
                                               ? Theme.of(
                                                   context,
                                                 ).colorScheme.onPrimary
-                                              : Theme.of(
-                                                  context,
-                                                ).colorScheme.primary,
+                                              : Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withValues(alpha: 0.7),
                                         ),
                                   ),
                               ],

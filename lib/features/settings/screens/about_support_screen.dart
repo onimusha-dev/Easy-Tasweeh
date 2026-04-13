@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,6 +24,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.info_outline_rounded,
             title: 'About Easy Tasbeeh',
             subtitle: 'Version, team, and mission',
+            iconColor: AppIconColors.gray(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -30,6 +32,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.favorite_border_rounded,
             title: 'Support & donate',
             subtitle: '100% goes to charity',
+            iconColor: AppIconColors.pink(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -37,6 +40,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.code_rounded,
             title: 'View source on GitHub',
             subtitle: 'MIT licensed — free & open',
+            iconColor: AppIconColors.blue(context),
             onTap: () => _launchUrl('https://github.com'),
           ),
           buildSettingTile(
@@ -44,6 +48,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.star_border_rounded,
             title: 'Rate the app',
             subtitle: 'Help others find Easy Tasbeeh',
+            iconColor: AppIconColors.amber(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -51,6 +56,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.mail_outline_rounded,
             title: 'Send feedback',
             subtitle: 'Suggest features or report bugs',
+            iconColor: AppIconColors.teal(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -58,6 +64,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.policy_outlined,
             title: 'Privacy policy',
             subtitle: 'No data collected, ever',
+            iconColor: AppIconColors.green(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -65,6 +72,7 @@ class AboutSupportScreen extends StatelessWidget {
             icon: Icons.article_outlined,
             title: 'Licenses',
             subtitle: 'Open source acknowledgements',
+            iconColor: AppIconColors.gray(context),
             onTap: () => showLicensePage(context: context),
           ),
           const SizedBox(height: 32),

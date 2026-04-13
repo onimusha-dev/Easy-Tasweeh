@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/features/settings/widgets/notification_permission_banner.dart';
 import 'package:easy_tasweeh/features/settings/widgets/reminder_time_tile.dart';
@@ -65,6 +66,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             icon: Icons.notifications_active_outlined,
             title: 'Daily dhikr reminder',
             subtitle: 'Remind me to do my daily tasbeeh',
+            iconColor: AppIconColors.blue(context),
             trailing: Switch(
               value: settings.morningReminder,
               onChanged: (v) {
@@ -83,6 +85,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             icon: Icons.wb_sunny_rounded,
             enabled: settings.morningReminder,
             time: settings.morningTime,
+            iconColor: AppIconColors.amber(context),
             onToggle: (v) {
               if (v && !settings.notificationPermissionGranted) {
                 _showPermissionSnack();
@@ -102,6 +105,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             icon: Icons.nights_stay_rounded,
             enabled: settings.eveningReminder,
             time: settings.eveningTime,
+            iconColor: AppIconColors.purple(context),
             onToggle: (v) {
               if (v && !settings.notificationPermissionGranted) {
                 _showPermissionSnack();
@@ -125,6 +129,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             icon: Icons.calendar_today_outlined,
             title: 'Reminder days',
             subtitle: 'Choose which days to remind',
+            iconColor: AppIconColors.blue(context),
             trailingLabel: 'Every day',
             onTap: () {},
           ),
@@ -133,6 +138,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             icon: Icons.mosque_outlined,
             title: 'After salah reminder',
             subtitle: 'Prompt after each prayer time',
+            iconColor: AppIconColors.teal(context),
             trailing: Switch(
               value: settings.afterSalahReminder,
               onChanged: (v) => notifier.toggleAfterSalahReminder(v),

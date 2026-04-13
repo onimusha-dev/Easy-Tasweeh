@@ -135,4 +135,17 @@ class AppIconColors {
   static const iconPinkDark = Color(0xFFED93B1);
   static const iconGrayDark = Color(0xFFB4B2A9);
   static const iconGreenDark = Color(0xFF97C459);
+
+  static Color _get(BuildContext context, Color light, Color dark) {
+    return Theme.of(context).brightness == Brightness.light ? light : dark;
+  }
+
+  static Color teal(BuildContext context) => _get(context, iconTeal, iconTealDark);
+  static Color purple(BuildContext context) => _get(context, iconPurple, iconPurpleDark);
+  static Color amber(BuildContext context) => _get(context, iconAmber, iconAmberDark);
+  static Color blue(BuildContext context) => _get(context, iconBlue, iconBlueDark);
+  static Color coral(BuildContext context) => _get(context, iconCoral, iconCoralDark);
+  static Color pink(BuildContext context) => _get(context, iconPink, iconPinkDark);
+  static Color gray(BuildContext context) => _get(context, iconGray, iconGrayDark);
+  static Color green(BuildContext context) => _get(context, iconGreen, iconGreenDark);
 }

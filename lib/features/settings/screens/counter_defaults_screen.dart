@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class CounterDefaultsScreen extends ConsumerWidget {
             icon: Icons.gps_fixed_rounded,
             title: 'Default goal',
             subtitle: 'Starting goal for new sessions',
+            iconColor: AppIconColors.teal(context),
             trailingLabel: '33',
             onTap: () {},
           ),
@@ -35,6 +37,7 @@ class CounterDefaultsScreen extends ConsumerWidget {
             icon: Icons.refresh_rounded,
             title: 'Auto-reset on goal',
             subtitle: 'Reset and track rounds',
+            iconColor: AppIconColors.green(context),
             trailing: Switch(
               value: settings.autoResetOnGoal,
               onChanged: (v) => notifier.toggleAutoResetOnGoal(v),
@@ -45,6 +48,7 @@ class CounterDefaultsScreen extends ConsumerWidget {
             icon: Icons.format_list_bulleted_rounded,
             title: 'Default dhikr',
             subtitle: 'Pre-select dhikr on app open',
+            iconColor: AppIconColors.blue(context),
             trailingLabel: 'SubhanAllah',
             onTap: () {},
           ),
@@ -53,6 +57,7 @@ class CounterDefaultsScreen extends ConsumerWidget {
             icon: Icons.history_rounded,
             title: 'Resume last session',
             subtitle: 'Continue where you left off',
+            iconColor: AppIconColors.amber(context),
             trailing: Switch(
               value: settings.resumeLastSession,
               onChanged: (v) => notifier.toggleResumeLastSession(v),

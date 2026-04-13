@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasweeh/features/settings/screens/about_support_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/appearance_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/counter_defaults_screen.dart';
@@ -14,10 +15,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Settings',
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -30,6 +28,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.brightness_6_outlined,
             title: 'Appearance',
             subtitle: 'Theme, accent, counter style, font size',
+            iconColor: AppIconColors.purple(context),
             onTap: () => _push(context, const AppearanceScreen()),
           ),
           buildSettingTile(
@@ -37,6 +36,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.vibration_rounded,
             title: 'Sound & Haptics',
             subtitle: 'Tap sound, haptic feedback, intensity',
+            iconColor: AppIconColors.amber(context),
             onTap: () => _push(context, const SoundHapticsScreen()),
           ),
           buildSettingTile(
@@ -44,6 +44,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.notifications_active_outlined,
             title: 'Reminders',
             subtitle: 'Daily dhikr reminders & salah prompts',
+            iconColor: AppIconColors.blue(context),
             onTap: () => _push(context, const RemindersScreen()),
           ),
           buildSettingTile(
@@ -51,6 +52,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.gps_fixed_rounded,
             title: 'Counter Defaults',
             subtitle: 'Goal, dhikr, auto-reset, session resume',
+            iconColor: AppIconColors.teal(context),
             onTap: () => _push(context, const CounterDefaultsScreen()),
           ),
           buildSettingTile(
@@ -58,6 +60,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.info_outline_rounded,
             title: 'About & Support',
             subtitle: 'Version, donate, GitHub, feedback',
+            iconColor: AppIconColors.gray(context),
             onTap: () => _push(context, const AboutSupportScreen()),
           ),
           buildSettingTile(
@@ -65,6 +68,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.storage_outlined,
             title: 'Data',
             subtitle: 'Export history, reset all data',
+            iconColor: AppIconColors.coral(context),
             onTap: () => _push(context, const DataScreen()),
           ),
 

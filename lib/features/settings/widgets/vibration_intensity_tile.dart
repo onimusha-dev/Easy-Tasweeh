@@ -15,6 +15,7 @@ class VibrationIntensityTile extends StatelessWidget {
   final int value;
   final ValueChanged<int> onChanged;
   final ValueChanged<int>? onChangedEnd;
+  final Color? iconColor;
 
   const VibrationIntensityTile({
     super.key,
@@ -24,6 +25,7 @@ class VibrationIntensityTile extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.onChangedEnd,
+    this.iconColor,
   });
 
   @override
@@ -39,13 +41,10 @@ class VibrationIntensityTile extends StatelessWidget {
           visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: scheme.primary, size: 18),
+          leading: Icon(
+            icon,
+            color: iconColor ?? scheme.primary,
+            size: 22,
           ),
           title: Text(
             label,
@@ -58,7 +57,10 @@ class VibrationIntensityTile extends StatelessWidget {
               fontSize: textTheme.bodySmall?.fontSize,
             ),
           ),
-          trailing: _IntensityBadge(value: value),
+          trailing: _IntensityBadge(
+            value: value,
+            color: iconColor,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 60, right: 24, bottom: 8),
@@ -67,11 +69,14 @@ class VibrationIntensityTile extends StatelessWidget {
               Icon(
                 Icons.vibration_rounded,
                 size: 14,
-                color: scheme.outline,
+                color: iconColor?.withValues(alpha: 0.5) ?? scheme.outline,
               ),
               Expanded(
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
+                    activeTrackColor: iconColor,
+                    inactiveTrackColor: iconColor?.withValues(alpha: 0.2),
+                    thumbColor: iconColor,
                     trackHeight: 3,
                     thumbShape: const RoundSliderThumbShape(
                         enabledThumbRadius: 7),
@@ -93,7 +98,7 @@ class VibrationIntensityTile extends StatelessWidget {
               Icon(
                 Icons.vibration_rounded,
                 size: 20,
-                color: scheme.outline,
+                color: iconColor?.withValues(alpha: 0.8) ?? scheme.outline,
               ),
             ],
           ),
@@ -105,7 +110,8 @@ class VibrationIntensityTile extends StatelessWidget {
 
 class _IntensityBadge extends StatelessWidget {
   final int value;
-  const _IntensityBadge({required this.value});
+  final Color? color;
+  const _IntensityBadge({required this.value, this.color});
 
   String get _label {
     if (value <= 64) return 'LIGHT';
@@ -117,17 +123,20 @@ class _IntensityBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final effectiveColor = color ?? scheme.primary;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: scheme.primaryContainer.withValues(alpha: 0.35),
+        color: effectiveColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: scheme.primary.withValues(alpha: 0.25)),
+        border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
       ),
       child: Text(
         _label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: scheme.primary,
+              color: effectiveColor,
+              fontWeight: FontWeight.bold,
             ),
       ),
     );

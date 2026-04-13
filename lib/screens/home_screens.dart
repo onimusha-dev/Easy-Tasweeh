@@ -83,11 +83,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         children: [
                           Text(
                             currentDhikr.arabic,
-                            style: Theme.of(context).textTheme.titleLarge
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 28,
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface,
                                 ),
                           ),
                           const SizedBox(height: 6),

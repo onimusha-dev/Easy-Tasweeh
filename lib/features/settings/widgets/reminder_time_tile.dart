@@ -28,6 +28,9 @@ class ReminderTimeTile extends ConsumerWidget {
   /// Called when the user picks a new time
   final ValueChanged<TimeOfDay> onTimePicked;
 
+  /// Custom icon color
+  final Color? iconColor;
+
   const ReminderTimeTile({
     super.key,
     required this.title,
@@ -37,6 +40,7 @@ class ReminderTimeTile extends ConsumerWidget {
     required this.time,
     required this.onToggle,
     required this.onTimePicked,
+    this.iconColor,
   });
 
   @override
@@ -51,13 +55,10 @@ class ReminderTimeTile extends ConsumerWidget {
           visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: scheme.primary, size: 18),
+          leading: Icon(
+            icon,
+            color: iconColor ?? scheme.primary,
+            size: 22,
           ),
           title: Text(
             title,
@@ -88,7 +89,7 @@ class ReminderTimeTile extends ConsumerWidget {
                 Icon(
                   Icons.schedule_rounded,
                   size: 14,
-                  color: scheme.outline,
+                  color: iconColor?.withValues(alpha: 0.6) ?? scheme.outline,
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -100,6 +101,7 @@ class ReminderTimeTile extends ConsumerWidget {
                 const SizedBox(width: 8),
                 _TimeChip(
                   label: time.label,
+                  color: iconColor,
                   onTap: enabled
                       ? () => _pickTime(context)
                       : null,
@@ -134,21 +136,23 @@ class ReminderTimeTile extends ConsumerWidget {
 class _TimeChip extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
+  final Color? color;
 
-  const _TimeChip({required this.label, this.onTap});
+  const _TimeChip({required this.label, this.onTap, this.color});
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final effectiveColor = color ?? scheme.primary;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: scheme.primaryContainer.withValues(alpha: 0.4),
+          color: effectiveColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: scheme.primary.withValues(alpha: 0.3),
+            color: effectiveColor.withValues(alpha: 0.25),
           ),
         ),
         child: Row(
@@ -157,12 +161,13 @@ class _TimeChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: scheme.primary,
+                    color: effectiveColor,
+                    fontWeight: FontWeight.bold,
                   ),
             ),
             if (onTap != null) ...[
               const SizedBox(width: 4),
-              Icon(Icons.edit_rounded, size: 10, color: scheme.primary),
+              Icon(Icons.edit_rounded, size: 10, color: effectiveColor),
             ],
           ],
         ),

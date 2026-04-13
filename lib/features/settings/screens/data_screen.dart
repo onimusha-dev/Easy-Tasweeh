@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class DataScreen extends StatelessWidget {
             icon: Icons.download_outlined,
             title: 'Export history',
             subtitle: 'Save your sessions as a file',
+            iconColor: AppIconColors.blue(context),
             onTap: () {},
           ),
           buildSettingTile(
@@ -29,6 +31,7 @@ class DataScreen extends StatelessWidget {
             icon: Icons.history_toggle_off_rounded,
             title: 'Reset all data',
             subtitle: 'Clear history and preferences',
+            iconColor: AppIconColors.coral(context),
             onTap: () => _confirmReset(context),
           ),
           const SizedBox(height: 32),

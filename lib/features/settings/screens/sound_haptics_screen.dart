@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:easy_tasweeh/features/settings/widgets/vibration_intensity_tile.dart';
@@ -35,6 +36,7 @@ class SoundHapticsScreen extends ConsumerWidget {
             icon: Icons.volume_up_outlined,
             title: 'Tap sound',
             subtitle: 'Play a soft click on each count',
+            iconColor: AppIconColors.amber(context),
             trailing: Switch(
               value: settings.tapSound,
               onChanged: (v) => notifier.toggleTapSound(v),
@@ -45,6 +47,7 @@ class SoundHapticsScreen extends ConsumerWidget {
             icon: Icons.music_note_outlined,
             title: 'Goal reached sound',
             subtitle: 'Play a tone when target is hit',
+            iconColor: AppIconColors.coral(context),
             trailing: Switch(
               value: settings.goalReachedSound,
               onChanged: (v) => notifier.toggleGoalReachedSound(v),
@@ -61,6 +64,7 @@ class SoundHapticsScreen extends ConsumerWidget {
             icon: Icons.vibration_rounded,
             title: 'Haptic feedback',
             subtitle: 'Vibrate on each tap',
+            iconColor: AppIconColors.amber(context),
             trailing: Switch(
               value: settings.hapticEnabled,
               onChanged: (v) => notifier.toggleHaptic(v),
@@ -79,6 +83,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                         icon: Icons.electric_bolt_outlined,
                         title: 'Haptic intensity',
                         subtitle: 'Light, medium, or strong',
+                        iconColor: AppIconColors.pink(context),
                         trailingLabel: _intensityLabel(
                           settings.vibrationAmplitude,
                         ),
@@ -89,6 +94,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                         subtitle: 'Strength of each dhikr tap vibration',
                         icon: Icons.touch_app_rounded,
                         value: settings.vibrationAmplitude,
+                        iconColor: AppIconColors.pink(context),
                         onChanged: (v) => notifier.setVibrationAmplitude(v),
                         onChangedEnd: (v) async {
                           if (await Vibration.hasVibrator()) {
@@ -101,6 +107,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                         subtitle: 'Strength when a target is reached',
                         icon: Icons.flag_rounded,
                         value: settings.completionVibrationAmplitude,
+                        iconColor: AppIconColors.coral(context),
                         onChanged: (v) =>
                             notifier.setCompletionVibrationAmplitude(v),
                         onChangedEnd: (v) async {
@@ -119,6 +126,7 @@ class SoundHapticsScreen extends ConsumerWidget {
             icon: Icons.pattern_outlined,
             title: 'Goal haptic pattern',
             subtitle: 'Special pulse when goal reached',
+            iconColor: AppIconColors.coral(context),
             trailing: Switch(
               value: settings.goalHapticPattern,
               onChanged: (v) => notifier.toggleGoalHapticPattern(v),
