@@ -16,10 +16,7 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Settings',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(
@@ -78,7 +75,6 @@ class SettingsScreen extends StatelessWidget {
               'Easy Tasbeeh v1.0.0 · MIT License · Non-profit',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: Theme.of(context).colorScheme.outlineVariant,
-                letterSpacing: 0.5,
               ),
             ),
           ),

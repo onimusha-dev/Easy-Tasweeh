@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 Widget buildSectionTitle(BuildContext context, String title) {
   return Text(
     title,
-    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-      fontWeight: FontWeight.w900,
-      letterSpacing: 1.5,
-      color: Theme.of(context).colorScheme.outline,
-    ),
+    style: Theme.of(context).textTheme.labelSmall,
   );
 }
 
@@ -40,8 +36,6 @@ Widget buildSettingTile(
             trailingLabel,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.5,
             ),
           ),
         ),
@@ -78,10 +72,7 @@ Widget buildSettingTile(
     ),
     title: Text(
       title,
-      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.w900,
-        letterSpacing: 1.5,
-      ),
+      style: Theme.of(context).textTheme.titleSmall,
     ),
     subtitle: Text(
       subtitle,

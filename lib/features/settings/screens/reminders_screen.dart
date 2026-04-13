@@ -42,10 +42,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
       appBar: AppBar(
         title: Text(
           'Reminders',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(

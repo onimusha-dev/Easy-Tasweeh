@@ -61,10 +61,7 @@ class ReminderTimeTile extends ConsumerWidget {
           ),
           title: Text(
             title,
-            style: textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.5,
-            ),
+            style: textTheme.titleSmall,
           ),
           subtitle: Text(
             subtitle,
@@ -160,8 +157,6 @@ class _TimeChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
                     color: scheme.primary,
                   ),
             ),

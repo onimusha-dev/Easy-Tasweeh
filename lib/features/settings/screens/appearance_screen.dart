@@ -16,10 +16,7 @@ class AppearanceScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'Appearance',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(
@@ -91,8 +88,9 @@ class AppearanceScreen extends ConsumerWidget {
               value: mode,
               groupValue: ref.watch(settingsProvider).themeMode,
               onChanged: (v) {
-                if (v != null)
+                if (v != null) {
                   ref.read(settingsProvider.notifier).setThemeMode(v);
+                }
                 Navigator.pop(context);
               },
             );
@@ -117,8 +115,9 @@ class AppearanceScreen extends ConsumerWidget {
                 value: scheme,
                 groupValue: current,
                 onChanged: (v) {
-                  if (v != null)
+                  if (v != null) {
                     ref.read(settingsProvider.notifier).setColorScheme(v);
+                  }
                   Navigator.pop(context);
                 },
               );

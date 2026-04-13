@@ -31,10 +31,7 @@ class TargetSelectorSheet extends ConsumerWidget {
           const SizedBox(height: 20),
           Text(
             'Set Goal',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 4),
           Text(
@@ -84,20 +81,15 @@ class TargetSelectorSheet extends ConsumerWidget {
                       children: [
                         Text(
                           isFree ? '∞' : '$target',
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w900,
                               ),
                         ),
                         if (isFree)
                           Text(
                             'Free',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.primary,
-                              letterSpacing: 1,
                             ),
                           ),
                       ],

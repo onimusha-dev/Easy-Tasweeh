@@ -49,10 +49,7 @@ class VibrationIntensityTile extends StatelessWidget {
           ),
           title: Text(
             label,
-            style: textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.5,
-            ),
+            style: textTheme.titleSmall,
           ),
           subtitle: Text(
             subtitle,
@@ -130,8 +127,6 @@ class _IntensityBadge extends StatelessWidget {
       child: Text(
         _label,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.2,
               color: scheme.primary,
             ),
       ),

@@ -43,7 +43,7 @@ class AppTheme {
           padding: AppLayout.buttonPadding,
           shape: RoundedRectangleBorder(borderRadius: AppLayout.brLarge),
           elevation: 0,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
         ),
       ),
 
@@ -53,7 +53,7 @@ class AppTheme {
           foregroundColor: scheme.colorScheme.onPrimary,
           shape: RoundedRectangleBorder(borderRadius: AppLayout.brLarge),
           padding: AppLayout.buttonPadding,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
         ),
       ),
 
@@ -63,14 +63,14 @@ class AppTheme {
           side: BorderSide(color: scheme.colorScheme.primary, width: 1.5),
           shape: RoundedRectangleBorder(borderRadius: AppLayout.brLarge),
           padding: AppLayout.buttonPadding,
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
         ),
       ),
 
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: scheme.colorScheme.primary,
-          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
         ),
       ),
 
@@ -99,7 +99,7 @@ class AppTheme {
         contentTextStyle: TextStyle(
           color: isDark ? scheme.textPrimary : Colors.white,
           fontSize: 14,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w800,
         ),
         shape: RoundedRectangleBorder(borderRadius: AppLayout.brMedium),
         behavior: SnackBarBehavior.floating,
@@ -122,7 +122,7 @@ class AppTheme {
         titleTextStyle: TextStyle(
           color: scheme.textPrimary,
           fontSize: 18,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w900,
           letterSpacing: -0.3,
         ),
         contentTextStyle: TextStyle(
@@ -136,7 +136,7 @@ class AppTheme {
         selectedColor: isDark ? scheme.colorScheme.primary : scheme.colorScheme.primaryContainer,
         labelStyle: TextStyle(
           fontSize: 13,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w800,
           color: isDark ? scheme.colorScheme.onPrimary : scheme.colorScheme.onPrimaryContainer,
         ),
         shape: AppLayout.shapeChip,
@@ -157,7 +157,7 @@ class AppTheme {
         iconColor: scheme.colorScheme.primary,
         titleTextStyle: TextStyle(
           fontSize: 15,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w800,
           color: scheme.textPrimary,
           letterSpacing: -0.1,
         ),

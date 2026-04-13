@@ -17,10 +17,7 @@ class SoundHapticsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'Sound & Haptics',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(

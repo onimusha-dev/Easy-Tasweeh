@@ -11,10 +11,7 @@ class AboutSupportScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'About & Support',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(

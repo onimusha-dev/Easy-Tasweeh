@@ -47,10 +47,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         title: Text(
           'Easy Tasweeh',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         actions: [
           IconButton(

@@ -75,11 +75,7 @@ class _DhikrPickerState extends State<DhikrPicker> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             'DHIKR',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 2,
-              color: Theme.of(context).colorScheme.outline,
-            ),
+            style: Theme.of(context).textTheme.labelSmall,
           ),
         ),
         SizedBox(
@@ -121,9 +117,7 @@ class _DhikrPickerState extends State<DhikrPicker> {
                     children: [
                       Text(
                         item.transliteration,
-                        style: Theme.of(context).textTheme.labelMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.w900,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
                               color: isSelected
                                   ? Theme.of(context).colorScheme.onPrimary
                                   : Theme.of(context).colorScheme.onSurface,
@@ -134,9 +128,7 @@ class _DhikrPickerState extends State<DhikrPicker> {
                       const SizedBox(height: 2),
                       Text(
                         item.arabic,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: isSelected
                               ? Theme.of(
                                   context,
@@ -149,8 +141,7 @@ class _DhikrPickerState extends State<DhikrPicker> {
                       const SizedBox(height: 2),
                       Text(
                         item.translation,
-                        style: TextStyle(
-                          fontSize: 9,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: isSelected
                               ? Theme.of(
                                   context,

@@ -15,10 +15,7 @@ class AnalyticsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'Analytics',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: StreamBuilder(
@@ -111,8 +108,6 @@ class AnalyticsScreen extends ConsumerWidget {
               Text(
                 'WEEKLY ACTIVITY',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2,
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ),
@@ -151,10 +146,9 @@ class AnalyticsScreen extends ConsumerWidget {
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           return BarTooltipItem(
                             '${rod.toY.toInt()}',
-                            TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w900,
-                            ),
+                            Theme.of(context).textTheme.labelSmall!.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                           );
                         },
                       ),
@@ -183,14 +177,17 @@ class AnalyticsScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(top: 12.0),
                               child: Text(
                                 DateFormat('E').format(date).toUpperCase(),
-                                style: TextStyle(
-                                  color: isToday
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.outline,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 10,
-                                  letterSpacing: 1,
-                                ),
+                                style: Theme.of(context).textTheme.labelSmall
+                                    ?.copyWith(
+                                      fontSize: 10,
+                                      color: isToday
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.outline,
+                                    ),
                               ),
                             );
                           },
@@ -295,22 +292,9 @@ class _StatCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: 1.5,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ),
+          Text(label, style: Theme.of(context).textTheme.labelSmall),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              letterSpacing: -1,
-            ),
-          ),
+          Text(value, style: Theme.of(context).textTheme.headlineSmall),
         ],
       ),
     );

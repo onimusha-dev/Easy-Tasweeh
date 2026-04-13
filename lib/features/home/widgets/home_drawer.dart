@@ -53,15 +53,11 @@ class HomeDrawer extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'Easy Tasweeh',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(
                       'v1.0.0',
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
                         fontSize: 10,
                       ),
                     ),
@@ -89,18 +85,12 @@ class HomeDrawer extends StatelessWidget {
                     children: [
                       Text(
                         'Become a member',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Our commitment to keep Easy Tasweeh ad-free is possible because of the support of people like you.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton(
@@ -192,7 +182,7 @@ class HomeDrawer extends StatelessWidget {
         title,
         style: Theme.of(
           context,
-        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+        ).textTheme.bodyMedium,
       ),
       onTap: onTap,
       dense: true, // Makes it more compact

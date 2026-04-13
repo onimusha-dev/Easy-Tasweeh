@@ -40,10 +40,7 @@ class NotificationPermissionBanner extends ConsumerWidget {
       trailing: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: scheme.error,
-          textStyle: text.labelSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.2,
-          ),
+          textStyle: text.labelSmall,
         ),
         onPressed: () async {
           // Try in-app request first; if denied permanently, open Settings.
@@ -99,8 +96,6 @@ class _BannerCard extends StatelessWidget {
                 Text(
                   title,
                   style: text.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.4,
                     color: iconColor,
                   ),
                 ),

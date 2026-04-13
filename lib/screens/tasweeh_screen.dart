@@ -9,10 +9,7 @@ class TasweehScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'LEARN TASWEEH',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(
@@ -79,8 +76,6 @@ class TasweehScreen extends StatelessWidget {
               Text(
                 'WHAT IS DHIKR?',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.5,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
@@ -143,10 +138,7 @@ class TasweehScreen extends StatelessWidget {
                   const SizedBox(width: 16),
                   Text(
                     title.toUpperCase(),
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.2,
-                    ),
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
                 ],
               ),
@@ -162,9 +154,7 @@ class TasweehScreen extends StatelessWidget {
                   Text(
                     arabic,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontFamily:
-                          'Amiri', // Assuming you might have a nice Arabic font
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Amiri',
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     textAlign: TextAlign.center,
@@ -173,9 +163,7 @@ class TasweehScreen extends StatelessWidget {
                   Text(
                     transliteration.toUpperCase(),
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
                       color: Theme.of(context).colorScheme.outline,
-                      letterSpacing: 1,
                     ),
                   ),
                 ],
@@ -204,10 +192,7 @@ class TasweehScreen extends StatelessWidget {
       children: [
         Text(
           'TASWEEH FATIMA',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.5,
-          ),
+          style: Theme.of(context).textTheme.titleSmall,
         ),
         const SizedBox(height: 12),
         Text(

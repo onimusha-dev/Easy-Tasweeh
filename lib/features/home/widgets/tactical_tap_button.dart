@@ -85,9 +85,6 @@ class _TacticalTapButtonState extends State<TacticalTapButton>
                     'TAP',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 4,
-                      fontSize: 14,
                     ),
                   ),
                 ],

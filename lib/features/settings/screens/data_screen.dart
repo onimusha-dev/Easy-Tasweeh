@@ -10,10 +10,7 @@ class DataScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Data',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            letterSpacing: 2,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
       body: ListView(

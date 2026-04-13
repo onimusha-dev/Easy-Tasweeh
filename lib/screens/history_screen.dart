@@ -14,10 +14,7 @@ class HistoryScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'History Log',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         // actions: [
         //   IconButton(
@@ -49,9 +46,7 @@ class HistoryScreen extends ConsumerWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No sessions documented.',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -87,11 +82,8 @@ class HistoryScreen extends ConsumerWidget {
                         children: [
                           Text(
                             dateStr.toUpperCase(),
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                   color: Theme.of(context).colorScheme.outline,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1,
                                 ),
                           ),
                           const SizedBox(height: 4),
@@ -99,9 +91,7 @@ class HistoryScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 '${history.currentCount}',
-                                style: Theme.of(context).textTheme.titleLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w900,
+                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                       color: isSuccess
                                           ? Theme.of(
                                               context,
@@ -115,12 +105,10 @@ class HistoryScreen extends ConsumerWidget {
                                 const SizedBox(width: 8),
                                 Text(
                                   '/ ${history.targetCount}',
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(
+                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.outline,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                 ),
                               ],
@@ -140,7 +128,6 @@ class HistoryScreen extends ConsumerWidget {
                         'PARTIAL',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: Theme.of(context).colorScheme.outline,
-                          fontWeight: FontWeight.w900,
                         ),
                       ),
                   ],

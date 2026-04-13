@@ -37,10 +37,7 @@ class CounterDisplay extends StatelessWidget {
           children: [
             Text(
                   '$current',
-                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                    fontSize: 80,
-                    fontWeight: FontWeight.w900,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium,
                 )
                 .animate(key: ValueKey(current))
                 .scale(
@@ -52,8 +49,7 @@ class CounterDisplay extends StatelessWidget {
             if (target > 0)
               Text(
                 'OF $target',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: Theme.of(context).colorScheme.outline,
                 ),
               ),
