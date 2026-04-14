@@ -194,10 +194,7 @@ class TasweehScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'TASWEEH FATIMA',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('TASWEEH FATIMA', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 12),
         Text(
           'It is highly recommended to recite:\n• 33 times SubhanAllah\n• 33 times Alhamdulillah\n• 34 times Allahu Akbar\n\nTotaling 100 recitations, often performed after daily prayers.',

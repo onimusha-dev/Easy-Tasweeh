@@ -82,7 +82,8 @@ class HistoryScreen extends ConsumerWidget {
                         children: [
                           Text(
                             dateStr.toUpperCase(),
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
                                   color: Theme.of(context).colorScheme.outline,
                                 ),
                           ),
@@ -91,7 +92,8 @@ class HistoryScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 '${history.currentCount}',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(
                                       color: isSuccess
                                           ? Theme.of(
                                               context,
@@ -105,7 +107,8 @@ class HistoryScreen extends ConsumerWidget {
                                 const SizedBox(width: 8),
                                 Text(
                                   '/ ${history.targetCount}',
-                                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.outline,
