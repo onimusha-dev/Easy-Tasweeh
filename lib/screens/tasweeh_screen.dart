@@ -151,13 +151,17 @@ class TasweehScreen extends StatelessWidget {
               ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
               child: Column(
                 children: [
-                  Text(
-                    arabic,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                      fontFamily: 'Amiri',
-                      color: Theme.of(context).colorScheme.primary,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      arabic,
+                      textDirection: TextDirection.rtl,
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        height: 1.3,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(

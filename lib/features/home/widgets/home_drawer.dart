@@ -57,9 +57,9 @@ class HomeDrawer extends StatelessWidget {
                     ),
                     Text(
                       'v1.0.0',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontSize: 10,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelSmall?.copyWith(fontSize: 10),
                     ),
                   ],
                 ),
@@ -178,12 +178,7 @@ class HomeDrawer extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
         size: 20,
       ),
-      title: Text(
-        title,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium,
-      ),
+      title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
       onTap: onTap,
       dense: true, // Makes it more compact
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
