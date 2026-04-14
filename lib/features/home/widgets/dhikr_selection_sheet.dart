@@ -37,7 +37,7 @@ class DhikrSelectionSheet extends ConsumerWidget {
               children: [
                 Text(
                   'Select Dhikr',
-                  style: textTheme.headlineSmall?.copyWith(
+                  style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -49,13 +49,13 @@ class DhikrSelectionSheet extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               itemCount: dhikrList.length,
-              separatorBuilder: (context, _) => const SizedBox(height: 16),
+              separatorBuilder: (context, _) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final item = dhikrList[index];
                 final isSelected = item.id == currentDhikr.id;

@@ -23,10 +23,10 @@ class DhikrItemCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? colorScheme.primary
@@ -87,10 +87,10 @@ class DhikrItemCard extends StatelessWidget {
                 child: Text(
                   item.arabic,
                   textDirection: TextDirection.rtl,
-                  style: textTheme.headlineMedium?.copyWith(
+                  style: textTheme.titleLarge?.copyWith(
                     color: colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
-                    height: 1.5,
+                    height: 1.2,
                   ),
                 ),
               ),
@@ -98,7 +98,7 @@ class DhikrItemCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               item.transliteration,
-              style: textTheme.titleSmall?.copyWith(
+              style: textTheme.labelLarge?.copyWith(
                 color: colorScheme.onSurface,
                 fontWeight: FontWeight.w900,
               ),
@@ -109,8 +109,9 @@ class DhikrItemCard extends StatelessWidget {
               style: textTheme.bodySmall?.copyWith(
                 color: colorScheme.outline,
                 fontStyle: FontStyle.italic,
+                fontSize: 11,
               ),
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ],

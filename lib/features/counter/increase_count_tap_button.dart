@@ -2,17 +2,21 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class TacticalTapButton extends StatefulWidget {
+class IncreaseCountTapButton extends StatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTapDown;
 
-  const TacticalTapButton({super.key, required this.onTap, this.onTapDown});
+  const IncreaseCountTapButton({
+    super.key,
+    required this.onTap,
+    this.onTapDown,
+  });
 
   @override
-  State<TacticalTapButton> createState() => _TacticalTapButtonState();
+  State<IncreaseCountTapButton> createState() => _IncreaseCountTapButtonState();
 }
 
-class _TacticalTapButtonState extends State<TacticalTapButton>
+class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -59,31 +63,43 @@ class _TacticalTapButtonState extends State<TacticalTapButton>
         scale: Tween<double>(begin: 1.0, end: 0.92).animate(
           CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
         ),
-        child: SizedBox(
-          height: 280,
-          width: 280,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Outer glow/shadow wavy layer
-              CustomPaint(
-                size: const Size(280, 280),
-                painter: WavyCirclePainter(
-                  color: colorScheme.primary.withValues(alpha: 0.15),
-                  waves: 10,
-                  amplitude: 8,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 240, maxHeight: 240),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Outer glow/shadow wavy layer
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final size = constraints.maxWidth;
+                    return CustomPaint(
+                      size: Size(size, size),
+                      painter: WavyCirclePainter(
+                        color: colorScheme.primary.withValues(alpha: 0.15),
+                        waves: 10,
+                        amplitude: size * 0.03,
+                      ),
+                    );
+                  },
                 ),
-              ),
-              // Inner main wavy layer
-              CustomPaint(
-                size: const Size(240, 240),
-                painter: WavyCirclePainter(
-                  color: colorScheme.primary,
-                  waves: 10,
-                  amplitude: 8,
+                // Inner main wavy layer
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final size = constraints.maxWidth * 0.85;
+                    return CustomPaint(
+                      size: Size(size, size),
+                      painter: WavyCirclePainter(
+                        color: colorScheme.primary,
+                        waves: 10,
+                        amplitude: size * 0.03,
+                      ),
+                    );
+                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

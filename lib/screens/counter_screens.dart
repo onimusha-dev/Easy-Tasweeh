@@ -1,11 +1,11 @@
-import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/service/dhikr_service.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
+import 'package:easy_tasweeh/features/counter/counter_progress_widget.dart';
+import 'package:easy_tasweeh/features/counter/display_selected_dhikr_widget.dart';
+import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
 import 'package:easy_tasweeh/features/home/widgets/archive_dialog.dart';
-import 'package:easy_tasweeh/features/home/widgets/dhikr_selection_sheet.dart';
-import 'package:easy_tasweeh/features/home/widgets/tactical_tap_button.dart';
 import 'package:easy_tasweeh/features/home/widgets/target_selector_sheet.dart';
 import 'package:easy_tasweeh/features/left_menu_bar/left_menu_bar.dart';
 import 'package:flutter/material.dart';
@@ -64,60 +64,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   : 0.0;
               final percentage = (progress * 100).toInt();
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your Progress',
-                          style: textTheme.labelSmall?.copyWith(
-                            color: colorScheme.outline,
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w600,
-                          ),
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                          vertical: 20,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$percentage% to complete',
-                          style: textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: LinearProgressIndicator(
-                            value: progress == 0 ? 0.01 : progress,
-                            minHeight: 12,
-                            backgroundColor: colorScheme.outlineVariant
-                                .withValues(alpha: 0.3),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              colorScheme.primary,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CounterProgressWidget(
+                              colorScheme: colorScheme,
+                              percentage: percentage,
+                              progress: progress,
+                              textTheme: textTheme,
                             ),
-                          ),
+
+                            const SizedBox(height: 32),
+
+                            DisplaySelectedDhikrWidget(
+                              currentDhikr: currentDhikr,
+                            ),
+
+                            IncreaseCountTapButton(
+                              onTap: _isFrozen
+                                  ? null
+                                  : () => _incrementCounter(countData),
+                            ),
+
+                            const SizedBox(height: 32),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-
-                    const Spacer(flex: 2),
-
-                    // Dhikr Display
-                    _DhikrDisplay(currentDhikr: currentDhikr),
-
-                    // The Big Button
-                    TacticalTapButton(
-                      onTap: _isFrozen
-                          ? null
-                          : () => _incrementCounter(countData),
-                    ),
-
-                    const Spacer(flex: 2),
-                  ],
-                ),
+                  );
+                },
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -182,99 +169,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       isDismissible: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const TargetSelectorSheet(),
-    );
-  }
-}
-
-class _DhikrDisplay extends StatelessWidget {
-  final DhikrItem currentDhikr;
-
-  const _DhikrDisplay({required this.currentDhikr});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Expanded(
-      flex: 5,
-      child: Center(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 400),
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 0.05),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            );
-          },
-          child: Column(
-            key: ValueKey(currentDhikr.arabic),
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  currentDhikr.arabic,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.rtl,
-                  style: textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 48,
-                    color: colorScheme.onSurface,
-                    height: 1.4,
-                    letterSpacing: 0,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                currentDhikr.transliteration,
-                textAlign: TextAlign.center,
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: colorScheme.onSurface,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  '"${currentDhikr.translation}"',
-                  textAlign: TextAlign.center,
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.outline,
-                    fontStyle: FontStyle.italic,
-                    height: 1.3,
-                  ),
-                  maxLines: 3,
-                  overflow: TextOverflow.visible,
-                ),
-              ),
-              const SizedBox(height: 24),
-              TextButton.icon(
-                onPressed: () => DhikrSelectionSheet.show(context),
-                icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-                label: const Text('CHANGE DHIKR'),
-                style: TextButton.styleFrom(
-                  foregroundColor: colorScheme.primary,
-                  textStyle: textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
