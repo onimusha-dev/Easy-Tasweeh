@@ -1,5 +1,5 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
-import 'package:easy_tasweeh/features/home/widgets/dhikr_selection_sheet.dart';
+import 'package:easy_tasweeh/features/counter/dhikr_selection_sheet/dhikr_selection_sheet.dart';
 import 'package:flutter/material.dart';
 
 class DisplaySelectedDhikrWidget extends StatelessWidget {
@@ -76,7 +76,7 @@ class DisplaySelectedDhikrWidget extends StatelessWidget {
             TextButton.icon(
               onPressed: () => DhikrSelectionSheet.show(context),
               icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-              label: const Text('CHANGE DHIKR'),
+              label: const Text('Change Dhikr'),
               style: TextButton.styleFrom(
                 foregroundColor: colorScheme.primary,
                 textStyle: textTheme.labelLarge?.copyWith(
