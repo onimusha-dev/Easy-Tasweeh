@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/features/settings/widgets/notification_permission_banner.dart';
 import 'package:easy_tasweeh/features/settings/widgets/reminder_time_tile.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
@@ -57,7 +57,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
           // ── Daily reminders ──────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 6),
-            child: buildSectionTitle(context, 'DAILY REMINDERS'),
+            child: buildSettingSectionTitle(context, 'DAILY REMINDERS'),
           ),
           const SizedBox(height: 8),
 
@@ -120,7 +120,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
           // ── Other reminders ──────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
-            child: buildSectionTitle(context, 'OTHER'),
+            child: buildSettingSectionTitle(context, 'OTHER'),
           ),
           const SizedBox(height: 8),
 

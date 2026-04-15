@@ -1,7 +1,7 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_settings/app_settings.dart';
 
 /// Displays a contextual banner about notification permission status.
 /// - If permission is already granted  → shows a subtle "active" indicator.
@@ -11,25 +11,11 @@ class NotificationPermissionBanner extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final granted =
-        ref.watch(settingsProvider).notificationPermissionGranted;
+    final granted = ref.watch(settingsProvider).notificationPermissionGranted;
     final scheme = Theme.of(context).colorScheme;
     final text = Theme.of(context).textTheme;
 
-    if (granted) {
-      return _BannerCard(
-        color: scheme.primaryContainer,
-        icon: Icons.notifications_active_rounded,
-        iconColor: scheme.primary,
-        title: 'NOTIFICATIONS ACTIVE',
-        subtitle: 'Daily reminders will be delivered as scheduled.',
-        trailing: Icon(
-          Icons.check_circle_rounded,
-          size: 18,
-          color: scheme.primary,
-        ),
-      );
-    }
+    if (granted) return const SizedBox.shrink();
 
     return _BannerCard(
       color: scheme.errorContainer,
@@ -93,17 +79,14 @@ class _BannerCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: text.labelSmall?.copyWith(
-                    color: iconColor,
-                  ),
-                ),
+                Text(title, style: text.labelSmall?.copyWith(color: iconColor)),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
                   style: text.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],

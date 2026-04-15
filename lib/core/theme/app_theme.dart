@@ -7,6 +7,7 @@ class AppTheme {
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'GoogleSansFlex',
       brightness: scheme.brightness,
       colorScheme: scheme.colorScheme,
       scaffoldBackgroundColor: scheme.surface,

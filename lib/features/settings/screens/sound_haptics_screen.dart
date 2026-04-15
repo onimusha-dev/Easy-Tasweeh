@@ -29,7 +29,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Sound ──────────────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 6),
-            child: buildSectionTitle(context, 'SOUND'),
+            child: buildSettingSectionTitle(context, 'SOUND'),
           ),
           buildSettingTile(
             context,
@@ -57,7 +57,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Haptics ────────────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 6),
-            child: buildSectionTitle(context, 'HAPTICS'),
+            child: buildSettingSectionTitle(context, 'HAPTICS'),
           ),
           buildSettingTile(
             context,

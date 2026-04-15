@@ -28,77 +28,96 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final countAsync = ref.watch(currentCountStreamProvider);
 
-    return Scaffold(
-      drawer: const LeftMenuBar(),
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu_rounded),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-            );
-          },
-        ),
-        actions: [
-          IconButton(
-            onPressed: _showSetTargetSheet,
-            icon: const Icon(Icons.gps_fixed_rounded),
-            tooltip: 'Set Target',
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: const AssetImage('assets/images/default_black_background.png'),
+          colorFilter: ColorFilter.mode(
+            Colors.black.withValues(alpha: 0.75),
+            BlendMode.darken,
           ),
-          const SizedBox(width: 8),
-        ],
+          fit: BoxFit.cover,
+        ),
       ),
-      body: countAsync.when(
-        data: (countData) {
-          final current = countData?.currentCount ?? 0;
-          final target = countData?.targetCount ?? 0;
-          final currentDhikr = ref.watch(currentDhikrProvider);
-          final progress = target > 0
-              ? (current / target).clamp(0.0, 1.0)
-              : 0.0;
-          final percentage = (progress * 100).toInt();
-
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CounterProgressWidget(
-                          colorScheme: colorScheme,
-                          percentage: percentage,
-                          progress: progress,
-                          textTheme: textTheme,
-                        ),
-
-                        const SizedBox(height: 32),
-
-                        DisplaySelectedDhikrWidget(currentDhikr: currentDhikr),
-
-                        IncreaseCountTapButton(
-                          onTap: _isFrozen
-                              ? null
-                              : () => _incrementCounter(countData),
-                        ),
-
-                        const SizedBox(height: 32),
-                      ],
-                    ),
-                  ),
-                ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        drawer: const LeftMenuBar(),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu_rounded),
+                onPressed: () => Scaffold.of(context).openDrawer(),
               );
             },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
+          actions: [
+            IconButton(
+              onPressed: _showSetTargetSheet,
+              icon: const Icon(Icons.gps_fixed_rounded),
+              tooltip: 'Set Target',
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+        body: countAsync.when(
+          data: (countData) {
+            final current = countData?.currentCount ?? 0;
+            final target = countData?.targetCount ?? 0;
+            final currentDhikr = ref.watch(currentDhikrProvider);
+            final progress = target > 0
+                ? (current / target).clamp(0.0, 1.0)
+                : 0.0;
+            final percentage = (progress * 100).toInt();
+
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        // vertical: 20.0,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CounterProgressWidget(
+                            colorScheme: colorScheme,
+                            percentage: percentage,
+                            progress: progress,
+                            textTheme: textTheme,
+                          ),
+
+                          const SizedBox(height: 32),
+
+                          DisplaySelectedDhikrWidget(
+                            currentDhikr: currentDhikr,
+                          ),
+
+                          IncreaseCountTapButton(
+                            onTap: _isFrozen
+                                ? null
+                                : () => _incrementCounter(countData),
+                          ),
+
+                          const SizedBox(height: 32),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Center(child: Text('Error: $err')),
+        ),
       ),
     );
   }

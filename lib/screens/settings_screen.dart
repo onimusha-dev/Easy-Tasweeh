@@ -73,11 +73,11 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           // ── Footer ─────────────────────────────────────────────────────────
-          const SizedBox(height: 36),
+          const SizedBox(height: 100),
           Center(
             child: Text(
               'Easy Tasbeeh v1.0.0 · MIT License · Non-profit',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outlineVariant,
               ),
             ),

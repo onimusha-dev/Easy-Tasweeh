@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget buildSectionTitle(BuildContext context, String title) {
+Widget buildSettingSectionTitle(BuildContext context, String title) {
   return Text(title, style: Theme.of(context).textTheme.labelSmall);
 }
 

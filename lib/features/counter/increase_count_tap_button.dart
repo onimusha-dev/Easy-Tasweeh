@@ -51,6 +51,7 @@ class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
   @override
   Widget build(BuildContext context) {
     final bool isFrozen = widget.onTap == null;
+    // ignore: unused_local_variable
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -66,18 +67,19 @@ class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
         child: AspectRatio(
           aspectRatio: 1,
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 240, maxHeight: 240),
+            constraints: const BoxConstraints(maxWidth: 150, maxHeight: 150),
             child: Stack(
               alignment: Alignment.center,
               children: [
                 // Outer glow/shadow wavy layer
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = constraints.maxWidth;
+                    final size = constraints.maxWidth * 0.8;
                     return CustomPaint(
                       size: Size(size, size),
                       painter: WavyCirclePainter(
-                        color: colorScheme.primary.withValues(alpha: 0.15),
+                        // color: colorScheme.primary.withValues(alpha: 0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         waves: 10,
                         amplitude: size * 0.03,
                       ),
@@ -87,12 +89,13 @@ class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
                 // Inner main wavy layer
                 LayoutBuilder(
                   builder: (context, constraints) {
-                    final size = constraints.maxWidth * 0.85;
+                    final size = constraints.maxWidth * 0.6;
                     return CustomPaint(
                       size: Size(size, size),
                       painter: WavyCirclePainter(
-                        color: colorScheme.primary,
-                        waves: 10,
+                        // color: colorScheme.primary,
+                        color: Colors.white,
+                        waves: 7,
                         amplitude: size * 0.03,
                       ),
                     );

@@ -1,4 +1,4 @@
-import 'package:easy_tasweeh/features/left_menu_bar/membership_card.dart';
+import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/screens/analytics_screen.dart';
 import 'package:easy_tasweeh/screens/challenges_screen.dart';
 import 'package:easy_tasweeh/screens/history_screen.dart';
@@ -63,33 +63,38 @@ class LeftMenuBar extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
-                const MembershipCard(),
+                // const MembershipCard(),
                 _buildDrawerTile(
                   context,
+                  'blue',
                   icon: Icons.graphic_eq_outlined,
                   title: 'Analytics',
                   moveToScreen: AnalyticsScreen(),
                 ),
                 _buildDrawerTile(
                   context,
+                  'yellow',
                   icon: Icons.group_outlined,
                   title: 'Challenges',
                   moveToScreen: ChallengesScreen(),
                 ),
                 _buildDrawerTile(
                   context,
+                  'red',
                   icon: Icons.history_rounded,
                   title: 'History',
                   moveToScreen: HistoryScreen(),
                 ),
                 _buildDrawerTile(
                   context,
+                  'green',
                   icon: Icons.menu_book_rounded,
                   title: 'Learn Tasweeh',
                   moveToScreen: TasweehScreen(),
                 ),
                 _buildDrawerTile(
                   context,
+                  'grey',
                   icon: Icons.settings_rounded,
                   title: 'Settings',
                   moveToScreen: SettingsScreen(),
@@ -104,13 +109,14 @@ class LeftMenuBar extends StatelessWidget {
 }
 
 Widget _buildDrawerTile(
-  BuildContext context, {
+  BuildContext context,
+  String? iconColor, {
   required IconData icon,
   required String title,
   required moveToScreen,
 }) {
   return ListTile(
-    leading: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 20),
+    leading: Icon(icon, color: setIconsColor(iconColor), size: 20),
     title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
     onTap: () {
       Navigator.push(
