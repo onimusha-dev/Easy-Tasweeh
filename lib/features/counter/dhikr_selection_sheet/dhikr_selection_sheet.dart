@@ -11,9 +11,9 @@ class DhikrSelectionSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentDhikr = ref.watch(currentDhikrProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Container(
+      margin: const EdgeInsets.only(top: 100),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
@@ -31,31 +31,12 @@ class DhikrSelectionSheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                Text(
-                  'Select Dhikr',
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                const Spacer(),
-                IconButton.filledTonal(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close_rounded),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               itemCount: dhikrList.length,
-              separatorBuilder: (context, _) => const SizedBox(height: 12),
+              separatorBuilder: (context, _) =>
+                  Divider(indent: 24, endIndent: 24),
               itemBuilder: (context, index) {
                 final item = dhikrList[index];
                 final isSelected = item.id == currentDhikr.id;

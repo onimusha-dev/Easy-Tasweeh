@@ -1,7 +1,7 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:flutter/material.dart';
 
-class DhikrItemCard extends StatelessWidget {
+class DhikrItemCard extends StatefulWidget {
   final DhikrItem item;
   final bool isSelected;
   final VoidCallback onTap;
@@ -14,107 +14,80 @@ class DhikrItemCard extends StatelessWidget {
   });
 
   @override
+  State<DhikrItemCard> createState() => _DhikrItemCardState();
+}
+
+class _DhikrItemCardState extends State<DhikrItemCard> {
+  bool _isPressed = false;
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected
-                ? colorScheme.primary
-                : colorScheme.outlineVariant.withValues(alpha: 0.5),
-            width: isSelected ? 2 : 1,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: 100,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: (_isPressed || _isHovered)
+                ? LinearGradient(
+                    colors: [
+                      Colors.green.withValues(alpha: 0.1),
+                      Colors.green.withValues(alpha: 0.2),
+                      Colors.green.withValues(alpha: 0.1),
+                    ],
+                  )
+                : null,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colorScheme.primary.withValues(alpha: 0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (item.category != null)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: (isSelected
-                              ? colorScheme.primary
-                              : colorScheme.secondaryContainer)
-                          .withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.item.arabic,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w300,
+                      color: colorScheme.onSurface,
                     ),
-                    child: Text(
-                      item.category!.toUpperCase(),
-                      style: textTheme.labelSmall?.copyWith(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
+                    textAlign: TextAlign.right,
+                  ),
+                  Text(
+                    widget.item.transliteration,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
+                      color: colorScheme.onSurface.withValues(alpha: 0.75),
                     ),
                   ),
-                if (isSelected)
-                  Icon(
-                    Icons.check_circle_rounded,
-                    color: colorScheme.primary,
-                    size: 20,
+                  Text(
+                    widget.item.translation,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
+                      color: colorScheme.onSurface,
+                    ),
                   ),
+                ],
+              ),
+              if (widget.isSelected) ...[
+                const Icon(Icons.check_circle, color: Colors.green),
               ],
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  item.arabic,
-                  textDirection: TextDirection.rtl,
-                  style: textTheme.titleLarge?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                    height: 1.2,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              item.transliteration,
-              style: textTheme.labelLarge?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              item.translation,
-              style: textTheme.bodySmall?.copyWith(
-                color: colorScheme.outline,
-                fontStyle: FontStyle.italic,
-                fontSize: 11,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:easy_tasweeh/core/constants/app_constants.dart';
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/screens/analytics_screen.dart';
-import 'package:easy_tasweeh/screens/challenges_screen.dart';
 import 'package:easy_tasweeh/screens/history_screen.dart';
 import 'package:easy_tasweeh/screens/settings_screen.dart';
 import 'package:easy_tasweeh/screens/tasbeeh_screen.dart';
@@ -71,13 +70,6 @@ class LeftMenuBar extends StatelessWidget {
                   icon: Icons.graphic_eq_outlined,
                   title: 'Analytics',
                   moveToScreen: AnalyticsScreen(),
-                ),
-                _buildDrawerTile(
-                  context,
-                  'yellow',
-                  icon: Icons.group_outlined,
-                  title: 'Challenges',
-                  moveToScreen: ChallengesScreen(),
                 ),
                 _buildDrawerTile(
                   context,
