@@ -1,7 +1,7 @@
+import 'package:easy_tasweeh/core/constants/app_constants.dart';
 import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasweeh/features/settings/screens/about_support_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/appearance_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/counter_defaults_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/data_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/reminders_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/sound_haptics_screen.dart';
@@ -49,34 +49,26 @@ class SettingsScreen extends StatelessWidget {
           ),
           buildSettingTile(
             context,
-            icon: Icons.gps_fixed_rounded,
-            title: 'Counter Defaults',
-            subtitle: 'Goal, dhikr, auto-reset, session resume',
-            iconColor: AppIconColors.teal(context),
-            onTap: () => _push(context, const CounterDefaultsScreen()),
+            icon: Icons.storage_outlined,
+            title: 'Data',
+            subtitle: 'Backup, restore, delete all data',
+            iconColor: Colors.green,
+            onTap: () => _push(context, const DataScreen()),
           ),
           buildSettingTile(
             context,
             icon: Icons.info_outline_rounded,
             title: 'About & Support',
-            subtitle: 'Version, donate, GitHub, feedback',
-            iconColor: AppIconColors.gray(context),
+            subtitle: 'Donate, feedback, suggest a feature',
+            iconColor: Colors.grey,
             onTap: () => _push(context, const AboutSupportScreen()),
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.storage_outlined,
-            title: 'Data',
-            subtitle: 'Export history, reset all data',
-            iconColor: AppIconColors.coral(context),
-            onTap: () => _push(context, const DataScreen()),
           ),
 
           // ── Footer ─────────────────────────────────────────────────────────
           const SizedBox(height: 100),
           Center(
             child: Text(
-              'Easy Tasbeeh v1.0.0 · MIT License · Non-profit',
+              '${AppConstants.appName} v${AppConstants.appVersion} · Non-profit',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outlineVariant,
               ),

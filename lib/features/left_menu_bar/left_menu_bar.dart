@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/constants/app_constants.dart';
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/screens/analytics_screen.dart';
 import 'package:easy_tasweeh/screens/challenges_screen.dart';
@@ -45,11 +46,11 @@ class LeftMenuBar extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Easy Tasweeh',
+                      AppConstants.appName,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(
-                      'v1.0.0',
+                      'v${AppConstants.appVersion}',
                       style: Theme.of(
                         context,
                       ).textTheme.labelSmall?.copyWith(fontSize: 10),

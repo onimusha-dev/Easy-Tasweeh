@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'theme.dart';
 
 class AppTheme {
@@ -11,7 +12,10 @@ class AppTheme {
       brightness: scheme.brightness,
       colorScheme: scheme.colorScheme,
       scaffoldBackgroundColor: scheme.surface,
-      textTheme: AppTypography.buildTextTheme(scheme.textPrimary, scheme.textSecondary),
+      textTheme: AppTypography.buildTextTheme(
+        scheme.textPrimary,
+        scheme.textSecondary,
+      ),
 
       // ── AppBar ────────────────────────────────────────────────────────────
       appBarTheme: AppBarTheme(
@@ -20,8 +24,14 @@ class AppTheme {
         scrolledUnderElevation: 0.5,
         backgroundColor: Colors.transparent,
         foregroundColor: scheme.textPrimary,
-        iconTheme: IconThemeData(color: scheme.colorScheme.primary, size: AppLayout.iconSizeMedium),
-        actionsIconTheme: IconThemeData(color: scheme.colorScheme.primary, size: AppLayout.iconSizeMedium),
+        iconTheme: IconThemeData(
+          color: scheme.colorScheme.primary,
+          size: AppLayout.iconSizeMedium,
+        ),
+        actionsIconTheme: IconThemeData(
+          color: scheme.colorScheme.primary,
+          size: AppLayout.iconSizeMedium,
+        ),
         titleTextStyle: AppTypography.appBarTitle(scheme.textPrimary),
       ),
 
@@ -85,18 +95,22 @@ class AppTheme {
       // ── Interaction Elements ──────────────────────────────────────────────
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return isDark ? scheme.colorScheme.onPrimary : Colors.white;
+          if (states.contains(WidgetState.selected))
+            return isDark ? scheme.colorScheme.onPrimary : Colors.white;
           return const Color(0xFFBDBDBD);
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return scheme.colorScheme.secondary;
+          if (states.contains(WidgetState.selected))
+            return scheme.colorScheme.secondary;
           return isDark ? const Color(0xFF1E251E) : const Color(0xFFE0E0E0);
         }),
         trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
       ),
 
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: isDark ? const Color(0xFF1E251E) : const Color(0xFF1A1D1A),
+        backgroundColor: isDark
+            ? const Color(0xFF1E251E)
+            : const Color(0xFF1A1D1A),
         contentTextStyle: TextStyle(
           color: isDark ? scheme.textPrimary : Colors.white,
           fontSize: 14,
@@ -112,7 +126,9 @@ class AppTheme {
         elevation: 0,
         backgroundColor: isDark ? const Color(0xFF161B16) : scheme.card,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppLayout.radiusExtraLarge)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppLayout.radiusExtraLarge),
+          ),
         ),
       ),
 
@@ -126,19 +142,20 @@ class AppTheme {
           fontWeight: FontWeight.w900,
           letterSpacing: -0.3,
         ),
-        contentTextStyle: TextStyle(
-          color: scheme.textSecondary,
-          fontSize: 15,
-        ),
+        contentTextStyle: TextStyle(color: scheme.textSecondary, fontSize: 15),
       ),
 
       chipTheme: ChipThemeData(
         backgroundColor: scheme.colorScheme.primaryContainer,
-        selectedColor: isDark ? scheme.colorScheme.primary : scheme.colorScheme.primaryContainer,
+        selectedColor: isDark
+            ? scheme.colorScheme.primary
+            : scheme.colorScheme.primaryContainer,
         labelStyle: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w800,
-          color: isDark ? scheme.colorScheme.onPrimary : scheme.colorScheme.onPrimaryContainer,
+          color: isDark
+              ? scheme.colorScheme.onPrimary
+              : scheme.colorScheme.onPrimaryContainer,
         ),
         shape: AppLayout.shapeChip,
         side: BorderSide(color: scheme.border, width: 0.5),
@@ -182,7 +199,10 @@ class AppTheme {
   static ThemeData get darkTheme => dark;
 
   // Resolve dynamic scheme from settings
-  static BaseColorScheme resolveColorScheme(AppColorScheme scheme, Brightness brightness) {
+  static BaseColorScheme resolveColorScheme(
+    AppColorScheme scheme,
+    Brightness brightness,
+  ) {
     switch (scheme) {
       case AppColorScheme.teal:
         return TealColorScheme(brightness);

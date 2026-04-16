@@ -30,3 +30,15 @@ Color setIconsColor(String? color) {
       return Colors.white;
   }
 }
+
+Color setPercentageCompletionColor(double percentage) {
+  if (percentage < 25) {
+    return Colors.red;
+  } else if (percentage < 50) {
+    return Colors.orange;
+  } else if (percentage < 75) {
+    return Colors.yellow;
+  } else {
+    return Colors.green;
+  }
+}

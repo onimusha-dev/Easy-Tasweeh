@@ -9,8 +9,8 @@ class AppearanceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final settings = ref.watch(settingsProvider);
-    final notifier = ref.read(settingsProvider.notifier);
+    // final settings = ref.watch(settingsProvider);
+    // final notifier = ref.read(settingsProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,21 +25,20 @@ class AppearanceScreen extends ConsumerWidget {
           const SizedBox(height: 8),
           buildSettingTile(
             context,
-            icon: Icons.brightness_6_outlined,
-            title: 'Theme',
-            subtitle: 'Light, Dark, or follow system',
-            iconColor: AppIconColors.purple(context),
-            trailingLabel: settings.themeMode.name.toUpperCase(),
-            onTap: () => _showThemeDialog(context, ref),
-          ),
-          buildSettingTile(
-            context,
             icon: Icons.color_lens_outlined,
             title: 'Accent colour',
-            subtitle: 'Choose your app highlighting aesthetic',
+            subtitle: 'Choose your app\'s color scheme',
             iconColor: AppIconColors.pink(context),
             trailing: _ColourDot(),
             onTap: () => _showColorSchemeDialog(context, ref),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.brightness_6_outlined,
+            title: 'Theme',
+            subtitle: 'Light, Dark, System',
+            iconColor: AppIconColors.purple(context),
+            onTap: () => _showThemeDialog(context, ref),
           ),
           buildSettingTile(
             context,
@@ -47,7 +46,6 @@ class AppearanceScreen extends ConsumerWidget {
             title: 'Counter style',
             subtitle: 'Circle, minimal, or full screen tap',
             iconColor: AppIconColors.teal(context),
-            trailingLabel: 'Circle',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Counter styles coming soon!')),
@@ -56,23 +54,18 @@ class AppearanceScreen extends ConsumerWidget {
           ),
           buildSettingTile(
             context,
-            icon: Icons.text_fields_rounded,
-            title: 'Font size',
-            subtitle: 'Adjust counter number size',
+            icon: Icons.wallpaper_outlined,
+            title: 'Counter background',
+            subtitle: 'Choose your counter background',
             iconColor: AppIconColors.blue(context),
-            trailingLabel: 'Medium',
-            onTap: () {},
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.screen_lock_portrait_outlined,
-            title: 'Keep screen on',
-            subtitle: 'Prevent sleep while counting',
-            iconColor: AppIconColors.amber(context),
-            trailing: Switch(
-              value: settings.keepScreenOn,
-              onChanged: (v) => notifier.toggleKeepScreenOn(v),
-            ),
+            onTap: () {
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Counter backgrounds coming soon!'),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 32),
         ],

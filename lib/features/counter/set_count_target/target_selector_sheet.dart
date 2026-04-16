@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
 import 'package:easy_tasweeh/features/counter/set_count_target/archive_dialog.dart';
 import 'package:flutter/material.dart';
@@ -124,10 +125,11 @@ Widget _buildArchiveAndRestoreSessionActionButton(
   WidgetRef ref, {
   required int currentCount,
 }) {
+  final appColors = Theme.of(context).extension<AppColors>();
   if (currentCount > 0) {
     return SizedBox(
       width: double.infinity,
-      child: FilledButton.icon(
+      child: OutlinedButton.icon(
         onPressed: () {
           Navigator.pop(context);
           showDialog(
@@ -135,11 +137,29 @@ Widget _buildArchiveAndRestoreSessionActionButton(
             builder: (context) => const ArchiveDialog(),
           );
         },
-        icon: const Icon(Icons.archive_outlined, size: 20),
-        label: const Text('ARCHIVE CURRENT SESSION'),
-        style: FilledButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-          foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
+        icon: Icon(
+          Icons.archive_outlined,
+          size: 20,
+          color: appColors?.destructiveColor,
+        ),
+        label: Text(
+          'Archive Current Session',
+          style: TextStyle(
+            color: appColors?.destructiveColor,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 0.5,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.04),
+          side: BorderSide(
+            color:
+                appColors?.destructiveColor.withValues(alpha: 0.3) ??
+                Colors.red,
+            width: 1.5,
+          ),
+          overlayColor: appColors?.destructiveColor.withValues(alpha: 0.1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -156,6 +176,7 @@ Widget _buildArchiveAndRestoreSessionActionButton(
               .restoreLastSession();
           if (context.mounted) {
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -169,12 +190,19 @@ Widget _buildArchiveAndRestoreSessionActionButton(
           }
         },
         icon: const Icon(Icons.restore_rounded, size: 20),
-        label: const Text('RESTORE LAST SESSION'),
+        label: const Text(
+          'RESTORE LAST SESSION',
+          style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+        ),
         style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outlineVariant,
+            width: 1.5,
+          ),
         ),
       ),
     );

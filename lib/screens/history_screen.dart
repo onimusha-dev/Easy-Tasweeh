@@ -1,5 +1,6 @@
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
+import 'package:easy_tasweeh/features/history/history_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,15 +46,8 @@ class HistoryScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 40),
+          return ListView.builder(
             itemCount: historyList.length,
-            separatorBuilder: (context, index) => Divider(
-              color: Theme.of(
-                context,
-              ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-              height: 1,
-            ),
             itemBuilder: (context, index) {
               return HistoryItemCard(data: historyList[index], index: index);
             },
@@ -64,11 +58,12 @@ class HistoryScreen extends ConsumerWidget {
   }
 }
 
-class HistoryItemCard extends StatelessWidget {
+// we will use them later if needed
+class HistoryItemCardx extends StatelessWidget {
   final CountHistoryTableData data;
   final int index;
 
-  const HistoryItemCard({super.key, required this.data, required this.index});
+  const HistoryItemCardx({super.key, required this.data, required this.index});
 
   @override
   Widget build(BuildContext context) {
