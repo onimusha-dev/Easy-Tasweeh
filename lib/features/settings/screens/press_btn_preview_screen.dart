@@ -3,44 +3,40 @@ import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CounterScreenStylePreviewScreen extends ConsumerStatefulWidget {
-  const CounterScreenStylePreviewScreen({super.key});
+class PressBtnPreviewScreen extends ConsumerStatefulWidget {
+  const PressBtnPreviewScreen({super.key});
 
   @override
-  ConsumerState<CounterScreenStylePreviewScreen> createState() =>
-      _CounterScreenStylePreviewScreenState();
+  ConsumerState<PressBtnPreviewScreen> createState() =>
+      _PressBtnPreviewScreenState();
 }
 
-class _CounterScreenStylePreviewScreenState
-    extends ConsumerState<CounterScreenStylePreviewScreen> {
-  String? _selectedBackground;
+class _PressBtnPreviewScreenState
+    extends ConsumerState<PressBtnPreviewScreen> {
+  PressButtonStyle? _selectedStyle;
   int _demoCount = 33;
 
-  final List<Map<String, String>> _availableBackgrounds = [
-    {'name': 'Ocean Mist', 'path': 'assets/images/bg/bg-1.png'},
-    {'name': 'Emerald Forest', 'path': 'assets/images/bg/bg-2.png'},
-    {'name': 'Dusk Rose', 'path': 'assets/images/bg/bg-3.png'},
-    {'name': 'manhaten', 'path': 'assets/images/bg/bg-4.png'},
-    {'name': 'fire craket', 'path': 'assets/images/bg/bg-5.png'},
-    {'name': 'nebula', 'path': 'assets/images/bg/bg-6.png'},
-    {'name': 'lamon', 'path': 'assets/images/bg/bg-7.png'},
+  final List<Map<String, dynamic>> _availableStyles = [
+    {'name': 'Classic Wavy', 'style': PressButtonStyle.first},
+    {'name': 'Modern Ring', 'style': PressButtonStyle.second},
+    {'name': 'Glass Style', 'style': PressButtonStyle.third},
   ];
 
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final activeBg = _selectedBackground ?? settings.background;
-    final hasChanges = activeBg != settings.background;
+    final activeStyle = _selectedStyle ?? settings.pressButtonStyle;
+    final hasChanges = activeStyle != settings.pressButtonStyle;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
         title: Text(
-          'Live Preview',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          'Button Styles',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
         ),
         actions: [
           if (hasChanges)
@@ -48,11 +44,11 @@ class _CounterScreenStylePreviewScreenState
               onPressed: () async {
                 await ref
                     .read(settingsProvider.notifier)
-                    .setBackground(activeBg);
+                    .setPressButtonStyle(activeStyle);
                 if (mounted) {
-                  setState(() => _selectedBackground = null);
+                  setState(() => _selectedStyle = null);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Appearance updated!')),
+                    const SnackBar(content: Text('Button style updated!')),
                   );
                 }
               },
@@ -64,9 +60,10 @@ class _CounterScreenStylePreviewScreenState
       body: Column(
         children: [
           _CounterScreenStylePreview(
-            selectedBackground: activeBg,
+            selectedBackground: settings.background,
             backgroundOpacity: settings.backgroundOpacity,
             count: _demoCount,
+            previewStyle: activeStyle,
             onTap: () => setState(() => _demoCount++),
           ),
           const SizedBox(height: 16),
@@ -75,10 +72,10 @@ class _CounterScreenStylePreviewScreenState
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Text(
-                'Backgrounds',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                'Styles',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
           ),
@@ -89,7 +86,7 @@ class _CounterScreenStylePreviewScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildBackgroundGrid(activeBg),
+                  _buildStyleGrid(activeStyle),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -100,65 +97,79 @@ class _CounterScreenStylePreviewScreenState
     );
   }
 
-  Widget _buildBackgroundGrid(String activeBg) {
+  Widget _buildStyleGrid(PressButtonStyle activeStyle) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.8,
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.2,
       ),
-      itemCount: _availableBackgrounds.length,
+      itemCount: _availableStyles.length,
       itemBuilder: (context, index) {
-        final bg = _availableBackgrounds[index];
-        final isSelected = activeBg == bg['path'];
+        final item = _availableStyles[index];
+        final style = item['style'] as PressButtonStyle;
+        final isSelected = activeStyle == style;
         final colorScheme = Theme.of(context).colorScheme;
 
         return GestureDetector(
-          onTap: () => setState(() => _selectedBackground = bg['path']),
-          child: Column(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.outlineVariant,
-                      width: isSelected ? 3 : 1,
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage(bg['path']!),
-                      fit: BoxFit.cover,
+          onTap: () => setState(() => _selectedStyle = style),
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isSelected
+                    ? colorScheme.primary
+                    : colorScheme.outlineVariant,
+                width: isSelected ? 3 : 1,
+              ),
+            ),
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: IgnorePointer(
+                          child: IncreaseCountTapButton(
+                            onTap: () {},
+                            previewStyle: style,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        item['name']!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (isSelected)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 20,
+                      color: colorScheme.primary,
                     ),
                   ),
-                  child: isSelected
-                      ? Center(
-                          child: Icon(
-                            Icons.check_circle,
-                            color: colorScheme.primary,
-                          ),
-                        )
-                      : null,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                bg['name']!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected
-                      ? colorScheme.primary
-                      : colorScheme.onSurface,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -170,12 +181,14 @@ class _CounterScreenStylePreview extends StatelessWidget {
   final String selectedBackground;
   final double backgroundOpacity;
   final int count;
+  final PressButtonStyle previewStyle;
   final VoidCallback onTap;
 
   const _CounterScreenStylePreview({
     required this.selectedBackground,
     required this.backgroundOpacity,
     required this.count,
+    required this.previewStyle,
     required this.onTap,
   });
 
@@ -276,7 +289,10 @@ class _CounterScreenStylePreview extends StatelessWidget {
               SizedBox(
                 width: 130,
                 height: 130,
-                child: IncreaseCountTapButton(onTap: onTap),
+                child: IncreaseCountTapButton(
+                  onTap: onTap,
+                  previewStyle: previewStyle,
+                ),
               ),
             ],
           ),

@@ -7,11 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class IncreaseCountTapButton extends ConsumerStatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTapDown;
+  final PressButtonStyle? previewStyle;
 
   const IncreaseCountTapButton({
     super.key,
     required this.onTap,
     this.onTapDown,
+    this.previewStyle,
   });
 
   @override
@@ -56,6 +58,7 @@ class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
     final bool isFrozen = widget.onTap == null;
     final settings = ref.watch(settingsProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final activeStyle = widget.previewStyle ?? settings.pressButtonStyle;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -71,15 +74,15 @@ class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
           aspectRatio: 1,
           child: Container(
             constraints: const BoxConstraints(maxWidth: 240, maxHeight: 240),
-            child: _buildButtonStyle(settings, colorScheme),
+            child: _buildButtonStyle(activeStyle, colorScheme),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildButtonStyle(SettingsState settings, ColorScheme colorScheme) {
-    switch (settings.pressButtonStyle) {
+  Widget _buildButtonStyle(PressButtonStyle style, ColorScheme colorScheme) {
+    switch (style) {
       case PressButtonStyle.first:
         return _buildWavyStyle();
       case PressButtonStyle.second:

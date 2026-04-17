@@ -186,8 +186,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       builder: (context) => const TargetSelectorSheet(),
     );
   }
-
-  String _getBackground() {
-    return 'assets/images/bg/bg-1.png';
-  }
 }
