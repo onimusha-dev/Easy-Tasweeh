@@ -5,10 +5,13 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final settingsProvider =
-    StateNotifierProvider<SettingsNotifier, SettingsState>((ref) {
-  return SettingsNotifier();
-});
+enum PressButtonStyle { first, second, third }
+
+final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>(
+  (ref) {
+    return SettingsNotifier();
+  },
+);
 
 class ReminderTime {
   final int hour;
@@ -54,6 +57,14 @@ class SettingsState {
   final bool resumeLastSession;
   final ThemeMode themeMode;
   final AppColorScheme colorScheme;
+  final String background;
+  final double backgroundOpacity;
+  final PressButtonStyle pressButtonStyle;
+  final bool showArabic;
+  final bool showTransliteration;
+  final bool showTranslation;
+  final bool vibrateOnMilestone;
+  final int milestoneValue;
 
   SettingsState({
     required this.morningReminder,
@@ -73,6 +84,14 @@ class SettingsState {
     required this.resumeLastSession,
     required this.themeMode,
     required this.colorScheme,
+    required this.background,
+    required this.backgroundOpacity,
+    required this.pressButtonStyle,
+    required this.showArabic,
+    required this.showTransliteration,
+    required this.showTranslation,
+    required this.vibrateOnMilestone,
+    required this.milestoneValue,
   });
 
   SettingsState copyWith({
@@ -93,6 +112,14 @@ class SettingsState {
     bool? resumeLastSession,
     ThemeMode? themeMode,
     AppColorScheme? colorScheme,
+    String? background,
+    double? backgroundOpacity,
+    PressButtonStyle? pressButtonStyle,
+    bool? showArabic,
+    bool? showTransliteration,
+    bool? showTranslation,
+    bool? vibrateOnMilestone,
+    int? milestoneValue,
   }) {
     return SettingsState(
       morningReminder: morningReminder ?? this.morningReminder,
@@ -114,13 +141,22 @@ class SettingsState {
       resumeLastSession: resumeLastSession ?? this.resumeLastSession,
       themeMode: themeMode ?? this.themeMode,
       colorScheme: colorScheme ?? this.colorScheme,
+      background: background ?? this.background,
+      backgroundOpacity: backgroundOpacity ?? this.backgroundOpacity,
+      pressButtonStyle: pressButtonStyle ?? this.pressButtonStyle,
+      showArabic: showArabic ?? this.showArabic,
+      showTransliteration: showTransliteration ?? this.showTransliteration,
+      showTranslation: showTranslation ?? this.showTranslation,
+      vibrateOnMilestone: vibrateOnMilestone ?? this.vibrateOnMilestone,
+      milestoneValue: milestoneValue ?? this.milestoneValue,
     );
   }
 }
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
   SettingsNotifier()
-      : super(SettingsState(
+    : super(
+        SettingsState(
           morningReminder: false,
           eveningReminder: false,
           hapticEnabled: true,
@@ -138,7 +174,16 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           resumeLastSession: false,
           themeMode: ThemeMode.system,
           colorScheme: AppColorScheme.teal,
-        )) {
+          background: 'assets/images/bg/bg-1.png',
+          backgroundOpacity: 0.75,
+          pressButtonStyle: PressButtonStyle.first,
+          showArabic: true,
+          showTransliteration: true,
+          showTranslation: true,
+          vibrateOnMilestone: true,
+          milestoneValue: 33,
+        ),
+      ) {
     _loadSettings();
   }
 
@@ -162,6 +207,14 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _resumeLastSessionKey = 'resume_last_session';
   static const _themeModeKey = 'theme_mode';
   static const _colorSchemeKey = 'color_scheme';
+  static const _backgroundKey = 'background';
+  static const _backgroundOpacityKey = 'background_opacity';
+  static const _pressButtonStyleKey = 'press_button_style';
+  static const _showArabicKey = 'show_arabic';
+  static const _showTransliterationKey = 'show_transliteration';
+  static const _showTranslationKey = 'show_translation';
+  static const _vibrateOnMilestoneKey = 'vibrate_on_milestone';
+  static const _milestoneValueKey = 'milestone_value';
 
   final NotificationService _notificationService = NotificationService();
 
@@ -192,8 +245,19 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       afterSalahReminder: prefs.getBool(_afterSalahReminderKey) ?? false,
       autoResetOnGoal: prefs.getBool(_autoResetOnGoalKey) ?? true,
       resumeLastSession: prefs.getBool(_resumeLastSessionKey) ?? false,
-      themeMode: ThemeMode.values[prefs.getInt(_themeModeKey) ?? ThemeMode.system.index],
-      colorScheme: AppColorScheme.values[prefs.getInt(_colorSchemeKey) ?? AppColorScheme.teal.index],
+      themeMode: ThemeMode
+          .values[prefs.getInt(_themeModeKey) ?? ThemeMode.system.index],
+      colorScheme: AppColorScheme
+          .values[prefs.getInt(_colorSchemeKey) ?? AppColorScheme.teal.index],
+      background: prefs.getString(_backgroundKey) ?? 'assets/images/bg/bg-1.png',
+      backgroundOpacity: prefs.getDouble(_backgroundOpacityKey) ?? 0.75,
+      pressButtonStyle: PressButtonStyle
+          .values[prefs.getInt(_pressButtonStyleKey) ?? PressButtonStyle.first.index],
+      showArabic: prefs.getBool(_showArabicKey) ?? true,
+      showTransliteration: prefs.getBool(_showTransliterationKey) ?? true,
+      showTranslation: prefs.getBool(_showTranslationKey) ?? true,
+      vibrateOnMilestone: prefs.getBool(_vibrateOnMilestoneKey) ?? true,
+      milestoneValue: prefs.getInt(_milestoneValueKey) ?? 33,
     );
   }
 
@@ -233,7 +297,9 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_morningHourKey, hour);
     await prefs.setInt(_morningMinuteKey, minute);
-    state = state.copyWith(morningTime: ReminderTime(hour: hour, minute: minute));
+    state = state.copyWith(
+      morningTime: ReminderTime(hour: hour, minute: minute),
+    );
 
     if (state.morningReminder) {
       await _notificationService.scheduleDailyNotification(
@@ -269,7 +335,9 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_eveningHourKey, hour);
     await prefs.setInt(_eveningMinuteKey, minute);
-    state = state.copyWith(eveningTime: ReminderTime(hour: hour, minute: minute));
+    state = state.copyWith(
+      eveningTime: ReminderTime(hour: hour, minute: minute),
+    );
 
     if (state.eveningReminder) {
       await _notificationService.scheduleDailyNotification(
@@ -355,5 +423,53 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_colorSchemeKey, scheme.index);
     state = state.copyWith(colorScheme: scheme);
+  }
+
+  Future<void> setBackground(String background) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_backgroundKey, background);
+    state = state.copyWith(background: background);
+  }
+
+  Future<void> setBackgroundOpacity(double opacity) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_backgroundOpacityKey, opacity);
+    state = state.copyWith(backgroundOpacity: opacity);
+  }
+
+  Future<void> setPressButtonStyle(PressButtonStyle style) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_pressButtonStyleKey, style.index);
+    state = state.copyWith(pressButtonStyle: style);
+  }
+
+  Future<void> toggleShowArabic(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showArabicKey, value);
+    state = state.copyWith(showArabic: value);
+  }
+
+  Future<void> toggleShowTransliteration(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showTransliterationKey, value);
+    state = state.copyWith(showTransliteration: value);
+  }
+
+  Future<void> toggleShowTranslation(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showTranslationKey, value);
+    state = state.copyWith(showTranslation: value);
+  }
+
+  Future<void> toggleVibrateOnMilestone(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_vibrateOnMilestoneKey, value);
+    state = state.copyWith(vibrateOnMilestone: value);
+  }
+
+  Future<void> setMilestoneValue(int value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_milestoneValueKey, value);
+    state = state.copyWith(milestoneValue: value);
   }
 }

@@ -1,16 +1,19 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
+import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/features/counter/dhikr_selection_sheet/dhikr_selection_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DisplaySelectedDhikrWidget extends StatelessWidget {
+class DisplaySelectedDhikrWidget extends ConsumerWidget {
   final DhikrItem currentDhikr;
 
   const DisplaySelectedDhikrWidget({super.key, required this.currentDhikr});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final settings = ref.watch(settingsProvider);
 
     return Center(
       child: AnimatedSwitcher(
@@ -32,46 +35,51 @@ class DisplaySelectedDhikrWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                currentDhikr.arabic,
+            if (settings.showArabic)
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  currentDhikr.arabic,
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.rtl,
+                  style: textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 48,
+                    color: colorScheme.onSurface,
+                    height: 1.4,
+                    letterSpacing: 0,
+                  ),
+                ),
+              ),
+            if (settings.showArabic && (settings.showTransliteration || settings.showTranslation))
+              const SizedBox(height: 12),
+            if (settings.showTransliteration)
+              Text(
+                currentDhikr.transliteration,
                 textAlign: TextAlign.center,
-                textDirection: TextDirection.rtl,
-                style: textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 48,
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
                   color: colorScheme.onSurface,
-                  height: 1.4,
-                  letterSpacing: 0,
+                  letterSpacing: 0.5,
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              currentDhikr.transliteration,
-              textAlign: TextAlign.center,
-              style: textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: colorScheme.onSurface,
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                '"${currentDhikr.translation}"',
-                textAlign: TextAlign.center,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.outline,
-                  fontStyle: FontStyle.italic,
-                  height: 1.3,
+            if (settings.showTransliteration && settings.showTranslation)
+              const SizedBox(height: 6),
+            if (settings.showTranslation)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  '"${currentDhikr.translation}"',
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.outline,
+                    fontStyle: FontStyle.italic,
+                    height: 1.3,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.visible,
                 ),
-                maxLines: 3,
-                overflow: TextOverflow.visible,
               ),
-            ),
             const SizedBox(height: 24),
             TextButton.icon(
               onPressed: () => DhikrSelectionSheet.show(context),

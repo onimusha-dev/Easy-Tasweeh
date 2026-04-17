@@ -26,14 +26,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final settings = ref.watch(settingsProvider);
     final countAsync = ref.watch(currentCountStreamProvider);
 
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: const AssetImage('assets/images/default_black_background.png'),
+          image: AssetImage(settings.background),
           colorFilter: ColorFilter.mode(
-            Colors.black.withValues(alpha: 0.75),
+            Colors.black.withValues(alpha: settings.backgroundOpacity),
             BlendMode.darken,
           ),
           fit: BoxFit.cover,
@@ -142,6 +143,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final nextCount = (countData?.currentCount ?? 0) + 1;
     final target = countData?.targetCount ?? 0;
+    final settings = ref.read(settingsProvider);
+
+    // Milestone vibration
+    if (settings.vibrateOnMilestone &&
+        nextCount > 0 &&
+        nextCount % settings.milestoneValue == 0 &&
+        (target == 0 || nextCount < target)) {
+      Vibration.vibrate(duration: 150, amplitude: settings.vibrationAmplitude);
+    }
 
     if (target > 0 && nextCount >= target) {
       if (mounted) {
@@ -175,5 +185,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => const TargetSelectorSheet(),
     );
+  }
+
+  String _getBackground() {
+    return 'assets/images/bg/bg-1.png';
   }
 }

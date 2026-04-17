@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:easy_tasweeh/features/settings/widgets/vibration_intensity_tile.dart';
 import 'package:flutter/material.dart';
@@ -133,16 +133,68 @@ class SoundHapticsScreen extends ConsumerWidget {
             ),
           ),
 
+          // ── Milestones ───────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 6),
+            child: buildSettingSectionTitle(context, 'MILESTONES'),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.repeat_rounded,
+            title: 'Vibrate on milestone',
+            subtitle: 'Vibrate every X counts',
+            iconColor: AppIconColors.blue(context),
+            trailing: Switch(
+              value: settings.vibrateOnMilestone,
+              onChanged: (v) => notifier.toggleVibrateOnMilestone(v),
+            ),
+          ),
+          if (settings.vibrateOnMilestone)
+            buildSettingTile(
+              context,
+              icon: Icons.numbers_rounded,
+              title: 'Milestone value',
+              subtitle: 'Current: every ${settings.milestoneValue} counts',
+              iconColor: AppIconColors.purple(context),
+              onTap: () => _showMilestoneDialog(context, ref),
+            ),
+
           const SizedBox(height: 32),
         ],
       ),
     );
   }
 
-  String _intensityLabel(int amplitude) {
-    if (amplitude <= 64) return 'Light';
-    if (amplitude <= 150) return 'Medium';
-    if (amplitude <= 210) return 'Strong';
-    return 'Max';
+  void _showMilestoneDialog(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(settingsProvider.notifier);
+    final current = ref.watch(settingsProvider).milestoneValue;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Milestone'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [33, 100, 1000].map((val) {
+            return RadioListTile<int>(
+              title: Text('Every $val counts'),
+              value: val,
+              groupValue: current,
+              onChanged: (v) {
+                if (v != null) notifier.setMilestoneValue(v);
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
+}
+
+String _intensityLabel(int amplitude) {
+  if (amplitude <= 64) return 'Light';
+  if (amplitude <= 150) return 'Medium';
+  if (amplitude <= 210) return 'Strong';
+  return 'Max';
 }

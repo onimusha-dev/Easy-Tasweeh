@@ -1,5 +1,6 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/core/theme/theme.dart';
+import 'package:easy_tasweeh/features/settings/screens/counter_screen_style_preview_screen.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,11 +47,8 @@ class AppearanceScreen extends ConsumerWidget {
             title: 'Counter style',
             subtitle: 'Circle, minimal, or full screen tap',
             iconColor: AppIconColors.teal(context),
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Counter styles coming soon!')),
-              );
-            },
+            onTap: () =>
+                _push(context, const CounterScreenStylePreviewScreen()),
           ),
           buildSettingTile(
             context,
@@ -58,19 +56,17 @@ class AppearanceScreen extends ConsumerWidget {
             title: 'Counter background',
             subtitle: 'Choose your counter background',
             iconColor: AppIconColors.blue(context),
-            onTap: () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Counter backgrounds coming soon!'),
-                ),
-              );
-            },
+            onTap: () =>
+                _push(context, const CounterScreenStylePreviewScreen()),
           ),
           const SizedBox(height: 32),
         ],
       ),
     );
+  }
+
+  void _push(BuildContext context, Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {

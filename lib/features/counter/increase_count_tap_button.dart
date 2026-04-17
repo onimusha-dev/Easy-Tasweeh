@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 
+import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class IncreaseCountTapButton extends StatefulWidget {
+class IncreaseCountTapButton extends ConsumerStatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTapDown;
 
@@ -13,10 +15,11 @@ class IncreaseCountTapButton extends StatefulWidget {
   });
 
   @override
-  State<IncreaseCountTapButton> createState() => _IncreaseCountTapButtonState();
+  ConsumerState<IncreaseCountTapButton> createState() =>
+      _IncreaseCountTapButtonState();
 }
 
-class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
+class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -51,7 +54,7 @@ class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
   @override
   Widget build(BuildContext context) {
     final bool isFrozen = widget.onTap == null;
-    // ignore: unused_local_variable
+    final settings = ref.watch(settingsProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     return GestureDetector(
@@ -67,41 +70,121 @@ class _IncreaseCountTapButtonState extends State<IncreaseCountTapButton>
         child: AspectRatio(
           aspectRatio: 1,
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 150, maxHeight: 150),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Outer glow/shadow wavy layer
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final size = constraints.maxWidth * 0.8;
-                    return CustomPaint(
-                      size: Size(size, size),
-                      painter: WavyCirclePainter(
-                        // color: colorScheme.primary.withValues(alpha: 0.15),
-                        color: Colors.white.withValues(alpha: 0.15),
-                        waves: 10,
-                        amplitude: size * 0.03,
-                      ),
-                    );
-                  },
-                ),
-                // Inner main wavy layer
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final size = constraints.maxWidth * 0.6;
-                    return CustomPaint(
-                      size: Size(size, size),
-                      painter: WavyCirclePainter(
-                        // color: colorScheme.primary,
-                        color: Colors.white,
-                        waves: 7,
-                        amplitude: size * 0.03,
-                      ),
-                    );
-                  },
-                ),
-              ],
+            constraints: const BoxConstraints(maxWidth: 240, maxHeight: 240),
+            child: _buildButtonStyle(settings, colorScheme),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButtonStyle(SettingsState settings, ColorScheme colorScheme) {
+    switch (settings.pressButtonStyle) {
+      case PressButtonStyle.first:
+        return _buildWavyStyle();
+      case PressButtonStyle.second:
+        return _buildRingStyle(colorScheme);
+      case PressButtonStyle.third:
+        return _buildSquareStyle(colorScheme);
+    }
+  }
+
+  Widget _buildWavyStyle() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final size = constraints.maxWidth * 0.8;
+            return CustomPaint(
+              size: Size(size, size),
+              painter: WavyCirclePainter(
+                color: Colors.white.withValues(alpha: 0.15),
+                waves: 10,
+                amplitude: size * 0.03,
+              ),
+            );
+          },
+        ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final size = constraints.maxWidth * 0.6;
+            return CustomPaint(
+              size: Size(size, size),
+              painter: WavyCirclePainter(
+                color: Colors.white,
+                waves: 7,
+                amplitude: size * 0.03,
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRingStyle(ColorScheme colorScheme) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Outer glow
+        Container(
+          width: 160,
+          height: 160,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.2),
+                blurRadius: 30,
+                spreadRadius: 10,
+              ),
+            ],
+          ),
+        ),
+        // Main ring
+        Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 4),
+          ),
+          child: Center(
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSquareStyle(ColorScheme colorScheme) {
+    return Center(
+      child: Container(
+        width: 140,
+        height: 140,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(32),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.5),
+            width: 2,
+          ),
+        ),
+        child: Center(
+          child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
             ),
           ),
         ),
