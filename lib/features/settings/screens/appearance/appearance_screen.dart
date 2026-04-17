@@ -1,7 +1,7 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/settings/screens/bg_changer_preview_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/press_btn_changer_preview_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +11,6 @@ class AppearanceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final settings = ref.watch(settingsProvider);
-    // final notifier = ref.read(settingsProvider.notifier);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -31,7 +28,7 @@ class AppearanceScreen extends ConsumerWidget {
             title: 'Accent colour',
             subtitle: 'Choose your app\'s color scheme',
             iconColor: AppIconColors.pink(context),
-            trailing: _ColourDot(),
+            trailing: const _ColourDot(),
             onTap: () => _showColorSchemeDialog(context, ref),
           ),
           buildSettingTile(
@@ -123,6 +120,7 @@ class AppearanceScreen extends ConsumerWidget {
 }
 
 class _ColourDot extends StatelessWidget {
+  const _ColourDot();
   @override
   Widget build(BuildContext context) {
     return Container(

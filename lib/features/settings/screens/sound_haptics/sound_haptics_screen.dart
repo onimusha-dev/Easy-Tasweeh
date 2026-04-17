@@ -190,11 +190,11 @@ class SoundHapticsScreen extends ConsumerWidget {
       ),
     );
   }
-}
 
-String _intensityLabel(int amplitude) {
-  if (amplitude <= 64) return 'Light';
-  if (amplitude <= 150) return 'Medium';
-  if (amplitude <= 210) return 'Strong';
-  return 'Max';
+  String _intensityLabel(int amplitude) {
+    if (amplitude <= 64) return 'Light';
+    if (amplitude <= 150) return 'Medium';
+    if (amplitude <= 210) return 'Strong';
+    return 'Max';
+  }
 }
