@@ -1,10 +1,6 @@
 import 'package:easy_tasweeh/core/constants/app_constants.dart';
 import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
-import 'package:easy_tasweeh/features/settings/screens/about_support_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/data_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/reminders_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/sound_haptics_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/settings_screens.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 

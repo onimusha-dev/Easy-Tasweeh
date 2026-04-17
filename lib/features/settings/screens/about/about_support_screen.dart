@@ -49,45 +49,43 @@ class AboutSupportScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-Future<void> _launchEmail(BuildContext context) async {
-  final Uri emailLaunchUri = Uri(
-    scheme: 'mailto',
-    path: AppConstants.supportEmail,
-    query: _encodeQueryParameters(<String, String>{
-      'subject': 'Feedback - ${AppConstants.appName}',
-    }),
-  );
+  Future<void> _launchEmail(BuildContext context) async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: AppConstants.supportEmail,
+      query: _encodeQueryParameters(<String, String>{
+        'subject': 'Feedback - ${AppConstants.appName}',
+      }),
+    );
 
-  try {
-    if (await canLaunchUrl(emailLaunchUri)) {
-      await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
-    } else {
-      // Fallback: try launching without canLaunchUrl check,
-      // as it sometimes fails on Android even if it works.
-      await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
-    }
-  } catch (e) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Could not find an email app. Please email us at musaddik.dev@gmail.com',
+    try {
+      if (await canLaunchUrl(emailLaunchUri)) {
+        await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Could not find an email app. Please email us at musaddik.dev@gmail.com',
+            ),
+            duration: Duration(seconds: 5),
           ),
-          duration: Duration(seconds: 5),
-        ),
-      );
+        );
+      }
     }
   }
-}
 
-String? _encodeQueryParameters(Map<String, String> params) {
-  return params.entries
-      .map(
-        (MapEntry<String, String> e) =>
-            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
-      )
-      .join('&');
+  String? _encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map(
+          (MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+  }
 }
