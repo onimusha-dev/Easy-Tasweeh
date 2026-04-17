@@ -3,23 +3,32 @@ import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PressBtnPreviewScreen extends ConsumerStatefulWidget {
-  const PressBtnPreviewScreen({super.key});
+class PressBtnChangerPreviewScreen extends ConsumerStatefulWidget {
+  const PressBtnChangerPreviewScreen({super.key});
 
   @override
-  ConsumerState<PressBtnPreviewScreen> createState() =>
-      _PressBtnPreviewScreenState();
+  ConsumerState<PressBtnChangerPreviewScreen> createState() =>
+      _PressBtnChangerPreviewScreenState();
 }
 
-class _PressBtnPreviewScreenState
-    extends ConsumerState<PressBtnPreviewScreen> {
+class _PressBtnChangerPreviewScreenState
+    extends ConsumerState<PressBtnChangerPreviewScreen> {
   PressButtonStyle? _selectedStyle;
   int _demoCount = 33;
 
   final List<Map<String, dynamic>> _availableStyles = [
     {'name': 'Classic Wavy', 'style': PressButtonStyle.first},
     {'name': 'Modern Ring', 'style': PressButtonStyle.second},
-    {'name': 'Glass Style', 'style': PressButtonStyle.third},
+    {'name': 'Glass Square', 'style': PressButtonStyle.third},
+    {'name': 'Teal Circular', 'style': PressButtonStyle.tealCircular},
+    {'name': 'Slate Rounded', 'style': PressButtonStyle.slateRounded},
+    {'name': 'Amber Gradient', 'style': PressButtonStyle.amberGradient},
+    {'name': 'Purple Outlined', 'style': PressButtonStyle.purpleOutlined},
+    {'name': 'Coral Soft', 'style': PressButtonStyle.coralSoft},
+    {'name': 'Midnight Glass', 'style': PressButtonStyle.midnightGlass},
+    {'name': 'Neon Glow', 'style': PressButtonStyle.neonGlow},
+    {'name': 'Emerald Minimal', 'style': PressButtonStyle.emeraldMinimal},
+    {'name': 'Royal Gold', 'style': PressButtonStyle.royalGold},
   ];
 
   @override
@@ -34,9 +43,9 @@ class _PressBtnPreviewScreenState
       appBar: AppBar(
         title: Text(
           'Button Styles',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         actions: [
           if (hasChanges)
@@ -47,9 +56,7 @@ class _PressBtnPreviewScreenState
                     .setPressButtonStyle(activeStyle);
                 if (mounted) {
                   setState(() => _selectedStyle = null);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Button style updated!')),
-                  );
+                  const SnackBar(content: Text('Button style updated!'));
                 }
               },
               child: const Text('Save'),
@@ -73,9 +80,9 @@ class _PressBtnPreviewScreenState
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Text(
                 'Styles',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -148,8 +155,9 @@ class _PressBtnPreviewScreenState
                         item['name']!,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
                               ? colorScheme.primary
                               : colorScheme.onSurface,

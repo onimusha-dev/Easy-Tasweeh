@@ -6,8 +6,6 @@ class CoralSoftStyle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 100,
       decoration: BoxDecoration(
         color: const Color(0xFFFF7F50), // Coral
         borderRadius: BorderRadius.circular(30),

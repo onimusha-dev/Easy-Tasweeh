@@ -1,7 +1,7 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/features/settings/screens/bg_changer_preview_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/press_btn_preview_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/press_btn_changer_preview_screen.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,7 +48,7 @@ class AppearanceScreen extends ConsumerWidget {
             title: 'Counter style',
             subtitle: 'Circle, minimal, or full screen tap',
             iconColor: AppIconColors.teal(context),
-            onTap: () => _push(context, const PressBtnPreviewScreen()),
+            onTap: () => _push(context, const PressBtnChangerPreviewScreen()),
           ),
           buildSettingTile(
             context,

@@ -6,8 +6,6 @@ class AmberGradientStyle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 100,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [Colors.amber.shade400, Colors.orange.shade700],

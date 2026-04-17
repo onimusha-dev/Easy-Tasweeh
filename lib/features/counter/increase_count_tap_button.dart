@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasweeh/features/counter_btn_style/counter_button_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,8 +23,9 @@ class IncreaseCountTapButton extends ConsumerStatefulWidget {
 }
 
 class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _rippleController;
 
   @override
   void initState() {
@@ -32,16 +34,22 @@ class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
+    _rippleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _rippleController.dispose();
     super.dispose();
   }
 
   void _handleTapDown(TapDownDetails details) {
     _controller.forward();
+    _rippleController.forward(from: 0.0);
     widget.onTapDown?.call();
   }
 
@@ -72,9 +80,35 @@ class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
         ),
         child: AspectRatio(
           aspectRatio: 1,
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 240, maxHeight: 240),
-            child: _buildButtonStyle(activeStyle, colorScheme),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              AnimatedBuilder(
+                animation: _rippleController,
+                builder: (context, child) {
+                  return Container(
+                    width: 240 * _rippleController.value,
+                    height: 240 * _rippleController.value,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(
+                          alpha: (1 - _rippleController.value) * 0.5,
+                        ),
+                        width: 2,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 240,
+                  maxHeight: 240,
+                ),
+                child: _buildButtonStyle(activeStyle, colorScheme),
+              ),
+            ],
           ),
         ),
       ),
@@ -89,6 +123,24 @@ class _IncreaseCountTapButtonState extends ConsumerState<IncreaseCountTapButton>
         return _buildRingStyle(colorScheme);
       case PressButtonStyle.third:
         return _buildSquareStyle(colorScheme);
+      case PressButtonStyle.tealCircular:
+        return const TealCircularStyle();
+      case PressButtonStyle.slateRounded:
+        return const SlateRoundedStyle();
+      case PressButtonStyle.amberGradient:
+        return const AmberGradientStyle();
+      case PressButtonStyle.purpleOutlined:
+        return const PurpleOutlinedStyle();
+      case PressButtonStyle.coralSoft:
+        return const CoralSoftStyle();
+      case PressButtonStyle.midnightGlass:
+        return const MidnightGlassStyle();
+      case PressButtonStyle.neonGlow:
+        return const NeonGlowStyle();
+      case PressButtonStyle.emeraldMinimal:
+        return const EmeraldMinimalStyle();
+      case PressButtonStyle.royalGold:
+        return const RoyalGoldStyle();
     }
   }
 

@@ -5,7 +5,21 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum PressButtonStyle { first, second, third }
+enum PressButtonStyle {
+  first,
+  second,
+  third,
+  tealCircular,
+  slateRounded,
+  amberGradient,
+  purpleOutlined,
+  coralSoft,
+  midnightGlass,
+  neonGlow,
+  emeraldMinimal,
+  royalGold
+}
+
 
 final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>(
   (ref) {

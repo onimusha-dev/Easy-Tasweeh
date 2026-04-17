@@ -36,13 +36,25 @@ class CounterProgressWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: progress == 0 ? 0.01 : progress,
-            minHeight: 12,
-            backgroundColor: colorScheme.outlineVariant.withValues(alpha: 0.3),
-            valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: progress == 0 ? 0.01 : progress,
+              minHeight: 12,
+              backgroundColor: colorScheme.outlineVariant.withValues(alpha: 0.3),
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+            ),
           ),
         ),
       ],

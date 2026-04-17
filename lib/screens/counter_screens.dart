@@ -5,6 +5,7 @@ import 'package:easy_tasweeh/database/repository/count_repository.dart';
 import 'package:easy_tasweeh/features/counter/counter_progress_widget.dart';
 import 'package:easy_tasweeh/features/counter/display_selected_dhikr_widget.dart';
 import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
+import 'package:easy_tasweeh/features/counter/particle_background.dart';
 import 'package:easy_tasweeh/features/counter/set_count_target/target_selector_sheet.dart';
 import 'package:easy_tasweeh/features/left_menu_bar/left_menu_bar.dart';
 import 'package:flutter/material.dart';
@@ -40,85 +41,84 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           fit: BoxFit.cover,
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        drawer: const LeftMenuBar(),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          leading: Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.menu_rounded),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              );
-            },
-          ),
-          actions: [
-            IconButton(
-              onPressed: _showSetTargetSheet,
-              icon: const Icon(Icons.gps_fixed_rounded),
-              tooltip: 'Set Target',
+      child: Stack(
+        children: [
+          const Positioned.fill(child: ParticleBackground()),
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            drawer: const LeftMenuBar(),
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              leading: Builder(
+                builder: (context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu_rounded),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  );
+                },
+              ),
+              actions: [
+                IconButton(
+                  onPressed: _showSetTargetSheet,
+                  icon: const Icon(Icons.gps_fixed_rounded),
+                  tooltip: 'Set Target',
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
-            const SizedBox(width: 8),
-          ],
-        ),
-        body: countAsync.when(
-          data: (countData) {
-            final current = countData?.currentCount ?? 0;
-            final target = countData?.targetCount ?? 0;
-            final currentDhikr = ref.watch(currentDhikrProvider);
-            final progress = target > 0
-                ? (current / target).clamp(0.0, 1.0)
-                : 0.0;
-            final percentage = (progress * 100).toInt();
+            body: countAsync.when(
+              data: (countData) {
+                final current = countData?.currentCount ?? 0;
+                final target = countData?.targetCount ?? 0;
+                final currentDhikr = ref.watch(currentDhikrProvider);
+                final progress = target > 0
+                    ? (current / target).clamp(0.0, 1.0)
+                    : 0.0;
+                final percentage = (progress * 100).toInt();
 
-            return LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24.0,
-                        // vertical: 20.0,
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CounterProgressWidget(
+                                colorScheme: colorScheme,
+                                percentage: percentage,
+                                progress: progress,
+                                textTheme: textTheme,
+                              ),
+                              const SizedBox(height: 32),
+                              DisplaySelectedDhikrWidget(
+                                currentDhikr: currentDhikr,
+                              ),
+                              _getCounterStyle(
+                                settings.pressButtonStyle,
+                                _isFrozen
+                                    ? null
+                                    : () => _incrementCounter(countData),
+                              ),
+                              const SizedBox(height: 32),
+                            ],
+                          ),
+                        ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CounterProgressWidget(
-                            colorScheme: colorScheme,
-                            percentage: percentage,
-                            progress: progress,
-                            textTheme: textTheme,
-                          ),
-
-                          const SizedBox(height: 32),
-
-                          DisplaySelectedDhikrWidget(
-                            currentDhikr: currentDhikr,
-                          ),
-
-                          IncreaseCountTapButton(
-                            onTap: _isFrozen
-                                ? null
-                                : () => _incrementCounter(countData),
-                          ),
-
-                          const SizedBox(height: 32),
-                        ],
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
-        ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -185,5 +185,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) => const TargetSelectorSheet(),
     );
+  }
+
+  Widget _getCounterStyle(PressButtonStyle style, VoidCallback? onTap) {
+    return IncreaseCountTapButton(onTap: onTap, previewStyle: style);
   }
 }

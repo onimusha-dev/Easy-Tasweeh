@@ -3,3 +3,7 @@ export 'slate_rounded_style.dart';
 export 'amber_gradient_style.dart';
 export 'purple_outlined_style.dart';
 export 'coral_soft_style.dart';
+export 'midnight_glass_style.dart';
+export 'neon_glow_style.dart';
+export 'emerald_minimal_style.dart';
+export 'royal_gold_style.dart';
