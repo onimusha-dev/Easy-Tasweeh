@@ -1,0 +1,29 @@
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.dart": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.formatOnPaste": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.dart": "explicit",
+            "source.organizeImports": "explicit"
+        },
+    "editor.tabSize": 4,
+    },
+    "files.exclude": {
+        "**/.dart_tool": true,
+        "**/.idea": true,
+        "**/.git": true,
+        "**/ios": true,
+        "**/linux": true,
+        "**/macos": true,
+        "**/windows": true,
+        "**/web": true,
+    }   
+}

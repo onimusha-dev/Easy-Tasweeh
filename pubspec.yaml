@@ -2,7 +2,7 @@ name: easy_tasweeh
 description: "A clean and simple dhikr counter designed for Muslims who want to stay consistent with their daily tasbeeh."
 publish_to: 'none'
 
-version: 1.0.1+1
+version: 1.0.2+1
 
 environment:
   sdk: ^3.11.4
@@ -63,16 +63,11 @@ flutter_icons:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/images/bg/
+    - assets/fonts/
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: GoogleSansFlex
+      fonts:
+        - asset: assets/fonts/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf
+        

@@ -1,0 +1,82 @@
+import 'package:easy_tasweeh/core/constants/app_constants.dart';
+import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
+import 'package:easy_tasweeh/features/settings/screens/barrel.dart';
+import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:flutter/material.dart';
+
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        children: [
+          const SizedBox(height: 8),
+
+          // ── Sections ───────────────────────────────────────────────────────
+          buildSettingTile(
+            context,
+            icon: Icons.brightness_6_outlined,
+            title: 'Appearance',
+            subtitle: 'Theme, accent, counter style, font size',
+            iconColor: AppIconColors.purple(context),
+            onTap: () => _push(context, const AppearanceScreen()),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.vibration_rounded,
+            title: 'Sound & Haptics',
+            subtitle: 'Tap sound, haptic feedback, intensity',
+            iconColor: AppIconColors.amber(context),
+            onTap: () => _push(context, const SoundHapticsScreen()),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.notifications_active_outlined,
+            title: 'Reminders',
+            subtitle: 'Daily dhikr reminders & salah prompts',
+            iconColor: AppIconColors.blue(context),
+            onTap: () => _push(context, const RemindersScreen()),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.storage_outlined,
+            title: 'Data',
+            subtitle: 'Backup, restore, delete all data',
+            iconColor: Colors.green,
+            onTap: () => _push(context, const DataScreen()),
+          ),
+          buildSettingTile(
+            context,
+            icon: Icons.info_outline_rounded,
+            title: 'About & Support',
+            subtitle: 'Donate, feedback, suggest a feature',
+            iconColor: Colors.grey,
+            onTap: () => _push(context, const AboutSupportScreen()),
+          ),
+
+          // ── Footer ─────────────────────────────────────────────────────────
+          const SizedBox(height: 100),
+          Center(
+            child: Text(
+              '${AppConstants.appName} v${AppConstants.appVersion} · Non-profit',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  void _push(BuildContext context, Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+  }
+}

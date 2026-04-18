@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/dao/current_count_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'count_repository.g.dart';
@@ -12,6 +13,12 @@ CountRepository countRepository(Ref ref) {
   final countHistoryDao = ref.watch(countHistoryDaoProvider);
   return CountRepository(currentCountDao, countHistoryDao);
 }
+
+final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
+  ref,
+) {
+  return ref.watch(countRepositoryProvider).watchCurrentCount();
+});
 
 class CountRepository {
   final CurrentCountDao _currentCountDao;
@@ -96,5 +103,36 @@ class CountRepository {
   // Watch all history records
   Stream<List<CountHistoryTableData>> watchAllHistory() {
     return _countHistoryDao.watchAllHistory();
+  }
+
+  // Restore the last incomplete session from history (only if it was from today)
+  Future<bool> restoreLastSession() async {
+    final history = await _countHistoryDao.watchAllHistory().first;
+    if (history.isEmpty) return false;
+
+    final last = history.first;
+    final now = DateTime.now();
+    final isToday =
+        last.createdAt.year == now.year &&
+        last.createdAt.month == now.month &&
+        last.createdAt.day == now.day;
+
+    // Check if the session was incomplete and from today
+    if (isToday &&
+        last.targetCount > 0 &&
+        last.currentCount < last.targetCount) {
+      final current = await getOrCreateCurrentCount();
+      await _currentCountDao.updateCount(
+        CurrentCountTableCompanion(
+          id: Value(current.id),
+          targetCount: Value(last.targetCount),
+          currentCount: Value(last.currentCount),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
+      await _countHistoryDao.deleteById(last.id);
+      return true;
+    }
+    return false;
   }
 }
