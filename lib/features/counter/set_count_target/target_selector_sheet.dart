@@ -9,7 +9,7 @@ class TargetSelectorSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<int> targets = [100, 300, 500, 700, 1000, 2000];
+    final List<int> targets = [10, 300, 500, 700, 1000, 2000];
 
     final countAsync = ref.watch(currentCountStreamProvider);
     final currentTarget = countAsync.when(

@@ -27,113 +27,55 @@ class CounterProgressWidget extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
               children: [
+                const SizedBox(width: 8),
                 Text(
-                  'YOUR PROGRESS',
-                  style: textTheme.labelSmall?.copyWith(
-                    color: colorScheme.primary.withValues(alpha: 0.7),
-                    letterSpacing: 2.0,
-                    fontWeight: FontWeight.w800,
+                  '$currentCountData',
+                  style: textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 6),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '$currentCountData',
-                        style: textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: colorScheme.onSurface,
-                          letterSpacing: -0.5,
-                        ),
+                if (hasTarget)
+                  Text(
+                    ' / $targetCount',
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.4,
                       ),
-                      TextSpan(
-                        text: hasTarget ? ' / $targetCount' : ' counts',
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: colorScheme.onSurface.withValues(alpha: 0.4),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
               ],
             ),
             if (hasTarget)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      colorScheme.primary.withValues(alpha: 0.15),
-                      colorScheme.primary.withValues(alpha: 0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: colorScheme.primary.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.bolt_rounded,
-                      size: 14,
-                      color: colorScheme.primary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$percentage%',
-                      style: textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              SizedBox.shrink()
             else
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.3,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'ENDLESS',
-                  style: textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: colorScheme.outline,
-                    letterSpacing: 1.0,
-                  ),
+              Text(
+                'ENDLESS',
+                style: textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  letterSpacing: 0.8,
                 ),
               ),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 12),
         if (hasTarget)
           _AnimatedProgressBar(progress: progress, colorScheme: colorScheme)
         else
           Container(
-            height: 6,
+            height: 4,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(3),
+              color: colorScheme.onSurface.withValues(alpha: 0.06),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
       ],
@@ -152,74 +94,90 @@ class _AnimatedProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double thumbSize = 16.0;
+    const double thumbRadius = thumbSize / 2;
+
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0, end: progress.clamp(0.0, 1.0)),
-      duration: const Duration(milliseconds: 1000),
-      curve: Curves.elasticOut,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.easeOutCubic,
       builder: (context, value, child) {
-        return Container(
-          height: 16,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.1),
-            ),
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              // Progress Fill
-              FractionallySizedBox(
-                widthFactor: value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [colorScheme.primary, colorScheme.secondary],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              // Glowing Thumb/Cap
-              if (value > 0)
-                Positioned(
-                  left: (MediaQuery.of(context).size.width - 48) * value - 8,
-                  top: -2,
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: colorScheme.primary, width: 3),
-                    ),
-                  ),
-                ),
-              // Subtle Inner Shine
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: FractionallySizedBox(
-                  widthFactor: value,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withValues(alpha: 0.3),
-                          Colors.transparent,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final availableWidth = constraints.maxWidth;
+            // The thumb center moves from index 0 to availableWidth
+            // But we want to keep the thumb within bounds, so we offset the track
+            final trackWidth = availableWidth - (thumbRadius * 2);
+            final currentPosition = value * trackWidth;
+
+            return SizedBox(
+              height: thumbSize,
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  // Background Track
+                  Positioned(
+                    left: thumbRadius,
+                    right: thumbRadius,
+                    child: Container(
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: colorScheme.onSurface.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
                   ),
-                ),
+                  // Progress Fill
+                  Positioned(
+                    left: thumbRadius,
+                    child: Container(
+                      height: 8,
+                      width: currentPosition,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            colorScheme.primary,
+                            colorScheme.primary.withValues(alpha: 0.8),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            blurRadius: 6,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Thumb (Centered on the end of the progress fill)
+                  Positioned(
+                    left: currentPosition,
+                    child: Container(
+                      width: thumbSize,
+                      height: thumbSize,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.15),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                        border: Border.all(
+                          color: colorScheme.primary,
+                          width: 3.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

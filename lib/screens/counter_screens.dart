@@ -89,17 +89,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CounterProgressWidget(
-                                colorScheme: colorScheme,
-                                percentage: percentage,
-                                progress: progress,
-                                textTheme: textTheme,
-                                currentCountData: current,
-                                targetCount: target,
-                              ),
-                              const SizedBox(height: 32),
-                              DisplaySelectedDhikrWidget(
-                                currentDhikr: currentDhikr,
+                              Column(
+                                children: [
+                                  CounterProgressWidget(
+                                    colorScheme: colorScheme,
+                                    percentage: percentage,
+                                    progress: progress,
+                                    textTheme: textTheme,
+                                    currentCountData: current,
+                                    targetCount: target,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  DisplaySelectedDhikrWidget(
+                                    currentDhikr: currentDhikr,
+                                  ),
+                                ],
                               ),
                               SizedBox(
                                 width: settings.buttonSize,

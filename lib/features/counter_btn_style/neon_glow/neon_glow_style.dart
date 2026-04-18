@@ -4,11 +4,7 @@ class NeonGlowStyle extends StatefulWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTapDown;
 
-  const NeonGlowStyle({
-    super.key,
-    this.onTap,
-    this.onTapDown,
-  });
+  const NeonGlowStyle({super.key, this.onTap, this.onTapDown});
 
   @override
   State<NeonGlowStyle> createState() => _NeonGlowStyleState();
@@ -95,18 +91,15 @@ class _NeonGlowStyleState extends State<NeonGlowStyle>
                 decoration: BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.cyanAccent,
-                    width: 2,
-                  ),
+                  border: Border.all(color: Colors.cyanAccent, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.cyanAccent.withOpacity(0.6),
+                      color: Colors.cyanAccent.withValues(alpha: 0.6),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
                     BoxShadow(
-                      color: Colors.cyanAccent.withOpacity(0.4),
+                      color: Colors.cyanAccent.withValues(alpha: 0.4),
                       blurRadius: 40,
                       spreadRadius: 4,
                     ),
@@ -121,10 +114,7 @@ class _NeonGlowStyleState extends State<NeonGlowStyle>
                       fontWeight: FontWeight.bold,
                       letterSpacing: 4,
                       shadows: [
-                        Shadow(
-                          color: Colors.cyanAccent,
-                          blurRadius: 10,
-                        ),
+                        Shadow(color: Colors.cyanAccent, blurRadius: 10),
                       ],
                     ),
                   ),
