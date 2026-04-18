@@ -6,8 +6,8 @@ import 'package:easy_tasweeh/features/settings/screens/settings_screen.dart';
 import 'package:easy_tasweeh/features/tasbeeh/screens/tasbeeh_screen.dart';
 import 'package:flutter/material.dart';
 
-class LeftMenuBar extends StatelessWidget {
-  const LeftMenuBar({super.key});
+class SideDrawer extends StatelessWidget {
+  const SideDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,33 +64,33 @@ class LeftMenuBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               children: [
                 // const MembershipCard(),
-                _buildDrawerTile(
+                _DrawerTile(
                   context,
                   'blue',
                   icon: Icons.graphic_eq_outlined,
                   title: 'Analytics',
-                  moveToScreen: AnalyticsScreen(),
+                  screen: AnalyticsScreen(),
                 ),
-                _buildDrawerTile(
+                _DrawerTile(
                   context,
                   'red',
                   icon: Icons.history_rounded,
                   title: 'History',
-                  moveToScreen: HistoryScreen(),
+                  screen: HistoryScreen(),
                 ),
-                _buildDrawerTile(
+                _DrawerTile(
                   context,
                   'green',
                   icon: Icons.menu_book_rounded,
                   title: 'Learn Tasweeh',
-                  moveToScreen: TasweehScreen(),
+                  screen: TasweehScreen(),
                 ),
-                _buildDrawerTile(
+                _DrawerTile(
                   context,
                   'grey',
                   icon: Icons.settings_rounded,
                   title: 'Settings',
-                  moveToScreen: SettingsScreen(),
+                  screen: SettingsScreen(),
                 ),
               ],
             ),
@@ -101,12 +101,12 @@ class LeftMenuBar extends StatelessWidget {
   }
 }
 
-Widget _buildDrawerTile(
+Widget _DrawerTile(
   BuildContext context,
   String? iconColor, {
   required IconData icon,
   required String title,
-  required moveToScreen,
+  required Widget screen,
 }) {
   return ListTile(
     leading: Icon(icon, color: setIconsColor(iconColor), size: 20),
@@ -114,7 +114,7 @@ Widget _buildDrawerTile(
     onTap: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => moveToScreen),
+        MaterialPageRoute(builder: (context) => screen),
       );
     },
     dense: true, // Makes it more compact

@@ -3,12 +3,12 @@ import 'package:easy_tasweeh/features/counter/widgets/button_styles/counter_butt
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class IncreaseCountTapButton extends ConsumerWidget {
+class CounterButton extends ConsumerWidget {
   final VoidCallback? onTap;
   final VoidCallback? onTapDown;
   final PressButtonStyle? previewStyle;
 
-  const IncreaseCountTapButton({
+  const CounterButton({
     super.key,
     required this.onTap,
     this.onTapDown,

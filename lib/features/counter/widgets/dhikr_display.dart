@@ -1,13 +1,13 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_selection_sheet.dart';
+import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DisplaySelectedDhikrWidget extends ConsumerWidget {
+class DhikrDisplay extends ConsumerWidget {
   final DhikrItem currentDhikr;
 
-  const DisplaySelectedDhikrWidget({super.key, required this.currentDhikr});
+  const DhikrDisplay({super.key, required this.currentDhikr});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,7 +85,7 @@ class DisplaySelectedDhikrWidget extends ConsumerWidget {
               ),
             const SizedBox(height: 24),
             InkWell(
-              onTap: () => DhikrSelectionSheet.show(context),
+              onTap: () => DhikrSheet.show(context),
               borderRadius: BorderRadius.circular(20),
               child: Container(
                 padding: const EdgeInsets.symmetric(

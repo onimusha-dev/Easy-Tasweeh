@@ -1,11 +1,11 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/service/dhikr_service.dart';
-import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_item_card.dart';
+import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DhikrSelectionSheet extends ConsumerWidget {
-  const DhikrSelectionSheet({super.key});
+class DhikrSheet extends ConsumerWidget {
+  const DhikrSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +41,7 @@ class DhikrSelectionSheet extends ConsumerWidget {
                 final item = dhikrList[index];
                 final isSelected = item.id == currentDhikr.id;
 
-                return DhikrItemCard(
+                return DhikrTile(
                   item: item,
                   isSelected: isSelected,
                   onTap: () {
@@ -63,7 +63,7 @@ class DhikrSelectionSheet extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const DhikrSelectionSheet(),
+      builder: (context) => const DhikrSheet(),
     );
   }
 }

@@ -4,8 +4,8 @@ import 'package:easy_tasweeh/features/counter/widgets/set_count_target/archive_d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TargetSelectorSheet extends ConsumerWidget {
-  const TargetSelectorSheet({super.key});
+class TargetGoalSheet extends ConsumerWidget {
+  const TargetGoalSheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,7 +110,7 @@ class TargetSelectorSheet extends ConsumerWidget {
             },
           ),
           const SizedBox(height: 24),
-          _buildArchiveAndRestoreSessionActionButton(
+          _SessionActionButton(
             context,
             ref,
             currentCount: countAsync.asData?.value?.currentCount ?? 0,
@@ -121,7 +121,7 @@ class TargetSelectorSheet extends ConsumerWidget {
   }
 }
 
-Widget _buildArchiveAndRestoreSessionActionButton(
+Widget _SessionActionButton(
   BuildContext context,
   WidgetRef ref, {
   required int currentCount,

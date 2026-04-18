@@ -1,12 +1,12 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:flutter/material.dart';
 
-class DhikrItemCard extends StatefulWidget {
+class DhikrTile extends StatefulWidget {
   final DhikrItem item;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const DhikrItemCard({
+  const DhikrTile({
     super.key,
     required this.item,
     this.isSelected = false,
@@ -14,10 +14,10 @@ class DhikrItemCard extends StatefulWidget {
   });
 
   @override
-  State<DhikrItemCard> createState() => _DhikrItemCardState();
+  State<DhikrTile> createState() => _DhikrTileState();
 }
 
-class _DhikrItemCardState extends State<DhikrItemCard> {
+class _DhikrTileState extends State<DhikrTile> {
   bool _isPressed = false;
   bool _isHovered = false;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CounterProgressWidget extends StatelessWidget {
-  const CounterProgressWidget({
+class CounterProgress extends StatelessWidget {
+  const CounterProgress({
     super.key,
     required this.percentage,
     required this.progress,
