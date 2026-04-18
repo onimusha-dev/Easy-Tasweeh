@@ -79,6 +79,7 @@ class SettingsState {
   final bool showTranslation;
   final bool vibrateOnMilestone;
   final int milestoneValue;
+  final double buttonSize;
 
   SettingsState({
     required this.morningReminder,
@@ -106,6 +107,7 @@ class SettingsState {
     required this.showTranslation,
     required this.vibrateOnMilestone,
     required this.milestoneValue,
+    required this.buttonSize,
   });
 
   SettingsState copyWith({
@@ -134,6 +136,7 @@ class SettingsState {
     bool? showTranslation,
     bool? vibrateOnMilestone,
     int? milestoneValue,
+    double? buttonSize,
   }) {
     return SettingsState(
       morningReminder: morningReminder ?? this.morningReminder,
@@ -163,6 +166,7 @@ class SettingsState {
       showTranslation: showTranslation ?? this.showTranslation,
       vibrateOnMilestone: vibrateOnMilestone ?? this.vibrateOnMilestone,
       milestoneValue: milestoneValue ?? this.milestoneValue,
+      buttonSize: buttonSize ?? this.buttonSize,
     );
   }
 }
@@ -196,6 +200,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           showTranslation: true,
           vibrateOnMilestone: true,
           milestoneValue: 33,
+          buttonSize: 220,
         ),
       ) {
     _loadSettings();
@@ -229,6 +234,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _showTranslationKey = 'show_translation';
   static const _vibrateOnMilestoneKey = 'vibrate_on_milestone';
   static const _milestoneValueKey = 'milestone_value';
+  static const _buttonSizeKey = 'button_size';
 
   final NotificationService _notificationService = NotificationService();
 
@@ -272,6 +278,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       showTranslation: prefs.getBool(_showTranslationKey) ?? true,
       vibrateOnMilestone: prefs.getBool(_vibrateOnMilestoneKey) ?? true,
       milestoneValue: prefs.getInt(_milestoneValueKey) ?? 33,
+      buttonSize: prefs.getDouble(_buttonSizeKey) ?? 220,
     );
   }
 
@@ -485,5 +492,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_milestoneValueKey, value);
     state = state.copyWith(milestoneValue: value);
+  }
+
+  Future<void> setButtonSize(double size) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_buttonSizeKey, size);
+    state = state.copyWith(buttonSize: size);
   }
 }

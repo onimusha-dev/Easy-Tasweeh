@@ -51,7 +51,8 @@ class DisplaySelectedDhikrWidget extends ConsumerWidget {
                   ),
                 ),
               ),
-            if (settings.showArabic && (settings.showTransliteration || settings.showTranslation))
+            if (settings.showArabic &&
+                (settings.showTransliteration || settings.showTranslation))
               const SizedBox(height: 12),
             if (settings.showTransliteration)
               Text(
@@ -81,16 +82,17 @@ class DisplaySelectedDhikrWidget extends ConsumerWidget {
                 ),
               ),
             const SizedBox(height: 24),
-            TextButton.icon(
+            IconButton(
               onPressed: () => DhikrSelectionSheet.show(context),
-              icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-              label: const Text('Change Dhikr'),
-              style: TextButton.styleFrom(
+              icon: const Icon(Icons.swap_horiz_rounded, size: 24),
+
+              //   label: const Text('Change Dhikr'),
+              style: IconButton.styleFrom(
                 foregroundColor: colorScheme.primary,
-                textStyle: textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.1,
-                ),
+                // textStyle: textTheme.labelLarge?.copyWith(
+                //   fontWeight: FontWeight.bold,
+                //   letterSpacing: 1.1,
+                // ),
               ),
             ),
           ],

@@ -94,16 +94,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 percentage: percentage,
                                 progress: progress,
                                 textTheme: textTheme,
+                                currentCountData: current,
+                                targetCount: target,
                               ),
                               const SizedBox(height: 32),
                               DisplaySelectedDhikrWidget(
                                 currentDhikr: currentDhikr,
                               ),
-                              _getCounterStyle(
-                                settings.pressButtonStyle,
-                                _isFrozen
-                                    ? null
-                                    : () => _incrementCounter(countData),
+                              SizedBox(
+                                width: settings.buttonSize,
+                                height: settings.buttonSize,
+                                child: _getCounterStyle(
+                                  settings.pressButtonStyle,
+                                  _isFrozen
+                                      ? null
+                                      : () => _incrementCounter(countData),
+                                ),
                               ),
                               const SizedBox(height: 32),
                             ],

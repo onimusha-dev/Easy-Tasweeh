@@ -55,6 +55,33 @@ class AppearanceScreen extends ConsumerWidget {
             iconColor: AppIconColors.blue(context),
             onTap: () => _push(context, const BgChangerPreviewScreen()),
           ),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: buildSettingSectionTitle(context, 'SIZE'),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            child: buildSettingTile(
+              context,
+              icon: Icons.photo_size_select_small_rounded,
+              title: 'Button size',
+              subtitle: 'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
+              iconColor: AppIconColors.pink(context),
+              onTap: () {},
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Slider(
+              value: ref.watch(settingsProvider).buttonSize,
+              min: 150,
+              max: 320,
+              onChanged: (v) =>
+                  ref.read(settingsProvider.notifier).setButtonSize(v),
+            ),
+          ),
           const SizedBox(height: 32),
         ],
       ),
