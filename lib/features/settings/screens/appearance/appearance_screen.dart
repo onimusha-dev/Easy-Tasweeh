@@ -55,6 +55,18 @@ class AppearanceScreen extends ConsumerWidget {
             iconColor: AppIconColors.blue(context),
             onTap: () => _push(context, const BgChangerPreviewScreen()),
           ),
+          buildSettingTile(
+            context,
+            icon: Icons.auto_awesome_outlined,
+            title: 'Particle effect',
+            subtitle: 'Enable floating background particles',
+            iconColor: AppIconColors.teal(context),
+            trailing: Switch(
+              value: ref.watch(settingsProvider).showParticles,
+              onChanged: (v) =>
+                  ref.read(settingsProvider.notifier).toggleShowParticles(v),
+            ),
+          ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -67,7 +79,8 @@ class AppearanceScreen extends ConsumerWidget {
               context,
               icon: Icons.photo_size_select_small_rounded,
               title: 'Button size',
-              subtitle: 'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
+              subtitle:
+                  'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
               iconColor: AppIconColors.pink(context),
               onTap: () {},
             ),

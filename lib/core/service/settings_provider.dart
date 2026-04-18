@@ -80,6 +80,7 @@ class SettingsState {
   final bool vibrateOnMilestone;
   final int milestoneValue;
   final double buttonSize;
+  final bool showParticles;
 
   SettingsState({
     required this.morningReminder,
@@ -108,6 +109,7 @@ class SettingsState {
     required this.vibrateOnMilestone,
     required this.milestoneValue,
     required this.buttonSize,
+    required this.showParticles,
   });
 
   SettingsState copyWith({
@@ -137,6 +139,7 @@ class SettingsState {
     bool? vibrateOnMilestone,
     int? milestoneValue,
     double? buttonSize,
+    bool? showParticles,
   }) {
     return SettingsState(
       morningReminder: morningReminder ?? this.morningReminder,
@@ -167,6 +170,7 @@ class SettingsState {
       vibrateOnMilestone: vibrateOnMilestone ?? this.vibrateOnMilestone,
       milestoneValue: milestoneValue ?? this.milestoneValue,
       buttonSize: buttonSize ?? this.buttonSize,
+      showParticles: showParticles ?? this.showParticles,
     );
   }
 }
@@ -201,6 +205,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           vibrateOnMilestone: true,
           milestoneValue: 33,
           buttonSize: 220,
+          showParticles: false,
         ),
       ) {
     _loadSettings();
@@ -235,6 +240,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _vibrateOnMilestoneKey = 'vibrate_on_milestone';
   static const _milestoneValueKey = 'milestone_value';
   static const _buttonSizeKey = 'button_size';
+  static const _showParticlesKey = 'show_particles';
 
   final NotificationService _notificationService = NotificationService();
 
@@ -279,6 +285,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       vibrateOnMilestone: prefs.getBool(_vibrateOnMilestoneKey) ?? true,
       milestoneValue: prefs.getInt(_milestoneValueKey) ?? 33,
       buttonSize: prefs.getDouble(_buttonSizeKey) ?? 220,
+      showParticles: prefs.getBool(_showParticlesKey) ?? false,
     );
   }
 
@@ -498,5 +505,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble(_buttonSizeKey, size);
     state = state.copyWith(buttonSize: size);
+  }
+
+  Future<void> toggleShowParticles(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_showParticlesKey, value);
+    state = state.copyWith(showParticles: value);
   }
 }

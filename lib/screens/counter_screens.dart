@@ -43,7 +43,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       child: Stack(
         children: [
-          const Positioned.fill(child: ParticleBackground()),
+          if (settings.showParticles)
+            const Positioned.fill(child: ParticleBackground()),
           Scaffold(
             backgroundColor: Colors.transparent,
             drawer: const LeftMenuBar(),
