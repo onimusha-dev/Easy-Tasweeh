@@ -1,6 +1,6 @@
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
-import 'package:easy_tasweeh/features/history/history_item_card.dart';
+import 'package:easy_tasweeh/features/history/widgets/history_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

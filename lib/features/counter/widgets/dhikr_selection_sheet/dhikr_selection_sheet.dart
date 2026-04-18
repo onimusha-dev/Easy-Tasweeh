@@ -1,6 +1,6 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/service/dhikr_service.dart';
-import 'package:easy_tasweeh/features/counter/dhikr_selection_sheet/dhikr_item_card.dart';
+import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,5 +1,5 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
+import 'package:easy_tasweeh/features/counter/widgets/increase_count_tap_button.dart';
 import 'package:flutter/material.dart';
 
 class CounterPreview extends StatelessWidget {

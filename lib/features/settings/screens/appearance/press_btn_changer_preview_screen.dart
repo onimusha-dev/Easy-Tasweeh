@@ -1,5 +1,5 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/increase_count_tap_button.dart';
+import 'package:easy_tasweeh/features/counter/widgets/increase_count_tap_button.dart';
 import 'package:easy_tasweeh/features/settings/screens/appearance/widgets/counter_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

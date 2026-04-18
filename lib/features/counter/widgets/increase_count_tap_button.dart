@@ -1,5 +1,5 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter_btn_style/counter_button_styles.dart';
+import 'package:easy_tasweeh/features/counter/widgets/button_styles/counter_button_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

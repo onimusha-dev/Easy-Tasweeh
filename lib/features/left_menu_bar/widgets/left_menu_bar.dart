@@ -1,9 +1,9 @@
 import 'package:easy_tasweeh/core/constants/app_constants.dart';
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
-import 'package:easy_tasweeh/screens/analytics_screen.dart';
-import 'package:easy_tasweeh/screens/history_screen.dart';
-import 'package:easy_tasweeh/screens/settings_screen.dart';
-import 'package:easy_tasweeh/screens/tasbeeh_screen.dart';
+import 'package:easy_tasweeh/features/analytics/screens/analytics_screen.dart';
+import 'package:easy_tasweeh/features/history/screens/history_screen.dart';
+import 'package:easy_tasweeh/features/settings/screens/settings_screen.dart';
+import 'package:easy_tasweeh/features/tasbeeh/screens/tasbeeh_screen.dart';
 import 'package:flutter/material.dart';
 
 class LeftMenuBar extends StatelessWidget {
