@@ -89,15 +89,15 @@ class DisplaySelectedDhikrWidget extends ConsumerWidget {
               borderRadius: BorderRadius.circular(20),
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 6,
+                  horizontal: 12,
+                  vertical: 12,
                 ),
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  Icons.swap_horiz_rounded,
+                  Icons.more_horiz_rounded,
                   size: 16,
                   color: colorScheme.primary,
                 ),

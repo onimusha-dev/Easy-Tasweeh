@@ -9,6 +9,7 @@ import 'package:easy_tasweeh/features/counter/particle_background.dart';
 import 'package:easy_tasweeh/features/counter/set_count_target/target_selector_sheet.dart';
 import 'package:easy_tasweeh/features/left_menu_bar/left_menu_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 
@@ -62,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               actions: [
                 IconButton(
                   onPressed: _showSetTargetSheet,
-                  icon: const Icon(Icons.gps_fixed_rounded),
+                  icon: const Icon(Icons.track_changes_rounded),
                   tooltip: 'Set Target',
                 ),
                 const SizedBox(width: 8),
@@ -137,31 +138,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<void> _incrementCounter(CurrentCountTableData? countData) async {
     if (_isFrozen) return;
 
+    // Very short freeze to prevent accidental double-taps while keeping it responsive
     setState(() => _isFrozen = true);
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) setState(() => _isFrozen = false);
     });
 
     final repo = ref.read(countRepositoryProvider);
-    final hapticEnabled = ref.read(settingsProvider).hapticEnabled;
+    final settings = ref.read(settingsProvider);
 
-    if (hapticEnabled) {
-      final amplitude = ref.read(settingsProvider).vibrationAmplitude;
-      Vibration.vibrate(duration: 50, amplitude: amplitude);
+    if (settings.hapticEnabled) {
+      debugPrint('Triggering haptics for count: ${countData?.currentCount}');
+      // SelectionClick is subtle, adding a micro-vibration fallback for devices with weak haptic engines
+      HapticFeedback.selectionClick();
+      Vibration.vibrate(duration: 20);
     }
 
     await repo.increment();
 
     final nextCount = (countData?.currentCount ?? 0) + 1;
     final target = countData?.targetCount ?? 0;
-    final settings = ref.read(settingsProvider);
 
     // Milestone vibration
-    if (settings.vibrateOnMilestone &&
+    if (settings.hapticEnabled &&
+        settings.vibrateOnMilestone &&
         nextCount > 0 &&
         nextCount % settings.milestoneValue == 0 &&
         (target == 0 || nextCount < target)) {
-      Vibration.vibrate(duration: 150, amplitude: settings.vibrationAmplitude);
+      debugPrint('Triggering milestone haptics');
+      HapticFeedback.mediumImpact();
+      Vibration.vibrate(duration: 60);
     }
 
     if (target > 0 && nextCount >= target) {
@@ -176,15 +182,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         );
       }
-      if (hapticEnabled) {
-        _playCompletionVibration();
+      if (settings.hapticEnabled) {
+        debugPrint('Triggering completion haptics');
+        HapticFeedback.heavyImpact();
+        Vibration.vibrate(duration: 200);
       }
     }
-  }
-
-  void _playCompletionVibration() {
-    final amplitude = ref.read(settingsProvider).completionVibrationAmplitude;
-    Vibration.vibrate(duration: 2000, amplitude: amplitude);
   }
 
   void _showSetTargetSheet() {

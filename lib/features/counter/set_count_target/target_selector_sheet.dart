@@ -9,7 +9,7 @@ class TargetSelectorSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<int> targets = [10, 300, 500, 700, 1000, 2000];
+    final List<int> targets = [10, 300, 500, 700, 1000];
 
     final countAsync = ref.watch(currentCountStreamProvider);
     final currentTarget = countAsync.when(
@@ -66,9 +66,10 @@ class TargetSelectorSheet extends ConsumerWidget {
               mainAxisSpacing: 12,
               childAspectRatio: 1.8,
             ),
-            itemCount: targets.length,
+            itemCount: targets.length + 1, // +1 for Infinite
             itemBuilder: (context, index) {
-              final target = targets[index];
+              final isInfinite = index == targets.length;
+              final target = isInfinite ? 0 : targets[index];
               final isSelected = currentTarget == target;
 
               return InkWell(
@@ -94,10 +95,10 @@ class TargetSelectorSheet extends ConsumerWidget {
                   ),
                   child: Center(
                     child: Text(
-                      '$target',
+                      isInfinite ? '∞' : '$target',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
-                        fontSize: 16,
+                        fontSize: isInfinite ? 20 : 16,
                         color: isSelected
                             ? Theme.of(context).colorScheme.onPrimary
                             : Theme.of(context).colorScheme.onSurface,
