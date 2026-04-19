@@ -13,11 +13,11 @@ class DhikrSheet extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(top: 100),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -31,28 +31,51 @@ class DhikrSheet extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
+          Text('Select Dhikr', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 24),
           Flexible(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: dhikrList.length,
-              separatorBuilder: (context, _) =>
-                  Divider(indent: 24, endIndent: 24),
-              itemBuilder: (context, index) {
-                final item = dhikrList[index];
-                final isSelected = item.id == currentDhikr.id;
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  itemCount: dhikrList.length,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                    indent: 64,
+                    endIndent: 16,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = dhikrList[index];
+                    final isSelected = item.id == currentDhikr.id;
 
-                return DhikrTile(
-                  item: item,
-                  isSelected: isSelected,
-                  onTap: () {
-                    ref.read(currentDhikrProvider.notifier).state = item;
-                    Navigator.pop(context);
+                    return DhikrTile(
+                      item: item,
+                      isSelected: isSelected,
+                      onTap: () {
+                        ref.read(currentDhikrProvider.notifier).state = item;
+                        Navigator.pop(context);
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 64),
         ],
       ),
     );

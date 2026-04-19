@@ -1,7 +1,7 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:flutter/material.dart';
 
-class DhikrTile extends StatefulWidget {
+class DhikrTile extends StatelessWidget {
   final DhikrItem item;
   final bool isSelected;
   final VoidCallback onTap;
@@ -14,80 +14,74 @@ class DhikrTile extends StatefulWidget {
   });
 
   @override
-  State<DhikrTile> createState() => _DhikrTileState();
-}
-
-class _DhikrTileState extends State<DhikrTile> {
-  bool _isPressed = false;
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 100,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: (_isPressed || _isHovered)
-                ? LinearGradient(
-                    colors: [
-                      Colors.green.withValues(alpha: 0.1),
-                      Colors.green.withValues(alpha: 0.2),
-                      Colors.green.withValues(alpha: 0.1),
-                    ],
-                  )
-                : null,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return InkWell(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colorScheme.primary.withValues(alpha: 0.05)
+              : null,
+        ),
+        child: Row(
+          children: [
+            // Icon/Indicator
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: (isSelected ? colorScheme.primary : colorScheme.outlineVariant)
+                    .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  item.arabic.characters.first,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? colorScheme.primary : colorScheme.outline,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            
+            // Text Info
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.item.arabic,
+                    item.arabic,
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w300,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color: colorScheme.onSurface,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                  Text(
-                    widget.item.transliteration,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                      color: colorScheme.onSurface.withValues(alpha: 0.75),
                     ),
                   ),
                   Text(
-                    widget.item.translation,
+                    item.transliteration,
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                      color: colorScheme.onSurface,
+                      fontSize: 13,
+                      color: colorScheme.outline,
                     ),
                   ),
                 ],
               ),
-              if (widget.isSelected) ...[
-                const Icon(Icons.check_circle, color: Colors.green),
-              ],
-            ],
-          ),
+            ),
+
+            if (isSelected)
+              Icon(
+                Icons.check_circle_rounded,
+                color: colorScheme.primary,
+                size: 20,
+              ),
+          ],
         ),
       ),
     );
