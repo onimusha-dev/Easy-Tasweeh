@@ -24,6 +24,7 @@ class DataScreen extends StatelessWidget {
                 subtitle: 'Clear history and preferences',
                 iconColor: Colors.red,
                 onTap: () => _confirmReset(context),
+                showChevron: false,
               ),
             ],
           ),

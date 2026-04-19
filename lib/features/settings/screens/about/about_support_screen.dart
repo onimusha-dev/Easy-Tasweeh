@@ -30,6 +30,7 @@ class AboutSupportScreen extends StatelessWidget {
                 subtitle: '100% goes to charity',
                 iconColor: AppIconColors.pink(context),
                 onTap: () {},
+                showChevron: false,
               ),
               buildSettingTile(
                 context,
@@ -38,6 +39,7 @@ class AboutSupportScreen extends StatelessWidget {
                 subtitle: 'Help others find Easy Tasbeeh',
                 iconColor: AppIconColors.amber(context),
                 onTap: () {},
+                showChevron: false,
               ),
               buildSettingTile(
                 context,
@@ -46,6 +48,7 @@ class AboutSupportScreen extends StatelessWidget {
                 subtitle: 'Suggest features or report bugs',
                 iconColor: AppIconColors.teal(context),
                 onTap: () => _launchEmail(context),
+                showChevron: false,
               ),
             ],
           ),

@@ -13,6 +13,7 @@ Widget buildSettingTile(
   Widget? trailing,
   String? trailingLabel,
   VoidCallback? onTap,
+  bool showChevron = true,
 }) {
   Widget? trailingWidget;
 
@@ -37,15 +38,17 @@ Widget buildSettingTile(
             ),
           ),
         ),
-        const SizedBox(width: 4),
-        Icon(
-          Icons.chevron_right_rounded,
-          size: 16,
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ),
+        if (showChevron) ...[
+          const SizedBox(width: 4),
+          Icon(
+            Icons.chevron_right_rounded,
+            size: 16,
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ],
       ],
     );
-  } else {
+  } else if (showChevron && onTap != null) {
     // Default: just chevron for tappable tiles
     trailingWidget = Icon(
       Icons.chevron_right_rounded,
@@ -61,8 +64,9 @@ Widget buildSettingTile(
     leading: Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: (iconColor ?? Theme.of(context).colorScheme.primary)
-            .withValues(alpha: 0.1),
+        color: (iconColor ?? Theme.of(context).colorScheme.primary).withValues(
+          alpha: 0.1,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(
@@ -102,17 +106,14 @@ Widget buildSettingsGroup(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Theme.of(context)
-                .colorScheme
-                .outlineVariant
-                .withValues(alpha: 0.5),
+            color: Theme.of(
+              context,
+            ).colorScheme.outlineVariant.withValues(alpha: 0.5),
           ),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Column(
-            children: children,
-          ),
+          child: Column(children: children),
         ),
       ),
     ],

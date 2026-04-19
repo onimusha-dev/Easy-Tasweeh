@@ -91,6 +91,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     subtitle: 'Sessions completed',
                     iconColor: Theme.of(context).colorScheme.primary,
                     trailingLabel: '$totalSessions',
+                    showChevron: false,
                   ),
                   buildSettingTile(
                     context,
@@ -99,6 +100,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     subtitle: 'Single highest count',
                     iconColor: Colors.amber,
                     trailingLabel: '$maxSession',
+                    showChevron: false,
                   ),
                   buildSettingTile(
                     context,
@@ -107,6 +109,7 @@ class AnalyticsScreen extends ConsumerWidget {
                     subtitle: 'Lifetime tasbeeh count',
                     iconColor: Colors.orange,
                     trailingLabel: '$totalCount',
+                    showChevron: false,
                   ),
                 ],
               ),

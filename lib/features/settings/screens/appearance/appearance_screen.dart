@@ -34,6 +34,7 @@ class AppearanceScreen extends ConsumerWidget {
                 iconColor: AppIconColors.pink(context),
                 trailing: const _ColourDot(),
                 onTap: () => _showColorSchemeDialog(context, ref),
+                showChevron: false,
               ),
               buildSettingTile(
                 context,
@@ -42,6 +43,7 @@ class AppearanceScreen extends ConsumerWidget {
                 subtitle: 'Light, Dark, System',
                 iconColor: AppIconColors.purple(context),
                 onTap: () => _showThemeDialog(context, ref),
+                showChevron: false,
               ),
             ],
           ),

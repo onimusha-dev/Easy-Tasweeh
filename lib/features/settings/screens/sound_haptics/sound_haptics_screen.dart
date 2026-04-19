@@ -121,6 +121,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                   subtitle: 'Current: every ${settings.milestoneValue} counts',
                   iconColor: AppIconColors.purple(context),
                   onTap: () => _showMilestoneDialog(context, ref),
+                  showChevron: false,
                 ),
             ],
           ),
