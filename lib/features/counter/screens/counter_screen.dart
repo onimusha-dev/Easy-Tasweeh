@@ -147,7 +147,6 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 
     if (settings.hapticEnabled) {
       debugPrint('Triggering haptics for count: ${countData?.currentCount}');
-      // SelectionClick is subtle, adding a micro-vibration fallback for devices with weak haptic engines
       HapticFeedback.selectionClick();
       Vibration.vibrate(duration: 20);
     }

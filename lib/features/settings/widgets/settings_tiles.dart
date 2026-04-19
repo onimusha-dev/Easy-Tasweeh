@@ -58,10 +58,18 @@ Widget buildSettingTile(
     dense: true,
     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-    leading: Icon(
-      icon,
-      color: iconColor ?? Theme.of(context).colorScheme.primary,
-      size: 22,
+    leading: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: (iconColor ?? Theme.of(context).colorScheme.primary)
+            .withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        icon,
+        color: iconColor ?? Theme.of(context).colorScheme.primary,
+        size: 20,
+      ),
     ),
     title: Text(title, style: Theme.of(context).textTheme.titleSmall),
     subtitle: Text(
@@ -73,5 +81,40 @@ Widget buildSettingTile(
     ),
     trailing: trailingWidget,
     onTap: onTap,
+  );
+}
+
+Widget buildSettingsGroup(
+  BuildContext context, {
+  String? title,
+  required List<Widget> children,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (title != null)
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 8),
+          child: buildSettingSectionTitle(context, title),
+        ),
+      Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Theme.of(context)
+                .colorScheme
+                .outlineVariant
+                .withValues(alpha: 0.5),
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Column(
+            children: children,
+          ),
+        ),
+      ),
+    ],
   );
 }

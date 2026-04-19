@@ -11,16 +11,21 @@ class DataScreen extends StatelessWidget {
         title: Text('Data', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           const SizedBox(height: 8),
-          buildSettingTile(
+          buildSettingsGroup(
             context,
-            icon: Icons.delete_sweep_rounded,
-            title: 'Reset all data',
-            subtitle: 'Clear history and preferences',
-            iconColor: Colors.red,
-            onTap: () => _confirmReset(context),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.delete_sweep_rounded,
+                title: 'Reset all data',
+                subtitle: 'Clear history and preferences',
+                iconColor: Colors.red,
+                onTap: () => _confirmReset(context),
+              ),
+            ],
           ),
           const SizedBox(height: 32),
         ],
@@ -32,6 +37,7 @@ class DataScreen extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Reset all data?'),
         content: const Text(
           'This will permanently delete your session history and reset all preferences. This cannot be undone.',

@@ -25,5 +25,6 @@
         "**/macos": true,
         "**/windows": true,
         "**/web": true,
+        "**/test": true
     }   
 }

@@ -14,50 +14,62 @@ class SettingsScreen extends StatelessWidget {
         title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           const SizedBox(height: 8),
 
-          // ── Sections ───────────────────────────────────────────────────────
-          buildSettingTile(
+          buildSettingsGroup(
             context,
-            icon: Icons.brightness_6_outlined,
-            title: 'Appearance',
-            subtitle: 'Theme, accent, counter style, font size',
-            iconColor: AppIconColors.purple(context),
-            onTap: () => _push(context, const AppearanceScreen()),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.brightness_6_outlined,
+                title: 'Appearance',
+                subtitle: 'Theme, accent, counter style, font size',
+                iconColor: AppIconColors.purple(context),
+                onTap: () => _push(context, const AppearanceScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.vibration_rounded,
+                title: 'Sound & Haptics',
+                subtitle: 'Tap sound, haptic feedback, vibration',
+                iconColor: AppIconColors.amber(context),
+                onTap: () => _push(context, const SoundHapticsScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.notifications_active_outlined,
+                title: 'Reminders',
+                subtitle: 'Daily dhikr reminders & salah prompts',
+                iconColor: AppIconColors.blue(context),
+                onTap: () => _push(context, const RemindersScreen()),
+              ),
+            ],
           ),
-          buildSettingTile(
+
+          const SizedBox(height: 16),
+
+          buildSettingsGroup(
             context,
-            icon: Icons.vibration_rounded,
-            title: 'Sound & Haptics',
-            subtitle: 'Tap sound, haptic feedback, intensity',
-            iconColor: AppIconColors.amber(context),
-            onTap: () => _push(context, const SoundHapticsScreen()),
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.notifications_active_outlined,
-            title: 'Reminders',
-            subtitle: 'Daily dhikr reminders & salah prompts',
-            iconColor: AppIconColors.blue(context),
-            onTap: () => _push(context, const RemindersScreen()),
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.storage_outlined,
-            title: 'Data',
-            subtitle: 'Backup, restore, delete all data',
-            iconColor: Colors.green,
-            onTap: () => _push(context, const DataScreen()),
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.info_outline_rounded,
-            title: 'About & Support',
-            subtitle: 'Donate, feedback, suggest a feature',
-            iconColor: Colors.grey,
-            onTap: () => _push(context, const AboutSupportScreen()),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.storage_outlined,
+                title: 'Data',
+                subtitle: 'Backup, restore, delete all data',
+                iconColor: Colors.green,
+                onTap: () => _push(context, const DataScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.info_outline_rounded,
+                title: 'About & Support',
+                subtitle: 'Donate, feedback, suggest a feature',
+                iconColor: Colors.grey,
+                onTap: () => _push(context, const AboutSupportScreen()),
+              ),
+            ],
           ),
 
           // ── Footer ─────────────────────────────────────────────────────────

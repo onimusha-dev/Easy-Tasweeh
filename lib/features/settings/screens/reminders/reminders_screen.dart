@@ -47,103 +47,75 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           // ── Permission banner ────────────────────────────────────────────
-          const SizedBox(height: 12),
           const NotificationPermissionBanner(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // ── Daily reminders ──────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 6),
-            child: buildSettingSectionTitle(context, 'DAILY REMINDERS'),
-          ),
-          const SizedBox(height: 8),
-
-          buildSettingTile(
+          buildSettingsGroup(
             context,
-            icon: Icons.notifications_active_outlined,
-            title: 'Daily dhikr reminder',
-            subtitle: 'Remind me to do my daily tasbeeh',
-            iconColor: AppIconColors.blue(context),
-            trailing: Switch(
-              value: settings.morningReminder,
-              onChanged: (v) {
-                if (v && !settings.notificationPermissionGranted) {
-                  _showPermissionSnack();
-                  return;
-                }
-                notifier.toggleMorningReminder(v);
-              },
-            ),
+            title: 'DAILY REMINDERS',
+            children: [
+              ReminderTimeTile(
+                title: 'Morning Reminder',
+                subtitle: 'Start your day with remembrance',
+                icon: Icons.wb_sunny_rounded,
+                enabled: settings.morningReminder,
+                time: settings.morningTime,
+                iconColor: AppIconColors.amber(context),
+                onToggle: (v) {
+                  if (v && !settings.notificationPermissionGranted) {
+                    _showPermissionSnack();
+                    return;
+                  }
+                  notifier.toggleMorningReminder(v);
+                },
+                onTimePicked: (picked) =>
+                    notifier.setMorningTime(picked.hour, picked.minute),
+              ),
+              ReminderTimeTile(
+                title: 'Evening Reminder',
+                subtitle: 'End your day with peace and gratitude',
+                icon: Icons.nights_stay_rounded,
+                enabled: settings.eveningReminder,
+                time: settings.eveningTime,
+                iconColor: AppIconColors.purple(context),
+                onToggle: (v) {
+                  if (v && !settings.notificationPermissionGranted) {
+                    _showPermissionSnack();
+                    return;
+                  }
+                  notifier.toggleEveningReminder(v);
+                },
+                onTimePicked: (picked) =>
+                    notifier.setEveningTime(picked.hour, picked.minute),
+              ),
+            ],
           ),
 
-          ReminderTimeTile(
-            title: 'Morning Reminder',
-            subtitle: 'Start your day with remembrance',
-            icon: Icons.wb_sunny_rounded,
-            enabled: settings.morningReminder,
-            time: settings.morningTime,
-            iconColor: AppIconColors.amber(context),
-            onToggle: (v) {
-              if (v && !settings.notificationPermissionGranted) {
-                _showPermissionSnack();
-                return;
-              }
-              notifier.toggleMorningReminder(v);
-            },
-            onTimePicked: (picked) =>
-                notifier.setMorningTime(picked.hour, picked.minute),
-          ),
-
-          const Divider(indent: 24, endIndent: 24, height: 1),
-
-          ReminderTimeTile(
-            title: 'Evening Reminder',
-            subtitle: 'End your day with peace and gratitude',
-            icon: Icons.nights_stay_rounded,
-            enabled: settings.eveningReminder,
-            time: settings.eveningTime,
-            iconColor: AppIconColors.purple(context),
-            onToggle: (v) {
-              if (v && !settings.notificationPermissionGranted) {
-                _showPermissionSnack();
-                return;
-              }
-              notifier.toggleEveningReminder(v);
-            },
-            onTimePicked: (picked) =>
-                notifier.setEveningTime(picked.hour, picked.minute),
-          ),
+          const SizedBox(height: 16),
 
           // ── Other reminders ──────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
-            child: buildSettingSectionTitle(context, 'OTHER'),
-          ),
-          const SizedBox(height: 8),
-
-          buildSettingTile(
+          buildSettingsGroup(
             context,
-            icon: Icons.calendar_today_outlined,
-            title: 'Reminder days',
-            subtitle: 'Choose which days to remind',
-            iconColor: AppIconColors.blue(context),
-            trailingLabel: 'Every day',
-            onTap: () {},
+            title: 'OTHER',
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.mosque_outlined,
+                title: 'After salah reminder',
+                subtitle: 'Prompt after each prayer time',
+                iconColor: AppIconColors.teal(context),
+                trailing: Switch(
+                  value: settings.afterSalahReminder,
+                  onChanged: (v) => notifier.toggleAfterSalahReminder(v),
+                ),
+              ),
+            ],
           ),
-          buildSettingTile(
-            context,
-            icon: Icons.mosque_outlined,
-            title: 'After salah reminder',
-            subtitle: 'Prompt after each prayer time',
-            iconColor: AppIconColors.teal(context),
-            trailing: Switch(
-              value: settings.afterSalahReminder,
-              onChanged: (v) => notifier.toggleAfterSalahReminder(v),
-            ),
-          ),
+          const SizedBox(height: 32),
         ],
       ),
     );
