@@ -1,5 +1,4 @@
 import 'package:easy_tasweeh/core/constants/app_constants.dart';
-import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/features/analytics/screens/analytics_screen.dart';
 import 'package:easy_tasweeh/features/history/screens/history_screen.dart';
 import 'package:easy_tasweeh/features/settings/screens/settings_screen.dart';
@@ -11,118 +10,195 @@ class SideDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Drawer(
-      width: 280, // More compact width
+      width: 300,
+      backgroundColor: colorScheme.surface,
       child: Column(
         children: [
-          // Custom compact header
+          // Premium Header
           SafeArea(
             bottom: false,
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).colorScheme.outlineVariant,
-                    width: 0.5,
+              padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      Icons.settings_input_antenna_rounded,
+                      color: colorScheme.primary,
+                      size: 28,
+                    ),
                   ),
-                ),
-              ),
-              child: Center(
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        shape: BoxShape.circle,
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppConstants.appName,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.5,
+                        ),
                       ),
-                      child: Icon(
-                        Icons.settings_input_antenna_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 24,
+                      Text(
+                        'v${AppConstants.appVersion}',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: colorScheme.outline,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppConstants.appName,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      'v${AppConstants.appVersion}',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.labelSmall?.copyWith(fontSize: 10),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
+
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                // const MembershipCard(),
-                _DrawerTile(
-                  context,
-                  'blue',
-                  icon: Icons.graphic_eq_outlined,
-                  title: 'Analytics',
-                  screen: AnalyticsScreen(),
-                ),
-                _DrawerTile(
-                  context,
-                  'red',
-                  icon: Icons.history_rounded,
-                  title: 'History',
-                  screen: HistoryScreen(),
-                ),
-                _DrawerTile(
-                  context,
-                  'green',
-                  icon: Icons.menu_book_rounded,
-                  title: 'Learn Tasweeh',
-                  screen: TasweehScreen(),
-                ),
-                _DrawerTile(
-                  context,
-                  'grey',
-                  icon: Icons.settings_rounded,
-                  title: 'Settings',
-                  screen: SettingsScreen(),
+                Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerLow,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Column(
+                      children: [
+                        _DrawerTile(
+                          context,
+                          icon: Icons.auto_graph_rounded,
+                          title: 'Analytics',
+                          iconColor: Colors.blue,
+                          screen: const AnalyticsScreen(),
+                        ),
+                        _divider(context),
+                        _DrawerTile(
+                          context,
+                          icon: Icons.history_rounded,
+                          title: 'History Log',
+                          iconColor: Colors.orange,
+                          screen: const HistoryScreen(),
+                        ),
+                        _divider(context),
+                        _DrawerTile(
+                          context,
+                          icon: Icons.menu_book_rounded,
+                          title: 'Learn Tasweeh',
+                          iconColor: Colors.green,
+                          screen: const TasweehScreen(),
+                        ),
+                        _divider(context),
+                        _DrawerTile(
+                          context,
+                          icon: Icons.settings_rounded,
+                          title: 'Settings',
+                          iconColor: Colors.grey,
+                          screen: const SettingsScreen(),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
+            ),
+          ),
+
+          // Bottom Footer
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              'MADE WITH LOVE FOR THE UMMAH',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: colorScheme.outline.withValues(alpha: 0.5),
+                fontSize: 8,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
+  Widget _divider(BuildContext context) {
+    return Divider(
+      height: 1,
+      indent: 56,
+      endIndent: 16,
+      color: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+    );
+  }
 }
 
-Widget _DrawerTile(
-  BuildContext context,
-  String? iconColor, {
-  required IconData icon,
-  required String title,
-  required Widget screen,
-}) {
-  return ListTile(
-    leading: Icon(icon, color: setIconsColor(iconColor), size: 20),
-    title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => screen),
-      );
-    },
-    dense: true, // Makes it more compact
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-    visualDensity: const VisualDensity(
-      horizontal: 0,
-      vertical: -2,
-    ), // Further compaction
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-  );
+class _DrawerTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color iconColor;
+  final Widget screen;
+
+  const _DrawerTile(
+    BuildContext context, {
+    required this.icon,
+    required this.title,
+    required this.iconColor,
+    required this.screen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context); // Close drawer
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: iconColor, size: 20),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: colorScheme.outlineVariant,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
