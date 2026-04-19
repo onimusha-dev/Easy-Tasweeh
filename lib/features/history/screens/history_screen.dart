@@ -1,8 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/features/history/widgets/history_item_card.dart';
+import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -46,86 +47,51 @@ class HistoryScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.builder(
-            itemCount: historyList.length,
-            itemBuilder: (context, index) {
-              return HistoryItemCard(data: historyList[index], index: index);
-            },
+          // Group by date
+          final grouped = groupBy(historyList, (CountHistoryTableData data) {
+            return DateFormat('yyyy-MM-dd').format(data.createdAt);
+          });
+
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            children: grouped.entries.map((entry) {
+              final dateStr = entry.key;
+              final items = entry.value;
+
+              // Format date label (Today, Yesterday, or Date)
+              final date = DateTime.parse(dateStr);
+              final now = DateTime.now();
+              final today = DateTime(now.year, now.month, now.day);
+              final yesterday = today.subtract(const Duration(days: 1));
+
+              String label;
+              if (date == today) {
+                label = 'TODAY';
+              } else if (date == yesterday) {
+                label = 'YESTERDAY';
+              } else {
+                label = DateFormat('MMMM d, yyyy').format(date).toUpperCase();
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: buildSettingsGroup(
+                  context,
+                  title: label,
+                  children: items.mapIndexed((idx, data) {
+                    return HistoryItemCard(
+                      data: data,
+                      index: idx,
+                      isLast: idx == items.length - 1,
+                    );
+                  }).toList(),
+                ),
+              );
+            }).toList(),
           );
         },
       ),
     );
-  }
-}
-
-// we will use them later if needed
-class HistoryItemCardx extends StatelessWidget {
-  final CountHistoryTableData data;
-  final int index;
-
-  const HistoryItemCardx({super.key, required this.data, required this.index});
-
-  @override
-  Widget build(BuildContext context) {
-    final dateStr = DateFormat('MMM d, yyyy • HH:mm').format(data.createdAt);
-    final isSuccess =
-        data.targetCount > 0 && data.currentCount >= data.targetCount;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  dateStr.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      '${data.currentCount}',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: isSuccess
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                    if (data.targetCount > 0) ...[
-                      const SizedBox(width: 8),
-                      Text(
-                        '/ ${data.targetCount}',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
-          if (isSuccess)
-            Icon(
-              Icons.check_circle_rounded,
-              color: Theme.of(context).colorScheme.primary,
-              size: 20,
-            )
-          else if (data.targetCount > 0)
-            Text(
-              'PARTIAL',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
-            ),
-        ],
-      ),
-    ).animate().fadeIn().slideX(begin: 0.05, delay: (index * 40).ms);
   }
 }
 
