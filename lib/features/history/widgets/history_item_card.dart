@@ -19,7 +19,8 @@ class HistoryItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isCompleted = data.targetCount > 0 && data.currentCount >= data.targetCount;
+    final isCompleted =
+        data.targetCount > 0 && data.currentCount >= data.targetCount;
     final double percentage = data.targetCount > 0
         ? (data.currentCount / data.targetCount) * 100
         : 0;
@@ -46,7 +47,7 @@ class HistoryItemCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Count Info
               Expanded(
                 child: Column(
