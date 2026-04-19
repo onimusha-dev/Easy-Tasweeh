@@ -22,8 +22,6 @@ class _BgChangerPreviewScreenState
     {'name': 'Dusk Rose', 'path': 'assets/images/bg/bg-3.png'},
     {'name': 'manhaten', 'path': 'assets/images/bg/bg-4.png'},
     {'name': 'fire craket', 'path': 'assets/images/bg/bg-5.png'},
-    {'name': 'nebula', 'path': 'assets/images/bg/bg-6.png'},
-    {'name': 'lamon', 'path': 'assets/images/bg/bg-7.png'},
   ];
 
   @override

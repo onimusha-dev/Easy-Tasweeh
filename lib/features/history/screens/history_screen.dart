@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/features/history/widgets/history_item_card.dart';
@@ -99,35 +100,22 @@ class HistoryScreen extends ConsumerWidget {
 void _clearHistory(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Clear All History'),
-      content: const Text(
-        'This action cannot be undone. Are you sure you want to delete all saved sessions?',
-        style: TextStyle(fontWeight: FontWeight.w500),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('CANCEL'),
-        ),
-        FilledButton(
-          onPressed: () {
-            ref.read(countHistoryDaoProvider).deleteAll();
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('History cleared'),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          },
-          style: FilledButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            foregroundColor: Theme.of(context).colorScheme.onError,
+    builder: (context) => PremiumDialog(
+      icon: Icons.delete_sweep_rounded,
+      title: 'Clear All History',
+      description:
+          'This action cannot be undone. Are you sure you want to delete all saved sessions?',
+      confirmLabel: 'CLEAR ALL',
+      color: Theme.of(context).colorScheme.error,
+      onConfirm: () {
+        ref.read(countHistoryDaoProvider).deleteAll();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('History cleared'),
+            behavior: SnackBarBehavior.floating,
           ),
-          child: const Text('CLEAR ALL'),
-        ),
-      ],
+        );
+      },
     ),
   );
 }
