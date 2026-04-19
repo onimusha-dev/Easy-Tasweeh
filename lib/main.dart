@@ -30,7 +30,7 @@ class MyApp extends ConsumerWidget {
         AppTheme.resolveColorScheme(colorScheme, Brightness.dark),
       ),
       themeMode: themeMode,
-      home: const HomeScreen(),
+      home: const CounterScreen(),
     );
   }
 }

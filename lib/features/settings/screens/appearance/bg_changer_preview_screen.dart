@@ -22,8 +22,6 @@ class _BgChangerPreviewScreenState
     {'name': 'Dusk Rose', 'path': 'assets/images/bg/bg-3.png'},
     {'name': 'manhaten', 'path': 'assets/images/bg/bg-4.png'},
     {'name': 'fire craket', 'path': 'assets/images/bg/bg-5.png'},
-    {'name': 'nebula', 'path': 'assets/images/bg/bg-6.png'},
-    {'name': 'lamon', 'path': 'assets/images/bg/bg-7.png'},
   ];
 
   @override
@@ -42,24 +40,6 @@ class _BgChangerPreviewScreenState
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          if (hasChanges)
-            TextButton(
-              onPressed: () async {
-                await ref
-                    .read(settingsProvider.notifier)
-                    .setBackground(activeBg);
-                if (mounted) {
-                  setState(() => _selectedBackground = null);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Appearance updated!')),
-                  );
-                }
-              },
-              child: const Text('Save'),
-            ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: Column(
         children: [
@@ -70,29 +50,67 @@ class _BgChangerPreviewScreenState
             previewStyle: settings.pressButtonStyle,
             onTap: () => setState(() => _demoCount++),
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'Backgrounds',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+
+          // Fixed Header Bar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 16, 8),
+            child: SizedBox(
+              height: 48, // Consistent height
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'CHOOSE BACKGROUND',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  if (hasChanges)
+                    TextButton(
+                      onPressed: () async {
+                        await ref
+                            .read(settingsProvider.notifier)
+                            .setBackground(activeBg);
+                        if (mounted) {
+                          setState(() => _selectedBackground = null);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Appearance updated!'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'SAVE',
+                        style: TextStyle(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(width: 60), // Fixed width placeholder
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 8),
+
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildBackgroundGrid(activeBg),
-                  const SizedBox(height: 32),
-                ],
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: _buildBackgroundGrid(activeBg),
               ),
             ),
           ),
@@ -108,8 +126,8 @@ class _BgChangerPreviewScreenState
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.8,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.75,
       ),
       itemCount: _availableBackgrounds.length,
       itemBuilder: (context, index) {
@@ -122,41 +140,56 @@ class _BgChangerPreviewScreenState
           child: Column(
             children: [
               Expanded(
-                child: Container(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected
                           ? colorScheme.primary
-                          : colorScheme.outlineVariant,
-                      width: isSelected ? 3 : 1,
-                    ),
-                    image: DecorationImage(
-                      image: AssetImage(bg['path']!),
-                      fit: BoxFit.cover,
+                          : Colors.transparent,
+                      width: 2,
                     ),
                   ),
-                  child: isSelected
-                      ? Center(
-                          child: Icon(
-                            Icons.check_circle,
-                            color: colorScheme.primary,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(bg['path']!, fit: BoxFit.cover),
+                        if (isSelected)
+                          Container(
+                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            child: Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.check_rounded,
+                                  color: colorScheme.primary,
+                                  size: 16,
+                                ),
+                              ),
+                            ),
                           ),
-                        )
-                      : null,
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               Text(
-                bg['name']!,
+                bg['name']!.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontSize: 8,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected
-                      ? colorScheme.primary
-                      : colorScheme.onSurface,
+                  color: isSelected ? colorScheme.primary : colorScheme.outline,
+                  letterSpacing: 0.5,
                 ),
               ),
             ],

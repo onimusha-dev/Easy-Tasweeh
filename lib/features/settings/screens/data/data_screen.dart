@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 
@@ -11,16 +12,22 @@ class DataScreen extends StatelessWidget {
         title: Text('Data', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           const SizedBox(height: 8),
-          buildSettingTile(
+          buildSettingsGroup(
             context,
-            icon: Icons.delete_sweep_rounded,
-            title: 'Reset all data',
-            subtitle: 'Clear history and preferences',
-            iconColor: Colors.red,
-            onTap: () => _confirmReset(context),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.delete_sweep_rounded,
+                title: 'Reset all data',
+                subtitle: 'Clear history and preferences',
+                iconColor: Colors.red,
+                onTap: () => _confirmReset(context),
+                showChevron: false,
+              ),
+            ],
           ),
           const SizedBox(height: 32),
         ],
@@ -28,36 +35,24 @@ class DataScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _confirmReset(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
+  void _confirmReset(BuildContext context) {
+    showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Reset all data?'),
-        content: const Text(
-          'This will permanently delete your session history and reset all preferences. This cannot be undone.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(ctx).colorScheme.error,
+      builder: (ctx) => PremiumDialog(
+        icon: Icons.delete_sweep_rounded,
+        title: 'Reset all data?',
+        description: 'This will permanently delete your session history and reset all preferences. This cannot be undone.',
+        confirmLabel: 'RESET',
+        color: Theme.of(context).colorScheme.error,
+        onConfirm: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('All data cleared.'),
+              behavior: SnackBarBehavior.floating,
             ),
-            child: const Text('Reset'),
-          ),
-        ],
+          );
+        },
       ),
     );
-    if (confirmed == true && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('All data cleared.'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
   }
 }

@@ -2,25 +2,25 @@ import 'package:easy_tasweeh/core/service/dhikr_service.dart';
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
-import 'package:easy_tasweeh/features/counter/widgets/counter_progress_widget.dart';
-import 'package:easy_tasweeh/features/counter/widgets/display_selected_dhikr_widget.dart';
-import 'package:easy_tasweeh/features/counter/widgets/increase_count_tap_button.dart';
+import 'package:easy_tasweeh/features/counter/widgets/counter_button.dart';
+import 'package:easy_tasweeh/features/counter/widgets/counter_progress.dart';
+import 'package:easy_tasweeh/features/counter/widgets/dhikr_display.dart';
 import 'package:easy_tasweeh/features/counter/widgets/particle_background.dart';
-import 'package:easy_tasweeh/features/counter/widgets/set_count_target/target_selector_sheet.dart';
-import 'package:easy_tasweeh/features/left_menu_bar/widgets/left_menu_bar.dart';
+import 'package:easy_tasweeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
+import 'package:easy_tasweeh/features/left_menu_bar/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class CounterScreen extends ConsumerStatefulWidget {
+  const CounterScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<CounterScreen> createState() => _CounterScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _CounterScreenState extends ConsumerState<CounterScreen> {
   bool _isFrozen = false;
 
   @override
@@ -48,7 +48,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const Positioned.fill(child: ParticleBackground()),
           Scaffold(
             backgroundColor: Colors.transparent,
-            drawer: const LeftMenuBar(),
+            drawer: const SideDrawer(),
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
@@ -93,7 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             children: [
                               Column(
                                 children: [
-                                  CounterProgressWidget(
+                                  CounterProgress(
                                     colorScheme: colorScheme,
                                     percentage: percentage,
                                     progress: progress,
@@ -102,9 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     targetCount: target,
                                   ),
                                   const SizedBox(height: 16),
-                                  DisplaySelectedDhikrWidget(
-                                    currentDhikr: currentDhikr,
-                                  ),
+                                  DhikrDisplay(currentDhikr: currentDhikr),
                                 ],
                               ),
                               SizedBox(
@@ -149,7 +147,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (settings.hapticEnabled) {
       debugPrint('Triggering haptics for count: ${countData?.currentCount}');
-      // SelectionClick is subtle, adding a micro-vibration fallback for devices with weak haptic engines
       HapticFeedback.selectionClick();
       Vibration.vibrate(duration: 20);
     }
@@ -197,11 +194,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       enableDrag: false,
       isDismissible: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const TargetSelectorSheet(),
+      builder: (context) => const TargetGoalSheet(),
     );
   }
 
   Widget _getCounterStyle(PressButtonStyle style, VoidCallback? onTap) {
-    return IncreaseCountTapButton(onTap: onTap, previewStyle: style);
+    return CounterButton(onTap: onTap, previewStyle: style);
   }
 }

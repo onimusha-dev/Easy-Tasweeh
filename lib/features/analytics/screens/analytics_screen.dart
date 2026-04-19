@@ -1,4 +1,5 @@
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
+import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,226 +77,213 @@ class AnalyticsScreen extends ConsumerWidget {
           final chartData = dailyTotals.entries.toList().reversed.toList();
 
           return ListView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             children: [
-              // Summary Cards Row
-              Row(
+              // Summary Section
+              buildSettingsGroup(
+                context,
+                title: 'SUMMARY',
                 children: [
-                  Expanded(
-                    child: _StatCard(
-                      label: 'BEST SESSION',
-                      value: '$maxSession',
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  buildSettingTile(
+                    context,
+                    icon: Icons.auto_graph_rounded,
+                    title: 'Total sessions',
+                    subtitle: 'Sessions completed',
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    trailingLabel: '$totalSessions',
+                    showChevron: false,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _StatCard(
-                      label: 'SESSIONS',
-                      value: '$totalSessions',
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
+                  buildSettingTile(
+                    context,
+                    icon: Icons.star_rounded,
+                    title: 'Best session',
+                    subtitle: 'Single highest count',
+                    iconColor: Colors.amber,
+                    trailingLabel: '$maxSession',
+                    showChevron: false,
+                  ),
+                  buildSettingTile(
+                    context,
+                    icon: Icons.functions_rounded,
+                    title: 'Total count',
+                    subtitle: 'Lifetime tasbeeh count',
+                    iconColor: Colors.orange,
+                    trailingLabel: '$totalCount',
+                    showChevron: false,
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              _StatCard(
-                label: 'TOTAL COUNT',
-                value: '$totalCount',
-                color: Colors.orange,
-              ),
-              const SizedBox(height: 32),
-              Text(
-                'WEEKLY ACTIVITY',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-              const SizedBox(height: 16),
 
-              // Enhanced Bar Chart
-              Container(
-                height: 240,
-                padding: const EdgeInsets.fromLTRB(12, 24, 12, 12),
-                decoration: BoxDecoration(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  ),
-                ),
-                child: BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    maxY:
-                        dailyTotals.values
-                            .reduce((a, b) => a > b ? a : b)
-                            .toDouble() *
-                        1.2,
-                    barTouchData: BarTouchData(
-                      touchTooltipData: BarTouchTooltipData(
-                        getTooltipColor: (_) =>
-                            Theme.of(context).colorScheme.surface,
-                        tooltipBorder: BorderSide(
-                          color: Theme.of(context).colorScheme.outlineVariant,
-                        ),
-                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                          return BarTooltipItem(
-                            '${rod.toY.toInt()}',
-                            Theme.of(context).textTheme.labelSmall!.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                          );
-                        },
-                      ),
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (value, meta) {
-                            if (value.toInt() < 0 ||
-                                value.toInt() >= chartData.length) {
-                              return const SizedBox();
-                            }
-                            final dateStr = chartData[value.toInt()].key;
-                            final date = DateFormat(
-                              'yyyy-MM-dd',
-                            ).parse(dateStr);
-                            final isToday =
-                                DateFormat(
-                                  'yyyy-MM-dd',
-                                ).format(DateTime.now()) ==
-                                dateStr;
-
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Text(
-                                DateFormat('E').format(date).toUpperCase(),
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      fontSize: 10,
-                                      color: isToday
-                                          ? Theme.of(
-                                              context,
-                                            ).colorScheme.primary
-                                          : Theme.of(
-                                              context,
-                                            ).colorScheme.outline,
-                                    ),
+              const SizedBox(height: 24),
+              // Activity Section
+              buildSettingsGroup(
+                context,
+                title: 'WEEKLY ACTIVITY',
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+                    child: SizedBox(
+                      height: 240,
+                      child: BarChart(
+                        BarChartData(
+                          alignment: BarChartAlignment.spaceAround,
+                          maxY:
+                              dailyTotals.values
+                                  .reduce((a, b) => a > b ? a : b)
+                                  .toDouble() *
+                              1.3,
+                          barTouchData: BarTouchData(
+                            enabled: true,
+                            touchTooltipData: BarTouchTooltipData(
+                              getTooltipColor: (_) => Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHigh,
+                              //   tooltipRoundedRadius: 12,
+                              tooltipPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                      leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                      rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false),
-                      ),
-                    ),
-                    gridData: FlGridData(
-                      show: true,
-                      drawVerticalLine: false,
-                      horizontalInterval: 100, // Adjust based on data range
-                      getDrawingHorizontalLine: (value) => FlLine(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.outlineVariant.withValues(alpha: 0.2),
-                        strokeWidth: 1,
-                      ),
-                    ),
-                    borderData: FlBorderData(show: false),
-                    barGroups: List.generate(chartData.length, (index) {
-                      final value = chartData[index].value.toDouble();
-                      return BarChartGroupData(
-                        x: index,
-                        barRods: [
-                          BarChartRodData(
-                            toY: value,
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.primary,
-                                Theme.of(
-                                  context,
-                                ).colorScheme.primary.withValues(alpha: 0.7),
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
-                            width: 16,
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(6),
-                              bottom: Radius.circular(2),
-                            ),
-                            backDrawRodData: BackgroundBarChartRodData(
-                              show: true,
-                              toY:
-                                  dailyTotals.values
-                                      .reduce((a, b) => a > b ? a : b)
-                                      .toDouble() *
-                                  1.2,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHighest
-                                  .withValues(alpha: 0.3),
+                              tooltipMargin: 8,
+                              getTooltipItem:
+                                  (group, groupIndex, rod, rodIndex) {
+                                    return BarTooltipItem(
+                                      '${rod.toY.toInt()}',
+                                      Theme.of(
+                                        context,
+                                      ).textTheme.titleSmall!.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  },
                             ),
                           ),
-                        ],
-                      );
-                    }),
+                          titlesData: FlTitlesData(
+                            show: true,
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 32,
+                                getTitlesWidget: (value, meta) {
+                                  if (value.toInt() < 0 ||
+                                      value.toInt() >= chartData.length) {
+                                    return const SizedBox();
+                                  }
+                                  final dateStr = chartData[value.toInt()].key;
+                                  final date = DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).parse(dateStr);
+                                  final isToday =
+                                      DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(DateTime.now()) ==
+                                      dateStr;
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      DateFormat(
+                                        'E',
+                                      ).format(date).toUpperCase(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall
+                                          ?.copyWith(
+                                            fontSize: 9,
+                                            fontWeight: isToday
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                            color: isToday
+                                                ? Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary
+                                                : Theme.of(context)
+                                                      .colorScheme
+                                                      .outline
+                                                      .withValues(alpha: 0.5),
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            leftTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(showTitles: false),
+                            ),
+                          ),
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: false,
+                            horizontalInterval:
+                                (dailyTotals.values.reduce(
+                                          (a, b) => a > b ? a : b,
+                                        ) /
+                                        4)
+                                    .clamp(1, double.infinity),
+                            getDrawingHorizontalLine: (value) => FlLine(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outlineVariant
+                                  .withValues(alpha: 0.1),
+                              strokeWidth: 1,
+                              dashArray: [4, 4],
+                            ),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          barGroups: List.generate(chartData.length, (index) {
+                            final value = chartData[index].value.toDouble();
+                            return BarChartGroupData(
+                              x: index,
+                              barRods: [
+                                BarChartRodData(
+                                  toY: value,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Theme.of(context).colorScheme.primary
+                                          .withValues(alpha: 0.6),
+                                      Theme.of(context).colorScheme.primary,
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                  width: 12,
+                                  borderRadius: BorderRadius.circular(
+                                    20,
+                                  ), // Pill shape
+                                  backDrawRodData: BackgroundBarChartRodData(
+                                    show: true,
+                                    toY:
+                                        dailyTotals.values
+                                            .reduce((a, b) => a > b ? a : b)
+                                            .toDouble() *
+                                        1.3,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .outlineVariant
+                                        .withValues(alpha: 0.05),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               const SizedBox(height: 40),
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.labelSmall),
-          const SizedBox(height: 4),
-          Text(value, style: Theme.of(context).textTheme.headlineSmall),
-        ],
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/increase_count_tap_button.dart';
+import 'package:easy_tasweeh/features/counter/widgets/counter_button.dart';
 import 'package:easy_tasweeh/features/settings/screens/appearance/widgets/counter_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,24 +48,6 @@ class _PressBtnChangerPreviewScreenState
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          if (hasChanges)
-            TextButton(
-              onPressed: () async {
-                await ref
-                    .read(settingsProvider.notifier)
-                    .setPressButtonStyle(activeStyle);
-                if (mounted) {
-                  setState(() => _selectedStyle = null);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Button style updated!')),
-                  );
-                }
-              },
-              child: const Text('Save'),
-            ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: Column(
         children: [
@@ -76,29 +58,67 @@ class _PressBtnChangerPreviewScreenState
             previewStyle: activeStyle,
             onTap: () => setState(() => _demoCount++),
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Text(
-                'Styles',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+
+          // Fixed Header Bar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 16, 8),
+            child: SizedBox(
+              height: 48, // Consistent height
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'CHOOSE BUTTON STYLE',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  if (hasChanges)
+                    TextButton(
+                      onPressed: () async {
+                        await ref
+                            .read(settingsProvider.notifier)
+                            .setPressButtonStyle(activeStyle);
+                        if (mounted) {
+                          setState(() => _selectedStyle = null);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Button style updated!'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'SAVE',
+                        style: TextStyle(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(width: 60), // Fixed width placeholder
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 8),
+
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildStyleGrid(activeStyle),
-                  const SizedBox(height: 32),
-                ],
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  ),
+                ),
+                child: _buildStyleGrid(activeStyle),
               ),
             ),
           ),
@@ -113,9 +133,9 @@ class _PressBtnChangerPreviewScreenState
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.1,
       ),
       itemCount: _availableStyles.length,
       itemBuilder: (context, index) {
@@ -126,15 +146,18 @@ class _PressBtnChangerPreviewScreenState
 
         return GestureDetector(
           onTap: () => setState(() => _selectedStyle = style),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: isSelected
+                  ? colorScheme.primary.withValues(alpha: 0.05)
+                  : colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected
                     ? colorScheme.primary
-                    : colorScheme.outlineVariant,
-                width: isSelected ? 3 : 1,
+                    : colorScheme.outlineVariant.withValues(alpha: 0.3),
+                width: isSelected ? 2 : 1,
               ),
             ),
             child: Stack(
@@ -144,26 +167,27 @@ class _PressBtnChangerPreviewScreenState
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        width: 60,
-                        height: 60,
+                        width: 56,
+                        height: 56,
                         child: IgnorePointer(
-                          child: IncreaseCountTapButton(
+                          child: CounterButton(
                             onTap: () {},
                             previewStyle: style,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       Text(
-                        item['name']!,
-                        style: TextStyle(
-                          fontSize: 12,
+                        item['name']!.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontSize: 9,
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,
                           color: isSelected
                               ? colorScheme.primary
-                              : colorScheme.onSurface,
+                              : colorScheme.onSurfaceVariant,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],
@@ -171,12 +195,19 @@ class _PressBtnChangerPreviewScreenState
                 ),
                 if (isSelected)
                   Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Icon(
-                      Icons.check_circle,
-                      size: 20,
-                      color: colorScheme.primary,
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check_rounded,
+                        size: 12,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
               ],

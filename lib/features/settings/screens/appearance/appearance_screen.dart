@@ -19,83 +19,99 @@ class AppearanceScreen extends ConsumerWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           const SizedBox(height: 8),
-          buildSettingTile(
+
+          buildSettingsGroup(
             context,
-            icon: Icons.color_lens_outlined,
-            title: 'Accent colour',
-            subtitle: 'Choose your app\'s color scheme',
-            iconColor: AppIconColors.pink(context),
-            trailing: const _ColourDot(),
-            onTap: () => _showColorSchemeDialog(context, ref),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.color_lens_outlined,
+                title: 'Accent colour',
+                subtitle: 'Choose your app\'s color scheme',
+                iconColor: AppIconColors.pink(context),
+                trailing: const _ColourDot(),
+                onTap: () => _showColorSchemeDialog(context, ref),
+                showChevron: false,
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.brightness_6_outlined,
+                title: 'Theme',
+                subtitle: 'Light, Dark, System',
+                iconColor: AppIconColors.purple(context),
+                onTap: () => _showThemeDialog(context, ref),
+                showChevron: false,
+              ),
+            ],
           ),
-          buildSettingTile(
+
+          const SizedBox(height: 16),
+
+          buildSettingsGroup(
             context,
-            icon: Icons.brightness_6_outlined,
-            title: 'Theme',
-            subtitle: 'Light, Dark, System',
-            iconColor: AppIconColors.purple(context),
-            onTap: () => _showThemeDialog(context, ref),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.touch_app_outlined,
+                title: 'Counter style',
+                subtitle: 'Circle, minimal, or full screen tap',
+                iconColor: AppIconColors.teal(context),
+                onTap: () =>
+                    _push(context, const PressBtnChangerPreviewScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.wallpaper_outlined,
+                title: 'Counter background',
+                subtitle: 'Choose your counter background',
+                iconColor: AppIconColors.blue(context),
+                onTap: () => _push(context, const BgChangerPreviewScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.auto_awesome_outlined,
+                title: 'Particle effect',
+                subtitle: 'Enable floating background particles',
+                iconColor: AppIconColors.teal(context),
+                trailing: Switch(
+                  value: ref.watch(settingsProvider).showParticles,
+                  onChanged: (v) => ref
+                      .read(settingsProvider.notifier)
+                      .toggleShowParticles(v),
+                ),
+              ),
+            ],
           ),
-          buildSettingTile(
+          const SizedBox(height: 16),
+
+          buildSettingsGroup(
             context,
-            icon: Icons.touch_app_outlined,
-            title: 'Counter style',
-            subtitle: 'Circle, minimal, or full screen tap',
-            iconColor: AppIconColors.teal(context),
-            onTap: () => _push(context, const PressBtnChangerPreviewScreen()),
+            title: 'SIZE',
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.photo_size_select_small_rounded,
+                title: 'Button size',
+                subtitle:
+                    'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
+                iconColor: AppIconColors.pink(context),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(56, 0, 16, 16),
+                child: Slider(
+                  value: ref.watch(settingsProvider).buttonSize,
+                  min: 150,
+                  max: 320,
+                  divisions: 17,
+                  onChanged: (v) =>
+                      ref.read(settingsProvider.notifier).setButtonSize(v),
+                ),
+              ),
+            ],
           ),
-          buildSettingTile(
-            context,
-            icon: Icons.wallpaper_outlined,
-            title: 'Counter background',
-            subtitle: 'Choose your counter background',
-            iconColor: AppIconColors.blue(context),
-            onTap: () => _push(context, const BgChangerPreviewScreen()),
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.auto_awesome_outlined,
-            title: 'Particle effect',
-            subtitle: 'Enable floating background particles',
-            iconColor: AppIconColors.teal(context),
-            trailing: Switch(
-              value: ref.watch(settingsProvider).showParticles,
-              onChanged: (v) =>
-                  ref.read(settingsProvider.notifier).toggleShowParticles(v),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: buildSettingSectionTitle(context, 'SIZE'),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: buildSettingTile(
-              context,
-              icon: Icons.photo_size_select_small_rounded,
-              title: 'Button size',
-              subtitle:
-                  'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
-              iconColor: AppIconColors.pink(context),
-              onTap: () {},
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Slider(
-              value: ref.watch(settingsProvider).buttonSize,
-              min: 150,
-              max: 320,
-              onChanged: (v) =>
-                  ref.read(settingsProvider.notifier).setButtonSize(v),
-            ),
-          ),
-          const SizedBox(height: 32),
         ],
       ),
     );
@@ -109,6 +125,7 @@ class AppearanceScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Theme'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -136,6 +153,7 @@ class AppearanceScreen extends ConsumerWidget {
       builder: (context) {
         final current = ref.watch(settingsProvider).colorScheme;
         return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           title: const Text('Select Accent'),
           content: Column(
             mainAxisSize: MainAxisSize.min,

@@ -1,142 +1,118 @@
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
-import 'package:easy_tasweeh/core/utils/date_time_utils.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 
-class HistoryItemCard extends StatefulWidget {
+class HistoryItemCard extends StatelessWidget {
   final CountHistoryTableData data;
   final int index;
+  final bool isLast;
 
-  const HistoryItemCard({super.key, required this.data, required this.index});
-
-  @override
-  State<HistoryItemCard> createState() => _HistoryItemCardState();
-}
-
-class _HistoryItemCardState extends State<HistoryItemCard> {
-  bool _isHovered = false;
-  bool _isPressed = false;
+  const HistoryItemCard({
+    super.key,
+    required this.data,
+    required this.index,
+    this.isLast = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    final bool isCompleted =
-        widget.data.currentCount >= widget.data.targetCount;
-    final double percentage = widget.data.targetCount > 0
-        ? (widget.data.currentCount / widget.data.targetCount) * 100
+    final isCompleted =
+        data.targetCount > 0 && data.currentCount >= data.targetCount;
+    final double percentage = data.targetCount > 0
+        ? (data.currentCount / data.targetCount) * 100
         : 0;
 
     final Color statusColor = setPercentageCompletionColor(percentage);
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTap: () async {
-          // Logic for whatever tapping the card should do can go here
-
-          // Keep the highlight visible for a short duration
-          await Future.delayed(const Duration(milliseconds: 400));
-          if (mounted) setState(() => _isPressed = false);
-        },
-        onTapCancel: () => setState(() => _isPressed = false),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: (_isHovered || _isPressed)
-                ? LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      statusColor.withValues(alpha: 0.02),
-                      statusColor.withValues(alpha: 0.1),
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  )
-                : const LinearGradient(
-                    colors: [Colors.transparent, Colors.transparent],
-                  ),
-            border: Border(
-              bottom: BorderSide(
-                color: theme.dividerColor.withValues(alpha: 0.5),
-                width: 1,
-              ),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'سُبْحَانَ اللَّهِ', // Hardcoded demo title
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w200,
-                          letterSpacing: -0.2,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        'SubhanAllah', // Hardcoded demo title
-                        style: TextStyle(color: theme.hintColor, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                  if (isCompleted)
-                    const Icon(
-                      Icons.check_circle_rounded,
-                      color: Colors.green,
-                      size: 18,
-                    ),
-                ],
+              // Icon/Status Indicator
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  isCompleted ? Icons.done_all_rounded : Icons.history_rounded,
+                  color: statusColor,
+                  size: 20,
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const SizedBox(width: 16),
+
+              // Count Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Session #${data.id}',
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      DateFormat('hh:mm a').format(data.createdAt),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.outline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Progress/Score
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   RichText(
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: '${widget.data.currentCount}',
-                          style: textTheme.bodyLarge?.copyWith(
+                          text: '${data.currentCount}',
+                          style: theme.textTheme.titleMedium?.copyWith(
                             color: statusColor,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        TextSpan(
-                          text: ' /${widget.data.targetCount}',
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: theme.hintColor,
+                        if (data.targetCount > 0)
+                          TextSpan(
+                            text: ' / ${data.targetCount}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.outline,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
-                  Text(
-                    getFormattedHistoryTimestamp(widget.data.createdAt),
-                    style: textTheme.bodySmall?.copyWith(
-                      color: theme.hintColor,
-                      fontWeight: FontWeight.w500,
+                  if (data.targetCount > 0)
+                    Text(
+                      '${percentage.toInt()}%',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.outline.withValues(alpha: 0.7),
+                        fontSize: 10,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ],
           ),
         ),
-      ),
-    ).animate().fadeIn().slideX(begin: 0.05, delay: (widget.index * 40).ms);
+        if (!isLast)
+          Divider(
+            height: 1,
+            indent: 56,
+            endIndent: 16,
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
+      ],
+    ).animate().fadeIn().slideX(begin: 0.05, delay: (index * 40).ms);
   }
 }

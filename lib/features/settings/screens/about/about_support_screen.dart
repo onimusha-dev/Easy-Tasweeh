@@ -17,32 +17,77 @@ class AboutSupportScreen extends StatelessWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
-          const SizedBox(height: 8),
-          buildSettingTile(
-            context,
-            icon: Icons.favorite_border_rounded,
-            title: 'Support & donate',
-            subtitle: '100% goes to charity',
-            iconColor: AppIconColors.pink(context),
-            onTap: () {},
+          const SizedBox(height: 24),
+          // Branding Section
+          Center(
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Version ${AppConstants.appVersion}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+                ),
+              ],
+            ),
           ),
-          buildSettingTile(
+          const SizedBox(height: 40),
+          buildSettingsGroup(
             context,
-            icon: Icons.star_border_rounded,
-            title: 'Rate the app',
-            subtitle: 'Help others find Easy Tasbeeh',
-            iconColor: AppIconColors.amber(context),
-            onTap: () {},
-          ),
-          buildSettingTile(
-            context,
-            icon: Icons.mail_outline_rounded,
-            title: 'Send feedback',
-            subtitle: 'Suggest features or report bugs',
-            iconColor: AppIconColors.teal(context),
-            onTap: () => _launchEmail(context),
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.favorite_border_rounded,
+                title: 'Support & donate',
+                subtitle: '100% goes to charity',
+                iconColor: AppIconColors.pink(context),
+                onTap: () {},
+                showChevron: false,
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.star_border_rounded,
+                title: 'Rate the app',
+                subtitle: 'Help others find Easy Tasbeeh',
+                iconColor: AppIconColors.amber(context),
+                onTap: () {},
+                showChevron: false,
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.mail_outline_rounded,
+                title: 'Send feedback',
+                subtitle: 'Suggest features or report bugs',
+                iconColor: AppIconColors.teal(context),
+                onTap: () => _launchEmail(context),
+                showChevron: false,
+              ),
+            ],
           ),
           const SizedBox(height: 32),
         ],
