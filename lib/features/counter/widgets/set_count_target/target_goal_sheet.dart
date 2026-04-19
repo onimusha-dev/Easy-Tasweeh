@@ -9,7 +9,8 @@ class TargetGoalSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<int> targets = [10, 300, 500, 700, 1000];
+    final List<int> targets = [10, 33, 100, 300, 500];
+    final colorScheme = Theme.of(context).colorScheme;
 
     final countAsync = ref.watch(currentCountStreamProvider);
     final currentTarget = countAsync.when(
@@ -21,116 +22,164 @@ class TargetGoalSheet extends ConsumerWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 72),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 48),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Handle
+          Container(
+            width: 32,
+            height: 4,
+            decoration: BoxDecoration(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Header
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 40,
-                height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(2),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.track_changes_rounded,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Set Target Goal',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Choose how many counts for this session',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: colorScheme.outline,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Set Target Goal',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Choose how many counts for this session',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ),
           const SizedBox(height: 24),
-          GridView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.8,
-            ),
-            itemCount: targets.length + 1, // +1 for Infinite
-            itemBuilder: (context, index) {
-              final isInfinite = index == targets.length;
-              final target = isInfinite ? 0 : targets[index];
-              final isSelected = currentTarget == target;
 
-              return InkWell(
-                onTap: () {
-                  ref.read(countRepositoryProvider).setTarget(target);
-                  Navigator.pop(context);
-                },
-                borderRadius: BorderRadius.circular(16),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).colorScheme.primary
-                        : Theme.of(context).colorScheme.surfaceContainerHighest
-                              .withValues(alpha: 0.5),
-                    border: Border.all(
+          // Target Selection Card
+          Container(
+            decoration: BoxDecoration(color: colorScheme.surfaceContainerLow),
+            child: GridView.builder(
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.8,
+              ),
+              itemCount: targets.length + 1,
+              itemBuilder: (context, index) {
+                final isInfinite = index == targets.length;
+                final target = isInfinite ? 0 : targets[index];
+                final isSelected = currentTarget == target;
+
+                return InkWell(
+                  onTap: () {
+                    ref.read(countRepositoryProvider).setTarget(target);
+                    Navigator.pop(context);
+                  },
+                  borderRadius: BorderRadius.circular(16),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    decoration: BoxDecoration(
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.outlineVariant,
-                      width: isSelected ? 2 : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      isInfinite ? '∞' : '$target',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        fontSize: isInfinite ? 20 : 16,
+                          ? colorScheme.primary
+                          : colorScheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
                         color: isSelected
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.onSurface,
+                            ? colorScheme.primary
+                            : colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        width: isSelected ? 2 : 1,
+                      ),
+                      boxShadow: const [],
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            isInfinite ? '∞' : '$target',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isSelected
+                                      ? colorScheme.onPrimary
+                                      : colorScheme.onSurface,
+                                ),
+                          ),
+                          if (isInfinite)
+                            Text(
+                              'INFINITE',
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    fontSize: 8,
+                                    color: isSelected
+                                        ? colorScheme.onPrimary.withValues(
+                                            alpha: 0.7,
+                                          )
+                                        : colorScheme.outline,
+                                  ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           const SizedBox(height: 24),
-          _SessionActionButton(
+
+          // Session Actions
+          _sessionActionButton(
             context,
             ref,
             currentCount: countAsync.asData?.value?.currentCount ?? 0,
           ),
+          const SizedBox(height: 24),
         ],
       ),
     );
   }
 }
 
-Widget _SessionActionButton(
+Widget _sessionActionButton(
   BuildContext context,
   WidgetRef ref, {
   required int currentCount,
 }) {
+  final colorScheme = Theme.of(context).colorScheme;
   final appColors = Theme.of(context).extension<AppColors>();
+
   if (currentCount > 0) {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton.icon(
+      child: TextButton.icon(
         onPressed: () {
           Navigator.pop(context);
           showDialog(
@@ -140,27 +189,21 @@ Widget _SessionActionButton(
         },
         icon: Icon(
           Icons.archive_outlined,
-          size: 20,
+          size: 18,
           color: appColors?.destructiveColor,
         ),
         label: Text(
-          'Archive Current Session',
+          'ARCHIVE SESSION',
           style: TextStyle(
             color: appColors?.destructiveColor,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
+            fontSize: 12,
           ),
         ),
-        style: OutlinedButton.styleFrom(
+        style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.04),
-          side: BorderSide(
-            color:
-                appColors?.destructiveColor.withValues(alpha: 0.3) ??
-                Colors.red,
-            width: 1.5,
-          ),
-          overlayColor: appColors?.destructiveColor.withValues(alpha: 0.1),
+          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -170,7 +213,7 @@ Widget _SessionActionButton(
   } else {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton.icon(
+      child: TextButton.icon(
         onPressed: () async {
           final success = await ref
               .read(countRepositoryProvider)
@@ -190,19 +233,21 @@ Widget _SessionActionButton(
             );
           }
         },
-        icon: const Icon(Icons.restore_rounded, size: 20),
-        label: const Text(
+        icon: Icon(Icons.restore_rounded, size: 18, color: colorScheme.primary),
+        label: Text(
           'RESTORE LAST SESSION',
-          style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5),
+          style: TextStyle(
+            color: colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+            fontSize: 12,
+          ),
         ),
-        style: OutlinedButton.styleFrom(
+        style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: colorScheme.primary.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-          ),
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-            width: 1.5,
           ),
         ),
       ),

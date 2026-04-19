@@ -23,8 +23,8 @@ class CounterPreview extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      height: size.height * 0.45,
-      width: size.width * 0.5,
+      height: size.height * 0.35, // Reduced from 0.45 to prevent overflow
+      width: size.width * 0.6, // Slightly wider for better balance
       margin: const EdgeInsets.symmetric(horizontal: 24),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -42,7 +42,10 @@ class CounterPreview extends StatelessWidget {
         children: [
           _buildBackground(),
           _buildBadge(),
-          _buildContent(),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: FittedBox(fit: BoxFit.scaleDown, child: _buildContent()),
+          ),
         ],
       ),
     );
@@ -125,10 +128,7 @@ class CounterPreview extends StatelessWidget {
         SizedBox(
           width: 100,
           height: 100,
-          child: CounterButton(
-            onTap: onTap,
-            previewStyle: previewStyle,
-          ),
+          child: CounterButton(onTap: onTap, previewStyle: previewStyle),
         ),
       ],
     );
