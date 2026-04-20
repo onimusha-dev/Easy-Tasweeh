@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -35,7 +35,10 @@ class AppDatabase extends _$AppDatabase {
       await m.createAll();
     },
     onUpgrade: (migrator, from, to) async {
-      // Handle migrations here as the app grows
+      if (from < 2) {
+        await migrator.addColumn(currentCountTable, currentCountTable.dhikrId);
+        await migrator.addColumn(countHistoryTable, countHistoryTable.dhikrId);
+      }
     },
   );
 

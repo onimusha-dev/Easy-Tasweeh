@@ -107,9 +107,9 @@ class TargetGoalSheet extends ConsumerWidget {
                         context: context,
                         builder: (ctx) => PremiumDialog(
                           icon: Icons.track_changes_rounded,
-                          title: 'Change Goal?',
+                          title: 'Save session?',
                           description:
-                              'Changing your goal will archive your current session of $currentCount counts and reset the counter for the new goal.',
+                              'This will save your current progress to history.',
                           confirmLabel: 'Archive',
                           onConfirm: () {
                             ref.read(countRepositoryProvider).saveAndReset();

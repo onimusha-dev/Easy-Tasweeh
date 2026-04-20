@@ -1,3 +1,4 @@
+import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:flutter/material.dart';
@@ -54,12 +55,18 @@ class HistoryItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Session #${data.id}',
+                      dhikrList.firstWhere(
+                        (d) => d.id == data.dhikrId,
+                        orElse: () => dhikrList.first,
+                      ).arabic,
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      DateFormat('hh:mm a').format(data.createdAt),
+                      '${dhikrList.firstWhere(
+                            (d) => d.id == data.dhikrId,
+                            orElse: () => dhikrList.first,
+                          ).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.outline,
                       ),

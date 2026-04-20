@@ -72,7 +72,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
             body: countAsync.when(
               data: (countData) {
                 final current = countData?.currentCount ?? 0;
-                final target = countData?.targetCount ?? 0;
+                final target = countData?.targetCount ?? 33;
                 final currentDhikr = ref.watch(currentDhikrProvider);
                 final progress = target > 0
                     ? (current / target).clamp(0.0, 1.0)

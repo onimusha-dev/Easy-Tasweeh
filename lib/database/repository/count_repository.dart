@@ -32,12 +32,14 @@ class CountRepository {
     if (counts.isEmpty) {
       await _currentCountDao.insertCount(
         const CurrentCountTableCompanion(
-          targetCount: Value(0),
+          targetCount: Value(33),
           currentCount: Value(0),
         ),
       );
       final newCounts = await _currentCountDao.getAllCounts();
-      return newCounts.first;
+      return newCounts.isNotEmpty
+          ? newCounts.first
+          : throw Exception('Failed to initialize count');
     }
     return counts.first;
   }
@@ -80,6 +82,7 @@ class CountRepository {
         CountHistoryTableCompanion(
           targetCount: Value(current.targetCount),
           currentCount: Value(current.currentCount),
+          dhikrId: Value(current.dhikrId),
           createdAt: Value(DateTime.now()),
         ),
       );
@@ -95,6 +98,18 @@ class CountRepository {
       CurrentCountTableCompanion(
         id: Value(current.id),
         targetCount: Value(target),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  // Set current dhikr ID
+  Future<void> setDhikrId(String dhikrId) async {
+    final current = await getOrCreateCurrentCount();
+    await _currentCountDao.updateCount(
+      CurrentCountTableCompanion(
+        id: Value(current.id),
+        dhikrId: Value(dhikrId),
         updatedAt: Value(DateTime.now()),
       ),
     );

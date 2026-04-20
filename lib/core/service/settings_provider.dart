@@ -75,6 +75,7 @@ class SettingsState {
   final int milestoneValue;
   final double buttonSize;
   final bool showParticles;
+  final String lastDhikrId;
 
   SettingsState({
     required this.morningReminder,
@@ -102,6 +103,7 @@ class SettingsState {
     required this.milestoneValue,
     required this.buttonSize,
     required this.showParticles,
+    required this.lastDhikrId,
   });
 
   SettingsState copyWith({
@@ -130,6 +132,7 @@ class SettingsState {
     int? milestoneValue,
     double? buttonSize,
     bool? showParticles,
+    String? lastDhikrId,
   }) {
     return SettingsState(
       morningReminder: morningReminder ?? this.morningReminder,
@@ -158,6 +161,7 @@ class SettingsState {
       milestoneValue: milestoneValue ?? this.milestoneValue,
       buttonSize: buttonSize ?? this.buttonSize,
       showParticles: showParticles ?? this.showParticles,
+      lastDhikrId: lastDhikrId ?? this.lastDhikrId,
     );
   }
 }
@@ -191,6 +195,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           milestoneValue: 33,
           buttonSize: 220,
           showParticles: false,
+          lastDhikrId: 'subhanallah',
         ),
       ) {
     _loadSettings();
@@ -223,6 +228,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _milestoneValueKey = 'milestone_value';
   static const _buttonSizeKey = 'button_size';
   static const _showParticlesKey = 'show_particles';
+  static const _lastDhikrIdKey = 'last_dhikr_id';
 
   final NotificationService _notificationService = NotificationService();
 
@@ -265,6 +271,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       milestoneValue: prefs.getInt(_milestoneValueKey) ?? 33,
       buttonSize: prefs.getDouble(_buttonSizeKey) ?? 220,
       showParticles: prefs.getBool(_showParticlesKey) ?? false,
+      lastDhikrId: prefs.getString(_lastDhikrIdKey) ?? 'subhanallah',
     );
   }
 
@@ -477,5 +484,11 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_showParticlesKey, value);
     state = state.copyWith(showParticles: value);
+  }
+  
+  Future<void> setLastDhikrId(String dhikrId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_lastDhikrIdKey, dhikrId);
+    state = state.copyWith(lastDhikrId: dhikrId);
   }
 }

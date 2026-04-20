@@ -3,6 +3,7 @@ import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:easy_tasweeh/features/history/widgets/history_item_card.dart';
+import 'package:easy_tasweeh/features/history/widgets/history_totals_card.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,14 +35,15 @@ class HistoryScreen extends ConsumerWidget {
               child: Opacity(
                 opacity: 0.5,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Spacer(flex: 2),
                     const Icon(Icons.history_toggle_off_rounded, size: 64),
                     const SizedBox(height: 16),
                     Text(
                       'No sessions documented.',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
+                    const Spacer(flex: 3),
                   ],
                 ),
               ),
@@ -55,40 +57,46 @@ class HistoryScreen extends ConsumerWidget {
 
           return ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            children: grouped.entries.map((entry) {
-              final dateStr = entry.key;
-              final items = entry.value;
+            children: [
+              const SizedBox(height: 8),
+              HistoryTotalsCard(history: historyList),
+              const SizedBox(height: 24),
+              ...grouped.entries.map((entry) {
+                final dateStr = entry.key;
+                final items = entry.value;
 
-              // Format date label (Today, Yesterday, or Date)
-              final date = DateTime.parse(dateStr);
-              final now = DateTime.now();
-              final today = DateTime(now.year, now.month, now.day);
-              final yesterday = today.subtract(const Duration(days: 1));
+                // Format date label (Today, Yesterday, or Date)
+                final date = DateTime.parse(dateStr);
+                final now = DateTime.now();
+                final today = DateTime(now.year, now.month, now.day);
+                final yesterday = today.subtract(const Duration(days: 1));
 
-              String label;
-              if (date == today) {
-                label = 'TODAY';
-              } else if (date == yesterday) {
-                label = 'YESTERDAY';
-              } else {
-                label = DateFormat('MMMM d, yyyy').format(date).toUpperCase();
-              }
+                String label;
+                if (date == today) {
+                  label = 'TODAY';
+                } else if (date == yesterday) {
+                  label = 'YESTERDAY';
+                } else {
+                  label = DateFormat('MMMM d, yyyy').format(date).toUpperCase();
+                }
 
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: buildSettingsGroup(
-                  context,
-                  title: label,
-                  children: items.mapIndexed((idx, data) {
-                    return HistoryItemCard(
-                      data: data,
-                      index: idx,
-                      isLast: idx == items.length - 1,
-                    );
-                  }).toList(),
-                ),
-              );
-            }).toList(),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: buildSettingsGroup(
+                    context,
+                    title: label,
+                    children: items.mapIndexed((idx, data) {
+                      return HistoryItemCard(
+                        data: data,
+                        index: idx,
+                        isLast: idx == items.length - 1,
+                      );
+                    }).toList(),
+                  ),
+                );
+              }),
+              const SizedBox(height: 32),
+            ],
           );
         },
       ),
