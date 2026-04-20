@@ -17,7 +17,7 @@ class PremiumDialog extends StatelessWidget {
     required this.confirmLabel,
     required this.onConfirm,
     this.color,
-    this.cancelLabel = 'CANCEL',
+    this.cancelLabel = 'Cancel',
   });
 
   @override

@@ -12,7 +12,7 @@ class ArchiveDialog extends ConsumerWidget {
       icon: Icons.archive_outlined,
       title: 'Archive Session?',
       description: 'This will save your current progress to history and reset the counter for a new start.',
-      confirmLabel: 'ARCHIVE',
+      confirmLabel: 'Archive',
       color: Theme.of(context).colorScheme.error,
       onConfirm: () {
         ref.read(countRepositoryProvider).saveAndReset();

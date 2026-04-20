@@ -1,4 +1,5 @@
 import 'package:easy_tasweeh/core/theme/theme.dart';
+import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasweeh/database/repository/count_repository.dart';
 import 'package:easy_tasweeh/features/counter/widgets/set_count_target/archive_dialog.dart';
 import 'package:flutter/material.dart';
@@ -99,8 +100,28 @@ class TargetGoalSheet extends ConsumerWidget {
 
                 return InkWell(
                   onTap: () {
-                    ref.read(countRepositoryProvider).setTarget(target);
-                    Navigator.pop(context);
+                    final currentCount =
+                        countAsync.asData?.value?.currentCount ?? 0;
+                    if (currentCount > 0) {
+                      showDialog(
+                        context: context,
+                        builder: (ctx) => PremiumDialog(
+                          icon: Icons.track_changes_rounded,
+                          title: 'Change Goal?',
+                          description:
+                              'Changing your goal will archive your current session of $currentCount counts and reset the counter for the new goal.',
+                          confirmLabel: 'Archive',
+                          onConfirm: () {
+                            ref.read(countRepositoryProvider).saveAndReset();
+                            ref.read(countRepositoryProvider).setTarget(target);
+                            Navigator.pop(context); // Close sheet
+                          },
+                        ),
+                      );
+                    } else {
+                      ref.read(countRepositoryProvider).setTarget(target);
+                      Navigator.pop(context);
+                    }
                   },
                   borderRadius: BorderRadius.circular(16),
                   child: AnimatedContainer(
@@ -132,19 +153,6 @@ class TargetGoalSheet extends ConsumerWidget {
                                       : colorScheme.onSurface,
                                 ),
                           ),
-                          if (isInfinite)
-                            Text(
-                              'INFINITE',
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    fontSize: 8,
-                                    color: isSelected
-                                        ? colorScheme.onPrimary.withValues(
-                                            alpha: 0.7,
-                                          )
-                                        : colorScheme.outline,
-                                  ),
-                            ),
                         ],
                       ),
                     ),
@@ -193,7 +201,7 @@ Widget _sessionActionButton(
           color: appColors?.destructiveColor,
         ),
         label: Text(
-          'ARCHIVE SESSION',
+          'Archive Session',
           style: TextStyle(
             color: appColors?.destructiveColor,
             fontWeight: FontWeight.bold,
@@ -235,7 +243,7 @@ Widget _sessionActionButton(
         },
         icon: Icon(Icons.restore_rounded, size: 18, color: colorScheme.primary),
         label: Text(
-          'RESTORE LAST SESSION',
+          'Restore Last Session',
           style: TextStyle(
             color: colorScheme.primary,
             fontWeight: FontWeight.bold,

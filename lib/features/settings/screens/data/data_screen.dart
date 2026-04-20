@@ -41,8 +41,9 @@ class DataScreen extends StatelessWidget {
       builder: (ctx) => PremiumDialog(
         icon: Icons.delete_sweep_rounded,
         title: 'Reset all data?',
-        description: 'This will permanently delete your session history and reset all preferences. This cannot be undone.',
-        confirmLabel: 'RESET',
+        description:
+            'This will permanently delete your session history and reset all preferences. This cannot be undone.',
+        confirmLabel: 'Reset',
         color: Theme.of(context).colorScheme.error,
         onConfirm: () {
           ScaffoldMessenger.of(context).showSnackBar(
