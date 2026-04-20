@@ -55,18 +55,26 @@ class CounterPreview extends StatelessWidget {
     return Positioned.fill(
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
-        child: Container(
+        child: Builder(
           key: ValueKey(selectedBackground),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(selectedBackground),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withValues(alpha: backgroundOpacity),
-                BlendMode.darken,
+          builder: (context) {
+            final colorScheme = Theme.of(context).colorScheme;
+            return Container(
+              decoration: BoxDecoration(
+                color: selectedBackground.isEmpty ? colorScheme.surface : null,
+                image: selectedBackground.isEmpty
+                    ? null
+                    : DecorationImage(
+                        image: AssetImage(selectedBackground),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withValues(alpha: backgroundOpacity),
+                          BlendMode.darken,
+                        ),
+                      ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

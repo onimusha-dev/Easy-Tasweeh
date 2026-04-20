@@ -17,6 +17,7 @@ class _BgChangerPreviewScreenState
   int _demoCount = 33;
 
   final List<Map<String, String>> _availableBackgrounds = [
+    {'name': 'None', 'path': ''},
     {'name': 'Ocean Mist', 'path': 'assets/images/bg/bg-1.png'},
     {'name': 'Emerald Forest', 'path': 'assets/images/bg/bg-2.png'},
     {'name': 'Dusk Rose', 'path': 'assets/images/bg/bg-3.png'},
@@ -156,7 +157,17 @@ class _BgChangerPreviewScreenState
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.asset(bg['path']!, fit: BoxFit.cover),
+                        if (bg['path']!.isEmpty)
+                          Container(
+                            color: colorScheme.surface,
+                            child: Icon(
+                              Icons.block_rounded,
+                              color: colorScheme.outline.withValues(alpha: 0.3),
+                              size: 24,
+                            ),
+                          )
+                        else
+                          Image.asset(bg['path']!, fit: BoxFit.cover),
                         if (isSelected)
                           Container(
                             color: colorScheme.primary.withValues(alpha: 0.2),

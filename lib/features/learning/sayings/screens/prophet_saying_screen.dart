@@ -1,7 +1,6 @@
 import 'package:easy_tasweeh/core/models/saying_model.dart';
 import 'package:easy_tasweeh/features/learning/sayings/widgets/saying_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class ProphetSayingScreen extends StatelessWidget {
   const ProphetSayingScreen({super.key});
@@ -28,7 +27,7 @@ class ProphetSayingScreen extends StatelessWidget {
           final item = hadiths[index];
           return SayingTile(
             item: item,
-          ).animate().fadeIn(delay: (100 * index).ms).slideX(begin: 0.1);
+          );
         },
       ),
     );

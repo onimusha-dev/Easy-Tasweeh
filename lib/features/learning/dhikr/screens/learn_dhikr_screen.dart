@@ -3,7 +3,6 @@ import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/features/learning/dhikr/widgets/dhikr_tile.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class LearnDhikrScreen extends StatelessWidget {
   const LearnDhikrScreen({super.key});
@@ -32,7 +31,7 @@ class LearnDhikrScreen extends StatelessWidget {
                 isLast: itemIdx == dhikrList.length - 1,
               );
             }).toList(),
-          ).animate().fadeIn().slideY(begin: 0.1),
+          ),
           const SizedBox(height: 58),
         ],
       ),

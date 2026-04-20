@@ -185,7 +185,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           resumeLastSession: false,
           themeMode: ThemeMode.system,
           colorScheme: AppColorScheme.teal,
-          background: 'assets/images/bg/bg-1.png',
+          background: '',
           backgroundOpacity: 0.75,
           pressButtonStyle: PressButtonStyle.first,
           showArabic: true,
@@ -260,7 +260,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           .values[prefs.getInt(_themeModeKey) ?? ThemeMode.system.index],
       colorScheme: AppColorScheme
           .values[prefs.getInt(_colorSchemeKey) ?? AppColorScheme.teal.index],
-      background: prefs.getString(_backgroundKey) ?? 'assets/images/bg/bg-1.png',
+      background: prefs.getString(_backgroundKey) ?? '',
       backgroundOpacity: prefs.getDouble(_backgroundOpacityKey) ?? 0.75,
       pressButtonStyle: PressButtonStyle
           .values[prefs.getInt(_pressButtonStyleKey) ?? PressButtonStyle.first.index],

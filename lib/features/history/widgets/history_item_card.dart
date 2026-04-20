@@ -2,7 +2,6 @@ import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/utils/color_utils.dart';
 import 'package:easy_tasweeh/database/db.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 
 class HistoryItemCard extends StatelessWidget {
@@ -120,6 +119,6 @@ class HistoryItemCard extends StatelessWidget {
             color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
       ],
-    ).animate().fadeIn().slideX(begin: 0.05, delay: (index * 40).ms);
+    );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:easy_tasweeh/core/models/dhikr_model.dart';
 import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class DhikrDetailScreen extends StatelessWidget {
   final DhikrItem item;
@@ -75,7 +74,7 @@ class DhikrDetailScreen extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-    ).animate().fadeIn().scale(begin: const Offset(0.98, 0.98));
+    );
   }
 
   Widget _buildDictionaryEntry(BuildContext context, DhikrItem item) {
@@ -141,7 +140,7 @@ class DhikrDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.05);
+    );
   }
 
   Widget _buildDictionaryBenefit(BuildContext context, String benefit) {
@@ -192,6 +191,6 @@ class DhikrDetailScreen extends StatelessWidget {
           ),
         ),
       ],
-    ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.05);
+    );
   }
 }

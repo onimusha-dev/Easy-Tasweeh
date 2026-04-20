@@ -3,7 +3,6 @@ import 'package:easy_tasweeh/features/learning/dhikr/screens/learn_dhikr_screen.
 import 'package:easy_tasweeh/features/learning/sayings/screens/prophet_saying_screen.dart';
 import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class LearnScreen extends StatelessWidget {
   const LearnScreen({super.key});
@@ -29,7 +28,7 @@ class LearnScreen extends StatelessWidget {
               letterSpacing: 2.0,
               fontWeight: FontWeight.w900,
             ),
-          ).animate().fadeIn().slideX(begin: -0.1),
+          ),
           
           const SizedBox(height: 16),
           
@@ -64,7 +63,7 @@ class LearnScreen extends StatelessWidget {
                 },
               ),
             ],
-          ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
+          ),
           
           const SizedBox(height: 32),
           
@@ -124,6 +123,6 @@ class LearnScreen extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 400.ms).scale(begin: const Offset(0.98, 0.98));
+    );
   }
 }

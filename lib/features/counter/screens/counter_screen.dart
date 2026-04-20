@@ -33,14 +33,17 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(settings.background),
-          colorFilter: ColorFilter.mode(
-            Colors.black.withValues(alpha: settings.backgroundOpacity),
-            BlendMode.darken,
-          ),
-          fit: BoxFit.cover,
-        ),
+        color: settings.background.isEmpty ? colorScheme.surface : null,
+        image: settings.background.isEmpty
+            ? null
+            : DecorationImage(
+                image: AssetImage(settings.background),
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withValues(alpha: settings.backgroundOpacity),
+                  BlendMode.darken,
+                ),
+                fit: BoxFit.cover,
+              ),
       ),
       child: Stack(
         children: [
