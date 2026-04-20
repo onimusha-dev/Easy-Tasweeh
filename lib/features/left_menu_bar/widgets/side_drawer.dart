@@ -91,7 +91,6 @@ class SideDrawer extends StatelessWidget {
                     child: Column(
                       children: [
                         _DrawerTile(
-                          context,
                           icon: Icons.auto_graph_rounded,
                           title: 'Analytics',
                           iconColor: Colors.blue,
@@ -99,7 +98,6 @@ class SideDrawer extends StatelessWidget {
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.history_rounded,
                           title: 'History Log',
                           iconColor: Colors.orange,
@@ -107,7 +105,6 @@ class SideDrawer extends StatelessWidget {
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.menu_book_rounded,
                           title: 'Learning Hub',
                           iconColor: Colors.green,
@@ -115,7 +112,6 @@ class SideDrawer extends StatelessWidget {
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.settings_rounded,
                           title: 'Settings',
                           iconColor: Colors.grey,
@@ -164,8 +160,7 @@ class _DrawerTile extends StatelessWidget {
   final Color iconColor;
   final Widget screen;
 
-  const _DrawerTile(
-    BuildContext context, {
+  const _DrawerTile({
     required this.icon,
     required this.title,
     required this.iconColor,

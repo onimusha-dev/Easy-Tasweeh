@@ -67,7 +67,6 @@ flutter:
     - assets/images/bg/
     - assets/fonts/
     - assets/logo.png
-    - assets/images/
 
   fonts:
     - family: GoogleSansFlex

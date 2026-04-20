@@ -78,12 +78,13 @@ class _PressBtnChangerPreviewScreenState
                   if (hasChanges)
                     TextButton(
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
                             .setPressButtonStyle(activeStyle);
                         if (mounted) {
                           setState(() => _selectedStyle = null);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(
                               content: Text('Button style updated!'),
                             ),

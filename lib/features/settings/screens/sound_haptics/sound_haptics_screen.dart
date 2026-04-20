@@ -142,25 +142,27 @@ class SoundHapticsScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Milestone'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [33, 100, 1000].map((val) {
-            return RadioListTile<int>(
-              title: Text('Every $val counts'),
-              value: val,
-              groupValue: current,
-              activeColor: Theme.of(context).colorScheme.primary,
-              onChanged: (v) {
-                if (v != null) {
-                  notifier.setMilestoneValue(v);
-                  // Preview haptic + vibration
-                  HapticFeedback.mediumImpact();
-                  Vibration.vibrate(duration: 60);
-                }
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        content: RadioGroup<int>(
+          groupValue: current,
+          onChanged: (v) {
+            if (v != null) {
+              notifier.setMilestoneValue(v);
+              // Preview haptic + vibration
+              HapticFeedback.mediumImpact();
+              Vibration.vibrate(duration: 60);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [33, 100, 1000].map((val) {
+              return RadioListTile<int>(
+                title: Text('Every $val counts'),
+                value: val,
+                activeColor: Theme.of(context).colorScheme.primary,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

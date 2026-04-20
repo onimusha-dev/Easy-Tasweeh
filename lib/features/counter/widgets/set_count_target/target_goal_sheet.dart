@@ -105,7 +105,7 @@ class TargetGoalSheet extends ConsumerWidget {
                     if (currentCount > 0) {
                       showDialog(
                         context: context,
-                        builder: (ctx) => PremiumDialog(
+                        builder: (_) => PremiumDialog(
                           icon: Icons.track_changes_rounded,
                           title: 'Save session?',
                           description:

@@ -127,21 +127,23 @@ class AppearanceScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Theme'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: ThemeMode.values.map((mode) {
-            return RadioListTile<ThemeMode>(
-              title: Text(mode.name.toUpperCase()),
-              value: mode,
-              groupValue: ref.watch(settingsProvider).themeMode,
-              onChanged: (v) {
-                if (v != null) {
-                  ref.read(settingsProvider.notifier).setThemeMode(v);
-                }
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        content: RadioGroup<ThemeMode>(
+          groupValue: ref.watch(settingsProvider).themeMode,
+          onChanged: (v) {
+            if (v != null) {
+              ref.read(settingsProvider.notifier).setThemeMode(v);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: ThemeMode.values.map((mode) {
+              return RadioListTile<ThemeMode>(
+                title: Text(mode.name.toUpperCase()),
+                value: mode,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -153,23 +155,27 @@ class AppearanceScreen extends ConsumerWidget {
       builder: (context) {
         final current = ref.watch(settingsProvider).colorScheme;
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           title: const Text('Select Accent'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: AppColorScheme.values.map((scheme) {
-              return RadioListTile<AppColorScheme>(
-                title: Text(scheme.name.toUpperCase()),
-                value: scheme,
-                groupValue: current,
-                onChanged: (v) {
-                  if (v != null) {
-                    ref.read(settingsProvider.notifier).setColorScheme(v);
-                  }
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
+          content: RadioGroup<AppColorScheme>(
+            groupValue: current,
+            onChanged: (v) {
+              if (v != null) {
+                ref.read(settingsProvider.notifier).setColorScheme(v);
+              }
+              Navigator.pop(context);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: AppColorScheme.values.map((scheme) {
+                return RadioListTile<AppColorScheme>(
+                  title: Text(scheme.name.toUpperCase()),
+                  value: scheme,
+                );
+              }).toList(),
+            ),
           ),
         );
       },

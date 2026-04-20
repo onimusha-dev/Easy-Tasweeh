@@ -21,6 +21,7 @@ class MyApp extends ConsumerWidget {
     final colorScheme = settings.colorScheme;
 
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Easy Tasweeh',
       theme: AppTheme.createTheme(

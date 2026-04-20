@@ -71,12 +71,13 @@ class _BgChangerPreviewScreenState
                   if (hasChanges)
                     TextButton(
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
                             .setBackground(activeBg);
                         if (mounted) {
                           setState(() => _selectedBackground = null);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(
                               content: Text('Appearance updated!'),
                             ),

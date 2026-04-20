@@ -38,7 +38,7 @@ class DataScreen extends StatelessWidget {
   void _confirmReset(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => PremiumDialog(
+      builder: (_) => PremiumDialog(
         icon: Icons.delete_sweep_rounded,
         title: 'Reset all data?',
         description:
