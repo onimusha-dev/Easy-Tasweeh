@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_tasweeh/core/theme/theme.dart';
 import 'package:easy_tasweeh/core/service/notification_service.dart';
+import 'package:easy_tasweeh/core/models/saying_model.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,6 +76,18 @@ class SettingsState {
   final int milestoneValue;
   final double buttonSize;
   final bool showParticles;
+  final bool sayingReminders;
+  final int sayingsPerDay;
+  final bool afterSalahFajr;
+  final ReminderTime afterSalahFajrTime;
+  final bool afterSalahDhuhr;
+  final ReminderTime afterSalahDhuhrTime;
+  final bool afterSalahAsr;
+  final ReminderTime afterSalahAsrTime;
+  final bool afterSalahMaghrib;
+  final ReminderTime afterSalahMaghribTime;
+  final bool afterSalahIsha;
+  final ReminderTime afterSalahIshaTime;
   final String lastDhikrId;
 
   SettingsState({
@@ -103,6 +116,18 @@ class SettingsState {
     required this.milestoneValue,
     required this.buttonSize,
     required this.showParticles,
+    required this.sayingReminders,
+    required this.sayingsPerDay,
+    required this.afterSalahFajr,
+    required this.afterSalahFajrTime,
+    required this.afterSalahDhuhr,
+    required this.afterSalahDhuhrTime,
+    required this.afterSalahAsr,
+    required this.afterSalahAsrTime,
+    required this.afterSalahMaghrib,
+    required this.afterSalahMaghribTime,
+    required this.afterSalahIsha,
+    required this.afterSalahIshaTime,
     required this.lastDhikrId,
   });
 
@@ -132,6 +157,18 @@ class SettingsState {
     int? milestoneValue,
     double? buttonSize,
     bool? showParticles,
+    bool? sayingReminders,
+    int? sayingsPerDay,
+    bool? afterSalahFajr,
+    ReminderTime? afterSalahFajrTime,
+    bool? afterSalahDhuhr,
+    ReminderTime? afterSalahDhuhrTime,
+    bool? afterSalahAsr,
+    ReminderTime? afterSalahAsrTime,
+    bool? afterSalahMaghrib,
+    ReminderTime? afterSalahMaghribTime,
+    bool? afterSalahIsha,
+    ReminderTime? afterSalahIshaTime,
     String? lastDhikrId,
   }) {
     return SettingsState(
@@ -161,6 +198,19 @@ class SettingsState {
       milestoneValue: milestoneValue ?? this.milestoneValue,
       buttonSize: buttonSize ?? this.buttonSize,
       showParticles: showParticles ?? this.showParticles,
+      sayingReminders: sayingReminders ?? this.sayingReminders,
+      sayingsPerDay: sayingsPerDay ?? this.sayingsPerDay,
+      afterSalahFajr: afterSalahFajr ?? this.afterSalahFajr,
+      afterSalahFajrTime: afterSalahFajrTime ?? this.afterSalahFajrTime,
+      afterSalahDhuhr: afterSalahDhuhr ?? this.afterSalahDhuhr,
+      afterSalahDhuhrTime: afterSalahDhuhrTime ?? this.afterSalahDhuhrTime,
+      afterSalahAsr: afterSalahAsr ?? this.afterSalahAsr,
+      afterSalahAsrTime: afterSalahAsrTime ?? this.afterSalahAsrTime,
+      afterSalahMaghrib: afterSalahMaghrib ?? this.afterSalahMaghrib,
+      afterSalahMaghribTime:
+          afterSalahMaghribTime ?? this.afterSalahMaghribTime,
+      afterSalahIsha: afterSalahIsha ?? this.afterSalahIsha,
+      afterSalahIshaTime: afterSalahIshaTime ?? this.afterSalahIshaTime,
       lastDhikrId: lastDhikrId ?? this.lastDhikrId,
     );
   }
@@ -195,6 +245,18 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           milestoneValue: 33,
           buttonSize: 220,
           showParticles: false,
+          sayingReminders: true,
+          sayingsPerDay: 3,
+          afterSalahFajr: false,
+          afterSalahFajrTime: const ReminderTime(hour: 5, minute: 0),
+          afterSalahDhuhr: false,
+          afterSalahDhuhrTime: const ReminderTime(hour: 13, minute: 0),
+          afterSalahAsr: false,
+          afterSalahAsrTime: const ReminderTime(hour: 16, minute: 30),
+          afterSalahMaghrib: false,
+          afterSalahMaghribTime: const ReminderTime(hour: 18, minute: 30),
+          afterSalahIsha: false,
+          afterSalahIshaTime: const ReminderTime(hour: 20, minute: 30),
           lastDhikrId: 'subhanallah',
         ),
       ) {
@@ -228,6 +290,23 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   static const _milestoneValueKey = 'milestone_value';
   static const _buttonSizeKey = 'button_size';
   static const _showParticlesKey = 'show_particles';
+  static const _sayingRemindersKey = 'saying_reminders';
+  static const _sayingsPerDayKey = 'sayings_per_day';
+  static const _afterSalahFajrKey = 'after_salah_fajr';
+  static const _afterSalahFajrHourKey = 'after_salah_fajr_hour';
+  static const _afterSalahFajrMinKey = 'after_salah_fajr_min';
+  static const _afterSalahDhuhrKey = 'after_salah_dhuhr';
+  static const _afterSalahDhuhrHourKey = 'after_salah_dhuhr_hour';
+  static const _afterSalahDhuhrMinKey = 'after_salah_dhuhr_min';
+  static const _afterSalahAsrKey = 'after_salah_asr';
+  static const _afterSalahAsrHourKey = 'after_salah_asr_hour';
+  static const _afterSalahAsrMinKey = 'after_salah_asr_min';
+  static const _afterSalahMaghribKey = 'after_salah_maghrib';
+  static const _afterSalahMaghribHourKey = 'after_salah_maghrib_hour';
+  static const _afterSalahMaghribMinKey = 'after_salah_maghrib_min';
+  static const _afterSalahIshaKey = 'after_salah_isha';
+  static const _afterSalahIshaHourKey = 'after_salah_isha_hour';
+  static const _afterSalahIshaMinKey = 'after_salah_isha_min';
   static const _lastDhikrIdKey = 'last_dhikr_id';
 
   final NotificationService _notificationService = NotificationService();
@@ -271,6 +350,33 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       milestoneValue: prefs.getInt(_milestoneValueKey) ?? 33,
       buttonSize: prefs.getDouble(_buttonSizeKey) ?? 220,
       showParticles: prefs.getBool(_showParticlesKey) ?? false,
+      sayingReminders: prefs.getBool(_sayingRemindersKey) ?? true,
+      sayingsPerDay: prefs.getInt(_sayingsPerDayKey) ?? 3,
+      afterSalahFajr: prefs.getBool(_afterSalahFajrKey) ?? false,
+      afterSalahFajrTime: ReminderTime(
+        hour: prefs.getInt(_afterSalahFajrHourKey) ?? 5,
+        minute: prefs.getInt(_afterSalahFajrMinKey) ?? 0,
+      ),
+      afterSalahDhuhr: prefs.getBool(_afterSalahDhuhrKey) ?? false,
+      afterSalahDhuhrTime: ReminderTime(
+        hour: prefs.getInt(_afterSalahDhuhrHourKey) ?? 13,
+        minute: prefs.getInt(_afterSalahDhuhrMinKey) ?? 0,
+      ),
+      afterSalahAsr: prefs.getBool(_afterSalahAsrKey) ?? false,
+      afterSalahAsrTime: ReminderTime(
+        hour: prefs.getInt(_afterSalahAsrHourKey) ?? 16,
+        minute: prefs.getInt(_afterSalahAsrMinKey) ?? 30,
+      ),
+      afterSalahMaghrib: prefs.getBool(_afterSalahMaghribKey) ?? false,
+      afterSalahMaghribTime: ReminderTime(
+        hour: prefs.getInt(_afterSalahMaghribHourKey) ?? 18,
+        minute: prefs.getInt(_afterSalahMaghribMinKey) ?? 30,
+      ),
+      afterSalahIsha: prefs.getBool(_afterSalahIshaKey) ?? false,
+      afterSalahIshaTime: ReminderTime(
+        hour: prefs.getInt(_afterSalahIshaHourKey) ?? 20,
+        minute: prefs.getInt(_afterSalahIshaMinKey) ?? 30,
+      ),
       lastDhikrId: prefs.getString(_lastDhikrIdKey) ?? 'subhanallah',
     );
   }
@@ -335,7 +441,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     if (value) {
       await _notificationService.scheduleDailyNotification(
         id: 102,
-        title: 'Evening Tasweeh',
+        title: 'Evening Tasbeeh',
         body: 'End your day with peace and gratitude.',
         hour: state.eveningTime.hour,
         minute: state.eveningTime.minute,
@@ -400,6 +506,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_afterSalahReminderKey, value);
     state = state.copyWith(afterSalahReminder: value);
+    await _updatePrayerNotifications();
   }
 
   Future<void> toggleAutoResetOnGoal(bool value) async {
@@ -485,7 +592,215 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     await prefs.setBool(_showParticlesKey, value);
     state = state.copyWith(showParticles: value);
   }
-  
+
+  Future<void> toggleSayingReminders(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_sayingRemindersKey, value);
+    state = state.copyWith(sayingReminders: value);
+    await _updateSayingNotifications();
+  }
+
+  Future<void> setSayingsPerDay(int value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_sayingsPerDayKey, value);
+    state = state.copyWith(sayingsPerDay: value);
+    await _updateSayingNotifications();
+  }
+
+  Future<void> toggleAfterSalahFajr(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_afterSalahFajrKey, value);
+    state = state.copyWith(afterSalahFajr: value);
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> setAfterSalahFajrTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_afterSalahFajrHourKey, hour);
+    await prefs.setInt(_afterSalahFajrMinKey, minute);
+    state = state.copyWith(
+      afterSalahFajrTime: ReminderTime(hour: hour, minute: minute),
+      afterSalahFajr: true,
+    );
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> toggleAfterSalahDhuhr(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_afterSalahDhuhrKey, value);
+    state = state.copyWith(afterSalahDhuhr: value);
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> setAfterSalahDhuhrTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_afterSalahDhuhrHourKey, hour);
+    await prefs.setInt(_afterSalahDhuhrMinKey, minute);
+    state = state.copyWith(
+      afterSalahDhuhrTime: ReminderTime(hour: hour, minute: minute),
+      afterSalahDhuhr: true,
+    );
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> toggleAfterSalahAsr(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_afterSalahAsrKey, value);
+    state = state.copyWith(afterSalahAsr: value);
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> setAfterSalahAsrTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_afterSalahAsrHourKey, hour);
+    await prefs.setInt(_afterSalahAsrMinKey, minute);
+    state = state.copyWith(
+      afterSalahAsrTime: ReminderTime(hour: hour, minute: minute),
+      afterSalahAsr: true,
+    );
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> toggleAfterSalahMaghrib(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_afterSalahMaghribKey, value);
+    state = state.copyWith(afterSalahMaghrib: value);
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> setAfterSalahMaghribTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_afterSalahMaghribHourKey, hour);
+    await prefs.setInt(_afterSalahMaghribMinKey, minute);
+    state = state.copyWith(
+      afterSalahMaghribTime: ReminderTime(hour: hour, minute: minute),
+      afterSalahMaghrib: true,
+    );
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> toggleAfterSalahIsha(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_afterSalahIshaKey, value);
+    state = state.copyWith(afterSalahIsha: value);
+    await _updatePrayerNotifications();
+  }
+
+  Future<void> setAfterSalahIshaTime(int hour, int minute) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_afterSalahIshaHourKey, hour);
+    await prefs.setInt(_afterSalahIshaMinKey, minute);
+    state = state.copyWith(
+      afterSalahIshaTime: ReminderTime(hour: hour, minute: minute),
+      afterSalahIsha: true,
+    );
+    await _updatePrayerNotifications();
+  }
+
+  // ── Scheduling Helpers ───────────────────────────────────────────────────
+
+  Future<void> _updatePrayerNotifications() async {
+    if (!state.notificationPermissionGranted) return;
+
+    // Fajr
+    if (state.afterSalahReminder && state.afterSalahFajr) {
+      await _notificationService.scheduleDailyNotification(
+        id: 201,
+        title: 'After Fajr Dhikr',
+        body: 'Start your morning with peaceful dhikr.',
+        hour: state.afterSalahFajrTime.hour,
+        minute: state.afterSalahFajrTime.minute,
+      );
+    } else {
+      await _notificationService.cancelNotification(201);
+    }
+
+    // Dhuhr
+    if (state.afterSalahReminder && state.afterSalahDhuhr) {
+      await _notificationService.scheduleDailyNotification(
+        id: 202,
+        title: 'After Dhuhr Dhikr',
+        body: 'Pause for a moment of remembrance.',
+        hour: state.afterSalahDhuhrTime.hour,
+        minute: state.afterSalahDhuhrTime.minute,
+      );
+    } else {
+      await _notificationService.cancelNotification(202);
+    }
+
+    // Asr
+    if (state.afterSalahReminder && state.afterSalahAsr) {
+      await _notificationService.scheduleDailyNotification(
+        id: 203,
+        title: 'After Asr Dhikr',
+        body: 'Fill your afternoon with gratitude.',
+        hour: state.afterSalahAsrTime.hour,
+        minute: state.afterSalahAsrTime.minute,
+      );
+    } else {
+      await _notificationService.cancelNotification(203);
+    }
+
+    // Maghrib
+    if (state.afterSalahReminder && state.afterSalahMaghrib) {
+      await _notificationService.scheduleDailyNotification(
+        id: 204,
+        title: 'After Maghrib Dhikr',
+        body: 'A serene moment after sunset.',
+        hour: state.afterSalahMaghribTime.hour,
+        minute: state.afterSalahMaghribTime.minute,
+      );
+    } else {
+      await _notificationService.cancelNotification(204);
+    }
+
+    // Isha
+    if (state.afterSalahReminder && state.afterSalahIsha) {
+      await _notificationService.scheduleDailyNotification(
+        id: 205,
+        title: 'After Isha Dhikr',
+        body: 'End your day in remembrance.',
+        hour: state.afterSalahIshaTime.hour,
+        minute: state.afterSalahIshaTime.minute,
+      );
+    } else {
+      await _notificationService.cancelNotification(205);
+    }
+  }
+
+  Future<void> _updateSayingNotifications() async {
+    // Clear old ones (IDs 301 to 310)
+    for (int i = 1; i <= 10; i++) {
+      await _notificationService.cancelNotification(300 + i);
+    }
+
+    if (!state.notificationPermissionGranted || !state.sayingReminders) return;
+
+    // Schedule N sayings spread between 09:00 and 21:00
+    final int count = state.sayingsPerDay;
+    if (count <= 0) return;
+
+    final startHour = 9;
+    final totalMinutes = 12 * 60; // 12 hours window
+    final interval = totalMinutes ~/ count;
+
+    for (int i = 0; i < count; i++) {
+      final scheduledMinutes = (i * interval) + (interval ~/ 2);
+      final hour = startHour + (scheduledMinutes ~/ 60);
+      final minute = scheduledMinutes % 60;
+      
+      final hadith = hadiths[i % hadiths.length];
+
+      await _notificationService.scheduleDailyNotification(
+        id: 301 + i,
+        title: "Prophet's Saying",
+        body: hadith.content,
+        hour: hour,
+        minute: minute,
+      );
+    }
+  }
+
   Future<void> setLastDhikrId(String dhikrId) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_lastDhikrIdKey, dhikrId);
