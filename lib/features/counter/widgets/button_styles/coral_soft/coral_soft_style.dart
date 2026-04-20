@@ -97,7 +97,7 @@ class _CoralSoftStyleState extends State<CoralSoftStyle>
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFF7F50).withOpacity(0.4),
+                      color: const Color(0xFFFF7F50).withValues(alpha: 0.4),
                       blurRadius: 15,
                       spreadRadius: 2,
                     ),

@@ -95,13 +95,15 @@ class AppTheme {
       // ── Interaction Elements ──────────────────────────────────────────────
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return isDark ? scheme.colorScheme.onPrimary : Colors.white;
+          }
           return const Color(0xFFBDBDBD);
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return scheme.colorScheme.secondary;
+          }
           return isDark ? const Color(0xFF1E251E) : const Color(0xFFE0E0E0);
         }),
         trackOutlineColor: WidgetStateProperty.all(Colors.transparent),

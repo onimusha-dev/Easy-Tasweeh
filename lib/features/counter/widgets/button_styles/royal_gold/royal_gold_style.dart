@@ -105,12 +105,12 @@ class _RoyalGoldStyleState extends State<RoyalGoldStyle>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       blurRadius: 15,
                       offset: const Offset(0, 8),
                     ),
                     BoxShadow(
-                      color: Colors.amber.withOpacity(0.4),
+                      color: Colors.amber.withValues(alpha: 0.4),
                       blurRadius: 20,
                       spreadRadius: -2,
                     ),
@@ -124,7 +124,7 @@ class _RoyalGoldStyleState extends State<RoyalGoldStyle>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           width: 1,
                         ),
                         gradient: LinearGradient(
