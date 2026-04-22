@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'theme.dart';
 
@@ -24,6 +25,15 @@ class AppTheme {
         scrolledUnderElevation: 0.5,
         backgroundColor: Colors.transparent,
         foregroundColor: scheme.textPrimary,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarDividerColor: Colors.transparent,
+          systemNavigationBarContrastEnforced: false,
+          systemStatusBarContrastEnforced: false,
+          systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        ),
         iconTheme: IconThemeData(
           color: scheme.colorScheme.primary,
           size: AppLayout.iconSizeMedium,
