@@ -22,6 +22,7 @@ class CounterScreen extends ConsumerStatefulWidget {
 
 class _CounterScreenState extends ConsumerState<CounterScreen> {
   bool _isFrozen = false;
+  DateTime? _lastPressedAt;
 
   @override
   Widget build(BuildContext context) {
@@ -31,110 +32,136 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     final settings = ref.watch(settingsProvider);
     final countAsync = ref.watch(currentCountStreamProvider);
 
-    return Container(
-      decoration: BoxDecoration(
-        color: settings.background.isEmpty ? colorScheme.surface : null,
-        image: settings.background.isEmpty
-            ? null
-            : DecorationImage(
-                image: AssetImage(settings.background),
-                colorFilter: ColorFilter.mode(
-                  Colors.black.withValues(alpha: settings.backgroundOpacity),
-                  BlendMode.darken,
-                ),
-                fit: BoxFit.cover,
-              ),
-      ),
-      child: Stack(
-        children: [
-          if (settings.showParticles)
-            const Positioned.fill(child: ParticleBackground()),
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            drawer: const SideDrawer(),
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              leading: Builder(
-                builder: (context) {
-                  return IconButton(
-                    icon: const Icon(Icons.menu_rounded),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  );
-                },
-              ),
-              actions: [
-                IconButton(
-                  onPressed: _showSetTargetSheet,
-                  icon: const Icon(Icons.track_changes_rounded),
-                  tooltip: 'Set Target',
-                ),
-                const SizedBox(width: 8),
-              ],
-            ),
-            body: countAsync.when(
-              data: (countData) {
-                final current = countData?.currentCount ?? 0;
-                final target = countData?.targetCount ?? 33;
-                final currentDhikr = ref.watch(currentDhikrProvider);
-                final progress = target > 0
-                    ? (current / target).clamp(0.0, 1.0)
-                    : 0.0;
-                final percentage = (progress * 100).toInt();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
 
-                return LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  CounterProgress(
-                                    colorScheme: colorScheme,
-                                    percentage: percentage,
-                                    progress: progress,
-                                    textTheme: textTheme,
-                                    currentCountData: current,
-                                    targetCount: target,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  DhikrDisplay(currentDhikr: currentDhikr),
-                                ],
-                              ),
-                              SizedBox(
-                                width: settings.buttonSize,
-                                height: settings.buttonSize,
-                                child: _getCounterStyle(
-                                  settings.pressButtonStyle,
-                                  _isFrozen
-                                      ? null
-                                      : () => _incrementCounter(countData),
-                                ),
-                              ),
-                              const SizedBox(height: 32),
-                            ],
-                          ),
-                        ),
-                      ),
+        final now = DateTime.now();
+        final backButtonHasNotBeenPressedOrSnackBarHasExpired =
+            _lastPressedAt == null ||
+            now.difference(_lastPressedAt!) > const Duration(seconds: 2);
+
+        if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
+          _lastPressedAt = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: settings.background.isEmpty ? colorScheme.surface : null,
+          image: settings.background.isEmpty
+              ? null
+              : DecorationImage(
+                  image: AssetImage(settings.background),
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withValues(alpha: settings.backgroundOpacity),
+                    BlendMode.darken,
+                  ),
+                  fit: BoxFit.cover,
+                ),
+        ),
+        child: Stack(
+          children: [
+            if (settings.showParticles)
+              const Positioned.fill(child: ParticleBackground()),
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              drawer: const SideDrawer(),
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                leading: Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: const Icon(Icons.menu_rounded),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
                     );
                   },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
+                actions: [
+                  IconButton(
+                    onPressed: _showSetTargetSheet,
+                    icon: const Icon(Icons.track_changes_rounded),
+                    tooltip: 'Set Target',
+                  ),
+                  const SizedBox(width: 8),
+                ],
+              ),
+              body: countAsync.when(
+                data: (countData) {
+                  final current = countData?.currentCount ?? 0;
+                  final target = countData?.targetCount ?? 33;
+                  final currentDhikr = ref.watch(currentDhikrProvider);
+                  final progress = target > 0
+                      ? (current / target).clamp(0.0, 1.0)
+                      : 0.0;
+                  final percentage = (progress * 100).toInt();
+
+                  return LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    CounterProgress(
+                                      colorScheme: colorScheme,
+                                      percentage: percentage,
+                                      progress: progress,
+                                      textTheme: textTheme,
+                                      currentCountData: current,
+                                      targetCount: target,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    DhikrDisplay(currentDhikr: currentDhikr),
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: settings.buttonSize,
+                                  height: settings.buttonSize,
+                                  child: _getCounterStyle(
+                                    settings.pressButtonStyle,
+                                    _isFrozen
+                                        ? null
+                                        : () => _incrementCounter(countData),
+                                  ),
+                                ),
+                                const SizedBox(height: 32),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+    ),
+  );
+}
 
   Future<void> _incrementCounter(CurrentCountTableData? countData) async {
     if (_isFrozen) return;
