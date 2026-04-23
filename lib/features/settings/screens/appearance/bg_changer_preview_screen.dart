@@ -1,6 +1,6 @@
-import 'package:easy_tasweeh/core/models/appearance_data.dart';
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance/widgets/counter_preview.dart';
+import 'package:easy_tasbeeh/core/models/appearance_data.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/settings/screens/appearance/widgets/counter_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

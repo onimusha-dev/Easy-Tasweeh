@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/counter_button.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:flutter/material.dart';
 
 class CounterPreview extends StatelessWidget {

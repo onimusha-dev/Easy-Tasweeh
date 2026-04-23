@@ -1,4 +1,4 @@
-package com.musha.easy_tasweeh.easy_tasweeh
+package com.musha.easy_tasbeeh.easy_tasbeeh
 
 import io.flutter.embedding.android.FlutterActivity
 

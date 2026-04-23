@@ -1,4 +1,4 @@
-import 'package:easy_tasweeh/core/models/saying_model.dart';
+import 'package:easy_tasbeeh/core/models/saying_model.dart';
 import 'package:flutter/material.dart';
 
 class SayingCard extends StatelessWidget {

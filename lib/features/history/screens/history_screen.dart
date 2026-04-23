@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
-import 'package:easy_tasweeh/database/db.dart';
-import 'package:easy_tasweeh/features/history/widgets/history_item_card.dart';
-import 'package:easy_tasweeh/features/history/widgets/history_totals_card.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
+import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/features/history/widgets/history_item_card.dart';
+import 'package:easy_tasbeeh/features/history/widgets/history_totals_card.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

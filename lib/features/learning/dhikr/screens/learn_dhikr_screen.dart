@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:easy_tasweeh/core/models/dhikr_model.dart';
-import 'package:easy_tasweeh/features/learning/dhikr/widgets/dhikr_tile.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/features/learning/dhikr/widgets/dhikr_tile.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 
 class LearnDhikrScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class LearnDhikrScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text('Learn Tasweeh', style: textTheme.titleMedium),
+        title: Text('Learn Tasbeeh', style: textTheme.titleMedium),
         centerTitle: true,
       ),
       body: ListView(

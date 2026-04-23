@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.musha.easy_tasweeh.easy_tasweeh"
+    namespace = "com.musha.easy_tasbeeh.easy_tasbeeh"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.musha.easy_tasweeh.easy_tasweeh"
+        applicationId = "com.musha.easy_tasbeeh.easy_tasbeeh"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
-import 'package:easy_tasweeh/database/dao/current_count_dao.dart';
-import 'package:easy_tasweeh/database/tables/count_history.dart';
-import 'package:easy_tasweeh/database/tables/current_count_table.dart';
+import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
+import 'package:easy_tasbeeh/database/dao/current_count_dao.dart';
+import 'package:easy_tasbeeh/database/tables/count_history.dart';
+import 'package:easy_tasbeeh/database/tables/current_count_table.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -44,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
-      name: 'easy_tasweeh_db',
+      name: 'easy_tasbeeh_db',
       native: const DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),

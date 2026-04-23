@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:easy_tasweeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';

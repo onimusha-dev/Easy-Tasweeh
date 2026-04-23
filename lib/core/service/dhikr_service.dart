@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/models/dhikr_model.dart';
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final currentDhikrProvider = Provider<DhikrItem>((ref) {

@@ -1,7 +1,7 @@
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasweeh/database/repository/count_repository.dart';
-import 'package:easy_tasweeh/features/counter/widgets/set_count_target/archive_dialog.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/archive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -19,7 +19,7 @@ This project uses `shared_preferences` to store lightweight user settings and ap
 | `haptic_enabled` | `bool` | Global toggle for haptic feedback. |
 | `vibration_amplitude` | `int` | Amplitude for tap haptics (1-255). Default: 50. |
 | `completion_vibration_amplitude` | `int` | Amplitude for completion haptics (1-255). Default: 100. |
-| `keep_screen_on` | `bool` | Prevents device from sleeping during tasweeh. |
+| `keep_screen_on` | `bool` | Prevents device from sleeping during tasbeeh. |
 | `tap_sound` | `bool` | Plays a sound on every tap. |
 | `goal_reached_sound` | `bool` | Plays a distinct sound when the target is reached. |
 | `goal_haptic_pattern` | `bool` | Triggers a special haptic pattern on goal reach. |

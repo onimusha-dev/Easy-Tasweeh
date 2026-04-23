@@ -1,7 +1,7 @@
-import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
-import 'package:easy_tasweeh/features/learning/dhikr/screens/learn_dhikr_screen.dart';
-import 'package:easy_tasweeh/features/learning/sayings/screens/prophet_saying_screen.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
+import 'package:easy_tasbeeh/features/learning/dhikr/screens/learn_dhikr_screen.dart';
+import 'package:easy_tasbeeh/features/learning/sayings/screens/prophet_saying_screen.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 
 class LearnScreen extends StatelessWidget {
@@ -29,9 +29,9 @@ class LearnScreen extends StatelessWidget {
               fontWeight: FontWeight.w900,
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           buildSettingsGroup(
             context,
             children: [
@@ -40,11 +40,14 @@ class LearnScreen extends StatelessWidget {
                 icon: Icons.menu_book_rounded,
                 iconColor: AppIconColors.green(context),
                 title: 'Learn Dhikr',
-                subtitle: 'Master the common dhikrs, their meanings and virtues',
+                subtitle:
+                    'Master the common dhikrs, their meanings and virtues',
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LearnDhikrScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const LearnDhikrScreen(),
+                    ),
                   );
                 },
               ),
@@ -58,15 +61,17 @@ class LearnScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ProphetSayingScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProphetSayingScreen(),
+                    ),
                   );
                 },
               ),
             ],
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           _buildFeaturedTip(context),
         ],
       ),
@@ -78,7 +83,9 @@ class LearnScreen extends StatelessWidget {
       height: 1,
       indent: 64,
       endIndent: 20,
-      color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
+      color: Theme.of(
+        context,
+      ).colorScheme.outlineVariant.withValues(alpha: 0.3),
     );
   }
 
@@ -100,7 +107,11 @@ class LearnScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.lightbulb_outline_rounded, color: AppIconColors.blue(context), size: 20),
+              Icon(
+                Icons.lightbulb_outline_rounded,
+                color: AppIconColors.blue(context),
+                size: 20,
+              ),
               const SizedBox(width: 12),
               Text(
                 'DAILY TIP',

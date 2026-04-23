@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="assets/images/logo.png" alt="Easy Tasweeh Logo" width="120" />
+<img src="assets/images/logo.png" alt="Easy Tasbeeh Logo" width="120" />
 
-# Easy Tasweeh — تسبيح
+# Easy Tasbeeh — تسبيح
 
 **A clean and simple dhikr counter designed for Muslims who want to stay consistent with their daily tasbeeh.**
 
@@ -58,8 +58,8 @@ Make sure you have the following installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/easy_tasweeh.git
-   cd easy_tasweeh
+   git clone https://github.com/your-username/easy_tasbeeh.git
+   cd easy_tasbeeh
    ```
 
 2. **Install dependencies**
@@ -133,7 +133,7 @@ Cloud backup is **opt-in** — the app runs perfectly without it. To enable back
 ## 🏗️ Project Structure
 
 ```
-easy_tasweeh/
+easy_tasbeeh/
 ├── lib/
 │   ├── main.dart                  # App entry point
 │   ├── core/                      # Theme, constants, utilities
@@ -207,7 +207,7 @@ Please read our **[CONTRIBUTING.md](CONTRIBUTING.md)** to get started.
 
 ## 💚 Non-Profit & Charity
 
-**Easy Tasweeh is 100% free. No ads. No subscriptions. No data collection.**
+**Easy Tasbeeh is 100% free. No ads. No subscriptions. No data collection.**
 
 This is a non-profit project built purely for the benefit of the Muslim community.
 
@@ -236,7 +236,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ```
 MIT License
 
-Copyright (c) 2025 Easy Tasweeh Contributors
+Copyright (c) 2025 Easy Tasbeeh Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

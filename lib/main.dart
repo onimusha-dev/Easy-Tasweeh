@@ -1,6 +1,6 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/counter/screens/counter_screen.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -19,13 +19,15 @@ void main() async {
   );
 
   // Fix black background on swipe by making nav bar transparent and disabling contrast enforcement
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarDividerColor: Colors.transparent,
-    systemNavigationBarContrastEnforced: false,
-    systemStatusBarContrastEnforced: false,
-    statusBarColor: Colors.transparent,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarContrastEnforced: false,
+      systemStatusBarContrastEnforced: false,
+      statusBarColor: Colors.transparent,
+    ),
+  );
 
   // Auto-hide bottom bar after 3 seconds if it's revealed by a swipe
   SystemChrome.setSystemUIChangeCallback((bool visible) async {
@@ -64,7 +66,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      title: 'Easy Tasweeh',
+      title: 'Easy Tasbeeh',
       theme: AppTheme.createTheme(
         AppTheme.resolveColorScheme(colorScheme, Brightness.light),
       ),

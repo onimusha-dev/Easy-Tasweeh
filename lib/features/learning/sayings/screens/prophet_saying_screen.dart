@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/models/saying_model.dart';
-import 'package:easy_tasweeh/features/learning/sayings/widgets/saying_tile.dart';
+import 'package:easy_tasbeeh/core/models/saying_model.dart';
+import 'package:easy_tasbeeh/features/learning/sayings/widgets/saying_tile.dart';
 import 'package:flutter/material.dart';
 
 class ProphetSayingScreen extends StatelessWidget {
@@ -25,9 +25,7 @@ class ProphetSayingScreen extends StatelessWidget {
             return const SizedBox(height: 24); // spacing at the bottom
           }
           final item = hadiths[index];
-          return SayingTile(
-            item: item,
-          );
+          return SayingTile(item: item);
         },
       ),
     );

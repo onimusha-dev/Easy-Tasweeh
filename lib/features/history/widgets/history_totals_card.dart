@@ -1,4 +1,4 @@
-import 'package:easy_tasweeh/database/db.dart';
+import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter/material.dart';
 
 class HistoryTotalsCard extends StatelessWidget {

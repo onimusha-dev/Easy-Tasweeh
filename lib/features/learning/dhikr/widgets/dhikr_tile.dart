@@ -1,6 +1,6 @@
-import 'package:easy_tasweeh/core/models/dhikr_model.dart';
-import 'package:easy_tasweeh/core/theme/schemes/app_colors.dart';
-import 'package:easy_tasweeh/features/learning/dhikr/screens/dhikr_detail_screen.dart';
+import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
+import 'package:easy_tasbeeh/features/learning/dhikr/screens/dhikr_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class DhikrTile extends StatelessWidget {

@@ -1,8 +1,8 @@
-import 'package:easy_tasweeh/core/constants/app_constants.dart';
-import 'package:easy_tasweeh/features/analytics/screens/analytics_screen.dart';
-import 'package:easy_tasweeh/features/history/screens/history_screen.dart';
-import 'package:easy_tasweeh/features/learning/hub/screens/learn_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/settings_screen.dart';
+import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/features/analytics/screens/analytics_screen.dart';
+import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
+import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
+import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class SideDrawer extends StatelessWidget {

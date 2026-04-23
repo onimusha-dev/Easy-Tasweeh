@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/button_styles/counter_button_styles.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/button_styles/counter_button_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,9 +72,7 @@ class _CounterButtonState extends ConsumerState<CounterButton>
     return GestureDetector(
       onTapDown: _handleTapDown,
       behavior: HitTestBehavior.opaque,
-      child: Center(
-        child: _getButtonStyle(style),
-      ),
+      child: Center(child: _getButtonStyle(style)),
     );
   }
 

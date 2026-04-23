@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 
 class DataScreen extends StatelessWidget {

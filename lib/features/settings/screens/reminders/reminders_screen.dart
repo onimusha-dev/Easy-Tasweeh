@@ -1,9 +1,9 @@
 import 'package:app_settings/app_settings.dart';
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/settings/widgets/notification_permission_banner.dart';
-import 'package:easy_tasweeh/features/settings/widgets/reminder_time_tile.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/notification_permission_banner.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/reminder_time_tile.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,4 +1,4 @@
-# Contributing to Easy Tasweeh 🤲
+# Contributing to Easy Tasbeeh 🤲
 
 بسم الله الرحمن الرحيم
 
@@ -9,7 +9,7 @@ First of all — **JazakAllah Khair** for taking the time to contribute! Every i
 > — Prophet Muhammad ﷺ
 >
 >
-This document will walk you through everything you need to know to contribute to **Easy Tasweeh** — a free, offline, open-source dhikr counter for the Muslim community.
+This document will walk you through everything you need to know to contribute to **Easy Tasbeeh** — a free, offline, open-source dhikr counter for the Muslim community.
 
 ---
 
@@ -80,14 +80,14 @@ You don't have to be a developer to contribute! Here are ways everyone can help:
 
 ```bash
 # Fork via GitHub UI, then clone your fork
-git clone https://github.com/<your-username>/easy_tasweeh.git
-cd easy_tasweeh
+git clone https://github.com/<your-username>/easy_tasbeeh.git
+cd easy_tasbeeh
 ```
 
 ### 2. Set Upstream Remote
 
 ```bash
-git remote add upstream https://github.com/your-username/easy_tasweeh.git
+git remote add upstream https://github.com/your-username/easy_tasbeeh.git
 git fetch upstream
 ```
 
@@ -247,7 +247,7 @@ Features that force an internet connection or require account sign-up will not b
 
 ## 🌍 Translations & Localization
 
-We would love to make Easy Tasweeh accessible in as many languages as possible, especially:
+We would love to make Easy Tasbeeh accessible in as many languages as possible, especially:
 
 - 🇸🇦 Arabic (ar)
 - 🇵🇰 Urdu (ur)
@@ -267,7 +267,7 @@ For now, open an issue tagged `translation` and include your translated strings.
 
 ## 💚 Non-Profit & Donation Policy
 
-Easy Tasweeh is and will always be:
+Easy Tasbeeh is and will always be:
 
 - ✅ **100% Free** — no paywalls, no premium tiers
 - ✅ **No Ads** — ever

@@ -1,6 +1,6 @@
-import 'package:easy_tasweeh/core/constants/app_constants.dart';
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
