@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Set initial UI mode: Hide bottom navigation bar, keep top status bar
@@ -37,7 +38,18 @@ void main() {
     }
   });
 
-  runApp(Phoenix(child: ProviderScope(child: const MyApp())));
+  final prefs = await SharedPreferences.getInstance();
+
+  runApp(
+    Phoenix(
+      child: ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith((ref) => SettingsNotifier(prefs)),
+        ],
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {

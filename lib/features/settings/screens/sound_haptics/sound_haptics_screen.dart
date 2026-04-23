@@ -97,6 +97,37 @@ class SoundHapticsScreen extends ConsumerWidget {
 
           const SizedBox(height: 16),
 
+          // ── Behavior Section ─────────────────────────────────────────────
+          buildSettingsGroup(
+            context,
+            title: 'BEHAVIOR',
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.timer_outlined,
+                title: 'Tap freeze',
+                subtitle: 'Prevent accidental rapid tapping',
+                iconColor: Colors.blueGrey,
+                trailing: Switch(
+                  value: settings.tapFreezeEnabled,
+                  onChanged: (v) => notifier.toggleTapFreeze(v),
+                ),
+              ),
+              if (settings.tapFreezeEnabled)
+                buildSettingTile(
+                  context,
+                  icon: Icons.speed_rounded,
+                  title: 'Freeze duration',
+                  subtitle: 'Delay: ${settings.tapFreezeDuration} ms',
+                  iconColor: Colors.teal,
+                  onTap: () => _showFreezeDurationDialog(context, ref),
+                  showChevron: false,
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
           // ── Milestones Section ──────────────────────────────────────────
           buildSettingsGroup(
             context,
@@ -132,6 +163,37 @@ class SoundHapticsScreen extends ConsumerWidget {
     );
   }
 
+  void _showFreezeDurationDialog(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(settingsProvider.notifier);
+    final current = ref.watch(settingsProvider).tapFreezeDuration;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Select Delay'),
+        content: RadioGroup<int>(
+          groupValue: current,
+          onChanged: (v) {
+            if (v != null) {
+              notifier.setTapFreezeDuration(v);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [50, 100, 150, 200, 300, 500].map((val) {
+              return RadioListTile<int>(
+                title: Text('$val ms'),
+                value: val,
+                activeColor: Theme.of(context).colorScheme.primary,
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showMilestoneDialog(BuildContext context, WidgetRef ref) {
     final notifier = ref.read(settingsProvider.notifier);

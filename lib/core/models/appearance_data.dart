@@ -16,7 +16,6 @@ const List<BackgroundItem> availableBackgrounds = [
   BackgroundItem(name: 'Dusk Rose', path: 'assets/images/bg/bg-3.png'),
   BackgroundItem(name: 'Manhattan', path: 'assets/images/bg/bg-4.png'),
   BackgroundItem(name: 'Firecracker', path: 'assets/images/bg/bg-5.png'),
-  BackgroundItem(name: 'Firecracker', path: 'assets/images/bg/bg-5.png'),
 ];
 
 // ── Button Styles ───────────────────────────────────────────────────────────
@@ -29,28 +28,10 @@ class ButtonStyleItem {
 }
 
 const List<ButtonStyleItem> availableButtonStyles = [
-  ButtonStyleItem(name: 'Classic Wavy', style: PressButtonStyle.first),
-  ButtonStyleItem(name: 'Modern Ring', style: PressButtonStyle.second),
-  ButtonStyleItem(name: 'Glass Square', style: PressButtonStyle.third),
-  ButtonStyleItem(name: 'Teal Circular', style: PressButtonStyle.tealCircular),
-  ButtonStyleItem(name: 'Slate Rounded', style: PressButtonStyle.slateRounded),
-  ButtonStyleItem(
-    name: 'Amber Gradient',
-    style: PressButtonStyle.amberGradient,
-  ),
-  ButtonStyleItem(
-    name: 'Purple Outlined',
-    style: PressButtonStyle.purpleOutlined,
-  ),
-  ButtonStyleItem(name: 'Coral Soft', style: PressButtonStyle.coralSoft),
+  ButtonStyleItem(name: 'Classic Wavy', style: PressButtonStyle.classicWavy),
   ButtonStyleItem(
     name: 'Midnight Glass',
     style: PressButtonStyle.midnightGlass,
   ),
-  ButtonStyleItem(name: 'Neon Glow', style: PressButtonStyle.neonGlow),
-  ButtonStyleItem(
-    name: 'Emerald Minimal',
-    style: PressButtonStyle.emeraldMinimal,
-  ),
-  ButtonStyleItem(name: 'Royal Gold', style: PressButtonStyle.royalGold),
+  ButtonStyleItem(name: 'Glowing Ball', style: PressButtonStyle.glowingBall),
 ];

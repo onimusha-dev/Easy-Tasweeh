@@ -52,19 +52,17 @@ class ReminderTimeTile extends ConsumerWidget {
       children: [
         ListTile(
           dense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 4,
+          ),
           leading: Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: (iconColor ?? scheme.primary).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(
-              icon,
-              color: iconColor ?? scheme.primary,
-              size: 20,
-            ),
+            child: Icon(icon, color: iconColor ?? scheme.primary, size: 20),
           ),
           title: Text(
             title,
@@ -100,8 +98,9 @@ class ReminderTimeTile extends ConsumerWidget {
                   label: const Text('Set Time'),
                   style: TextButton.styleFrom(
                     visualDensity: VisualDensity.compact,
-                    backgroundColor:
-                        (iconColor ?? scheme.primary).withValues(alpha: 0.05),
+                    backgroundColor: (iconColor ?? scheme.primary).withValues(
+                      alpha: 0.05,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -121,7 +120,7 @@ class ReminderTimeTile extends ConsumerWidget {
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
+          child: child ?? const SizedBox.shrink(),
         );
       },
     );
@@ -149,9 +148,7 @@ class _TimeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: effectiveColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: effectiveColor.withValues(alpha: 0.25),
-          ),
+          border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -159,9 +156,9 @@ class _TimeChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: effectiveColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: effectiveColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             if (onTap != null) ...[
               const SizedBox(width: 4),

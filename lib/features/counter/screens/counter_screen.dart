@@ -159,32 +159,32 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
             ),
           ],
         ),
-    ),
-  );
-}
+      ),
+    );
+  }
 
   Future<void> _incrementCounter(CurrentCountTableData? countData) async {
     if (_isFrozen) return;
 
-    // Very short freeze to prevent accidental double-taps while keeping it responsive
+    // Initial freeze to prevent double-taps
     setState(() => _isFrozen = true);
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted) setState(() => _isFrozen = false);
-    });
+
+    // We will unfreeze after 100ms UNLESS we reach the target,
+    // in which case the completion logic handles the unfreeze.
+    final nextCount = (countData?.currentCount ?? 0) + 1;
+    final target = countData?.targetCount ?? 0;
+    final isTargetReached = target > 0 && nextCount >= target;
+
+    if (!isTargetReached) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) setState(() => _isFrozen = false);
+      });
+    }
 
     final repo = ref.read(countRepositoryProvider);
     final settings = ref.read(settingsProvider);
 
-    if (settings.hapticEnabled) {
-      debugPrint('Triggering haptics for count: ${countData?.currentCount}');
-      HapticFeedback.selectionClick();
-      Vibration.vibrate(duration: 20);
-    }
-
     await repo.increment();
-
-    final nextCount = (countData?.currentCount ?? 0) + 1;
-    final target = countData?.targetCount ?? 0;
 
     // Milestone vibration
     if (settings.hapticEnabled &&
@@ -211,8 +211,19 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
       }
       if (settings.hapticEnabled) {
         debugPrint('Triggering completion haptics');
-        HapticFeedback.heavyImpact();
-        Vibration.vibrate(duration: 200);
+        // Playful vibration pattern: vibe 200, gap 100, vibe 200, gap 100, vibe 600
+        const vibrationPattern = [0, 200, 100, 200, 100, 600];
+        // Reduced intensities (0 for gaps, ~120-150 for vibes)
+        const intensities = [0, 120, 0, 120, 0, 150];
+        const totalDuration = 1200; // sum of pattern
+
+        Vibration.vibrate(pattern: vibrationPattern, intensities: intensities);
+
+        // Freeze the button for the duration of the playful vibration
+        setState(() => _isFrozen = true);
+        Future.delayed(const Duration(milliseconds: totalDuration), () {
+          if (mounted) setState(() => _isFrozen = false);
+        });
       }
     }
   }
