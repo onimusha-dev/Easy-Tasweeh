@@ -28,7 +28,7 @@ class PremiumDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(
-        horizontal: 56,
+        horizontal: 40,
       ), // Smaller dialog
       child: Container(
         padding: const EdgeInsets.all(24),
@@ -82,6 +82,8 @@ class PremiumDialog extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     child: Text(
                       cancelLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -98,6 +100,8 @@ class PremiumDialog extends StatelessWidget {
                     ),
                     child: Text(
                       confirmLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),

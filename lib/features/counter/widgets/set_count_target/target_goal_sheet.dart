@@ -196,7 +196,11 @@ Widget _sessionActionButton(
           );
         },
         icon: const Icon(Icons.archive_outlined, size: 18),
-        label: const Text('Archive Session'),
+        label: const Text(
+          'Archive Session',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         style: FilledButton.styleFrom(
           backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.1),
           foregroundColor: appColors?.destructiveColor,
@@ -231,7 +235,11 @@ Widget _sessionActionButton(
           }
         },
         icon: const Icon(Icons.restore_rounded, size: 18),
-        label: const Text('Restore Last Session'),
+        label: const Text(
+          'Restore Last Session',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         style: FilledButton.styleFrom(
           backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
           foregroundColor: colorScheme.primary,
