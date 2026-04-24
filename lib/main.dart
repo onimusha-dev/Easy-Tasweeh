@@ -1,3 +1,5 @@
+import 'package:easy_tasbeeh/core/service/backup_service.dart';
+import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
@@ -6,11 +8,39 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+@pragma('vm:entry-point')
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    if (task == 'dailyBackup') {
+      await BackupService.performAutomaticBackup();
+    }
+    return true;
+  });
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  await AppPreferences.init(); // Add this line
+
+  await Workmanager().initialize(callbackDispatcher);
+
+  // Only schedule periodic backup if the user has enabled it.
+  final periodicEnabled = prefs.getBool('periodicBackupEnabled') ?? false;
+  if (periodicEnabled && prefs.getString('backupDirectory') != null) {
+    await Workmanager().registerPeriodicTask(
+      '1',
+      'dailyBackup',
+      frequency: const Duration(days: 1),
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
+      constraints: Constraints(requiresBatteryNotLow: true),
+    );
+  }
 
   // Set initial UI mode: Hide bottom navigation bar, keep top status bar
   SystemChrome.setEnabledSystemUIMode(
@@ -39,8 +69,6 @@ void main() async {
       );
     }
   });
-
-  final prefs = await SharedPreferences.getInstance();
 
   runApp(
     Phoenix(

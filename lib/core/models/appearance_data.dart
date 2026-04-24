@@ -11,9 +11,20 @@ class BackgroundItem {
 
 const List<BackgroundItem> availableBackgrounds = [
   BackgroundItem(name: 'None', path: ''),
-  BackgroundItem(name: 'Spiral Text', path: 'assets/images/bg/spiral-text.png'),
-  BackgroundItem(name: 'Paper Mint', path: 'assets/images/bg/paper-mint.png'),
+  BackgroundItem(
+    name: 'Whisper Light',
+    path: 'assets/images/bg/whisper-light.png',
+  ),
+  BackgroundItem(
+    name: 'Whisper Dark',
+    path: 'assets/images/bg/whisper-dark.png',
+  ),
   BackgroundItem(name: 'Lamon', path: 'assets/images/bg/lamon.png'),
+  BackgroundItem(name: 'Paper Mint', path: 'assets/images/bg/paper-mint.png'),
+  BackgroundItem(
+    name: 'Journey to Allah',
+    path: 'assets/images/bg/journey-to-allah.png',
+  ),
 ];
 
 // ── Button Styles ───────────────────────────────────────────────────────────

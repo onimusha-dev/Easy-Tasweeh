@@ -95,6 +95,10 @@ class SideDrawer extends StatelessWidget {
                           title: 'Analytics',
                           iconColor: Colors.blue,
                           screen: const AnalyticsScreen(),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24),
+                          ),
                         ),
                         _divider(context),
                         _DrawerTile(
@@ -116,6 +120,10 @@ class SideDrawer extends StatelessWidget {
                           title: 'Settings',
                           iconColor: Colors.grey,
                           screen: const SettingsScreen(),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
+                          ),
                         ),
                       ],
                     ),
@@ -159,53 +167,60 @@ class _DrawerTile extends StatelessWidget {
   final String title;
   final Color iconColor;
   final Widget screen;
+  final BorderRadius? borderRadius;
 
   const _DrawerTile({
     required this.icon,
     required this.title,
     required this.iconColor,
     required this.screen,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context); // Close drawer
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => screen),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+    return Material(
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: borderRadius ?? BorderRadius.zero,
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context); // Close drawer
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => screen),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
               ),
-              child: Icon(icon, color: iconColor, size: 20),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                ),
               ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: colorScheme.outlineVariant,
-              size: 20,
-            ),
-          ],
+              Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.outlineVariant,
+                size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

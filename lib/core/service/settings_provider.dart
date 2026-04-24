@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 
 enum PressButtonStyle { classicWavy, midnightGlass, glowingBall }
 
@@ -55,6 +56,10 @@ class SettingsState {
   final bool showParticles; // Added
   final ThemeMode themeMode;
   final AppColorScheme colorScheme;
+
+  // Backup
+  final bool periodicBackupEnabled;
+  final String? backupDirectory;
 
   // Reminders
   final bool morningReminder;
@@ -117,6 +122,8 @@ class SettingsState {
     required this.afterSalahIsha,
     required this.afterSalahIshaTime,
     required this.notificationPermissionGranted,
+    required this.periodicBackupEnabled,
+    this.backupDirectory,
   });
 
   SettingsState copyWith({
@@ -160,6 +167,9 @@ class SettingsState {
     bool? afterSalahIsha,
     ReminderTime? afterSalahIshaTime,
     bool? notificationPermissionGranted,
+    bool? periodicBackupEnabled,
+    // Use _clearBackupDirectory = true to explicitly set backupDirectory to null.
+    Object? backupDirectory = _sentinel,
   }) {
     return SettingsState(
       hapticEnabled: hapticEnabled ?? this.hapticEnabled,
@@ -204,9 +214,17 @@ class SettingsState {
       afterSalahIshaTime: afterSalahIshaTime ?? this.afterSalahIshaTime,
       notificationPermissionGranted:
           notificationPermissionGranted ?? this.notificationPermissionGranted,
+      periodicBackupEnabled:
+          periodicBackupEnabled ?? this.periodicBackupEnabled,
+      backupDirectory: identical(backupDirectory, _sentinel)
+          ? this.backupDirectory
+          : backupDirectory as String?,
     );
   }
 }
+
+// Sentinel object to distinguish "not provided" from "explicitly null".
+const Object _sentinel = Object();
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
   final SharedPreferences prefs;
@@ -274,6 +292,9 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
             0,
           ),
           notificationPermissionGranted: false,
+          periodicBackupEnabled:
+              prefs.getBool('periodicBackupEnabled') ?? false,
+          backupDirectory: prefs.getString('backupDirectory'),
         ),
       ) {
     refreshPermissionStatus();
@@ -544,6 +565,33 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     final time = ReminderTime(h, m);
     await prefs.setString('afterSalahIshaTime', jsonEncode(time.toJson()));
     state = state.copyWith(afterSalahIshaTime: time);
+  }
+
+  Future<void> togglePeriodicBackup(bool v) async {
+    await prefs.setBool('periodicBackupEnabled', v);
+    state = state.copyWith(periodicBackupEnabled: v);
+
+    // Register or cancel the background task live.
+    if (v && state.backupDirectory != null) {
+      await Workmanager().registerPeriodicTask(
+        '1',
+        'dailyBackup',
+        frequency: const Duration(days: 1),
+        existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
+        constraints: Constraints(requiresBatteryNotLow: true),
+      );
+    } else {
+      await Workmanager().cancelByUniqueName('1');
+    }
+  }
+
+  Future<void> setBackupDirectory(String? path) async {
+    if (path == null) {
+      await prefs.remove('backupDirectory');
+    } else {
+      await prefs.setString('backupDirectory', path);
+    }
+    state = state.copyWith(backupDirectory: path);
   }
 }
 

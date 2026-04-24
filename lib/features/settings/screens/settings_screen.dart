@@ -59,7 +59,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'Data',
                 subtitle: 'Backup, restore, delete all data',
                 iconColor: Colors.green,
-                onTap: () => _push(context, const DataScreen()),
+                onTap: () => _push(context, DataPrivacyScreen()),
               ),
               buildSettingTile(
                 context,
