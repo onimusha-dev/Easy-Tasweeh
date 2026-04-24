@@ -1,6 +1,8 @@
-import 'package:easy_tasweeh/core/models/dhikr_model.dart';
-import 'package:easy_tasweeh/core/service/dhikr_service.dart';
-import 'package:easy_tasweeh/features/counter/widgets/dhikr_selection_sheet/dhikr_tile.dart';
+import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -66,7 +68,10 @@ class DhikrSheet extends ConsumerWidget {
                       item: item,
                       isSelected: isSelected,
                       onTap: () {
-                        ref.read(currentDhikrProvider.notifier).state = item;
+                        ref
+                            .read(settingsProvider.notifier)
+                            .setLastDhikrId(item.id);
+                        ref.read(countRepositoryProvider).setDhikrId(item.id);
                         Navigator.pop(context);
                       },
                     );
@@ -75,7 +80,7 @@ class DhikrSheet extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 64),
+          const SizedBox(height: 24),
         ],
       ),
     );

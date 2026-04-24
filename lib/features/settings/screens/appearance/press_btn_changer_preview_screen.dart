@@ -1,6 +1,7 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/counter_button.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance/widgets/counter_preview.dart';
+import 'package:easy_tasbeeh/core/models/appearance_data.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
+import 'package:easy_tasbeeh/features/settings/screens/appearance/widgets/counter_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,21 +17,6 @@ class _PressBtnChangerPreviewScreenState
     extends ConsumerState<PressBtnChangerPreviewScreen> {
   PressButtonStyle? _selectedStyle;
   int _demoCount = 33;
-
-  final List<Map<String, dynamic>> _availableStyles = [
-    {'name': 'Classic Wavy', 'style': PressButtonStyle.first},
-    {'name': 'Modern Ring', 'style': PressButtonStyle.second},
-    {'name': 'Glass Square', 'style': PressButtonStyle.third},
-    {'name': 'Teal Circular', 'style': PressButtonStyle.tealCircular},
-    {'name': 'Slate Rounded', 'style': PressButtonStyle.slateRounded},
-    {'name': 'Amber Gradient', 'style': PressButtonStyle.amberGradient},
-    {'name': 'Purple Outlined', 'style': PressButtonStyle.purpleOutlined},
-    {'name': 'Coral Soft', 'style': PressButtonStyle.coralSoft},
-    {'name': 'Midnight Glass', 'style': PressButtonStyle.midnightGlass},
-    {'name': 'Neon Glow', 'style': PressButtonStyle.neonGlow},
-    {'name': 'Emerald Minimal', 'style': PressButtonStyle.emeraldMinimal},
-    {'name': 'Royal Gold', 'style': PressButtonStyle.royalGold},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +64,13 @@ class _PressBtnChangerPreviewScreenState
                   if (hasChanges)
                     TextButton(
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
                             .setPressButtonStyle(activeStyle);
                         if (mounted) {
                           setState(() => _selectedStyle = null);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(
                               content: Text('Button style updated!'),
                             ),
@@ -107,18 +94,21 @@ class _PressBtnChangerPreviewScreenState
           ),
 
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  ),
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
-                child: _buildStyleGrid(activeStyle),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: _buildStyleGrid(activeStyle),
+                ),
               ),
             ),
           ),
@@ -137,10 +127,10 @@ class _PressBtnChangerPreviewScreenState
         mainAxisSpacing: 12,
         childAspectRatio: 1.1,
       ),
-      itemCount: _availableStyles.length,
+      itemCount: availableButtonStyles.length,
       itemBuilder: (context, index) {
-        final item = _availableStyles[index];
-        final style = item['style'] as PressButtonStyle;
+        final item = availableButtonStyles[index];
+        final style = item.style;
         final isSelected = activeStyle == style;
         final colorScheme = Theme.of(context).colorScheme;
 
@@ -178,7 +168,7 @@ class _PressBtnChangerPreviewScreenState
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        item['name']!.toUpperCase(),
+                        item.name.toUpperCase(),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           fontSize: 9,
                           fontWeight: isSelected

@@ -1,4 +1,4 @@
-import 'package:easy_tasweeh/main.dart';
+import 'package:easy_tasbeeh/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -67,7 +67,8 @@ class NotificationService {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin
-        >()?.requestPermissions(alert: true, badge: true, sound: true);
+        >()
+        ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
   Future<void> scheduleDailyNotification({

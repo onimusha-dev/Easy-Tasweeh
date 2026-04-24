@@ -11,14 +11,14 @@ class ParticleBackground extends StatefulWidget {
 class _ParticleBackgroundState extends State<ParticleBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  final List<Particle> particles = List.generate(20, (index) => Particle());
+  final List<Particle> particles = List.generate(25, (index) => Particle());
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(seconds: 15),
     )..repeat();
   }
 
@@ -30,6 +30,9 @@ class _ParticleBackgroundState extends State<ParticleBackground>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -37,7 +40,10 @@ class _ParticleBackgroundState extends State<ParticleBackground>
           particle.update();
         }
         return CustomPaint(
-          painter: ParticlePainter(particles: particles),
+          painter: ParticlePainter(
+            particles: particles, 
+            color: isDark ? colorScheme.primary : colorScheme.secondary,
+          ),
           child: Container(),
         );
       },
@@ -48,9 +54,9 @@ class _ParticleBackgroundState extends State<ParticleBackground>
 class Particle {
   double x = math.Random().nextDouble();
   double y = math.Random().nextDouble();
-  double size = math.Random().nextDouble() * 3 + 1;
-  double speed = math.Random().nextDouble() * 0.001 + 0.0005;
-  double opacity = math.Random().nextDouble() * 0.5 + 0.1;
+  double size = math.Random().nextDouble() * 4 + 1.5;
+  double speed = math.Random().nextDouble() * 0.0008 + 0.0003;
+  double opacity = math.Random().nextDouble() * 0.4 + 0.1;
 
   void update() {
     y -= speed;
@@ -63,15 +69,16 @@ class Particle {
 
 class ParticlePainter extends CustomPainter {
   final List<Particle> particles;
+  final Color color;
 
-  ParticlePainter({required this.particles});
+  ParticlePainter({required this.particles, required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white;
+    final paint = Paint();
 
     for (var particle in particles) {
-      paint.color = Colors.white.withValues(alpha: particle.opacity);
+      paint.color = color.withValues(alpha: particle.opacity);
       canvas.drawCircle(
         Offset(particle.x * size.width, particle.y * size.height),
         particle.size,

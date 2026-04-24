@@ -1,143 +1,151 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
 
-class MidnightGlassStyle extends StatefulWidget {
-  final VoidCallback? onTap;
-  final VoidCallback? onTapDown;
+import 'package:flutter/material.dart';
 
-  const MidnightGlassStyle({
-    super.key,
-    this.onTap,
-    this.onTapDown,
-  });
+class MidnightGlassStyle extends StatelessWidget {
+  final Animation<double> rippleAnimation;
 
-  @override
-  State<MidnightGlassStyle> createState() => _MidnightGlassStyleState();
-}
-
-class _MidnightGlassStyleState extends State<MidnightGlassStyle>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late AnimationController _rippleController;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    _rippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _rippleController.dispose();
-    super.dispose();
-  }
-
-  void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
-    _rippleController.forward(from: 0.0);
-    widget.onTapDown?.call();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
-  }
-
-  void _handleTapCancel() {
-    _controller.reverse();
-  }
+  const MidnightGlassStyle({super.key, required this.rippleAnimation});
 
   @override
   Widget build(BuildContext context) {
-    final bool isFrozen = widget.onTap == null;
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: isFrozen ? null : _handleTapDown,
-      onTapUp: isFrozen ? null : _handleTapUp,
-      onTapCancel: isFrozen ? null : _handleTapCancel,
-      onTap: widget.onTap,
-      child: ScaleTransition(
-        scale: Tween<double>(begin: 1.0, end: 0.92).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-        ),
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: _rippleController,
-                builder: (context, child) {
-                  return Container(
-                    width: 240 * _rippleController.value,
-                    height: 240 * _rippleController.value,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Dynamic Waterflow Ripple Effect (Multi-ring)
+          AnimatedBuilder(
+            animation: rippleAnimation,
+            builder: (context, child) {
+              // Deep Dark for light mode contrast
+              final rippleColor = isDark
+                  ? colorScheme.primary
+                  : const Color(0xFF1A1A1A);
+              final baseOpacity = isDark
+                  ? 0.3
+                  : 0.85; // Even higher opacity for maximum recognition
+
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Outer ring (First wave)
+                  Container(
+                    width: 280 * rippleAnimation.value,
+                    height: 280 * rippleAnimation.value,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: colorScheme.primary.withValues(
-                          alpha: (1 - _rippleController.value) * 0.5,
+                        color: rippleColor.withValues(
+                          alpha: (1 - rippleAnimation.value) * baseOpacity,
                         ),
-                        width: 2,
+                        width: isDark ? 2.0 : 3.5,
                       ),
                     ),
-                  );
-                },
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1.5,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 15,
-                          spreadRadius: -5,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.indigo.shade400.withOpacity(0.5),
-                              Colors.purple.shade400.withOpacity(0.5),
-                            ],
+                  ),
+
+                  // Middle ring (Second wave)
+                  if (rippleAnimation.value > 0.3)
+                    Container(
+                      width: 280 * (rippleAnimation.value - 0.3) * 1.4,
+                      height: 280 * (rippleAnimation.value - 0.3) * 1.4,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: rippleColor.withValues(
+                            alpha:
+                                (1 - rippleAnimation.value) *
+                                (baseOpacity * 0.7),
                           ),
-                        ),
-                        child: const Icon(
-                          Icons.fingerprint,
-                          color: Colors.white,
-                          size: 30,
+                          width: isDark ? 1.5 : 2.5,
                         ),
                       ),
+                    ),
+
+                  // Inner ring (Third wave)
+                  if (rippleAnimation.value > 0.6)
+                    Container(
+                      width: 280 * (rippleAnimation.value - 0.6) * 2.5,
+                      height: 280 * (rippleAnimation.value - 0.6) * 2.5,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: rippleColor.withValues(
+                            alpha:
+                                (1 - rippleAnimation.value) *
+                                (baseOpacity * 0.4),
+                          ),
+                          width: isDark ? 1.0 : 1.5,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+
+          // Glass Button
+          ClipRRect(
+            borderRadius: BorderRadius.circular(40),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? colorScheme.surface.withValues(alpha: 0.15)
+                      : Colors.white.withValues(
+                          alpha: 0.85,
+                        ), // Whiter glass for light mode
+                  borderRadius: BorderRadius.circular(40),
+                  border: Border.all(
+                    color: isDark
+                        ? colorScheme.primary.withValues(alpha: 0.2)
+                        : colorScheme.primary.withValues(alpha: 0.5),
+                    width: 2.0, // Thicker border for definition
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDark
+                          ? Colors.black.withValues(alpha: 0.2)
+                          : colorScheme.primary.withValues(alpha: 0.2),
+                      blurRadius: 30,
+                      spreadRadius: -5,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          colorScheme.primary.withValues(
+                            alpha: isDark ? 0.4 : 0.9,
+                          ),
+                          colorScheme.secondary.withValues(
+                            alpha: isDark ? 0.4 : 0.9,
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.blur_on_rounded,
+                      color: Colors.white,
+                      size: 32,
                     ),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

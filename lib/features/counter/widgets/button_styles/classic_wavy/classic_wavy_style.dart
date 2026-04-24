@@ -1,131 +1,75 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-class ClassicWavyStyle extends StatefulWidget {
-  final VoidCallback? onTap;
-  final VoidCallback? onTapDown;
+class ClassicWavyStyle extends StatelessWidget {
+  final Animation<double> rippleAnimation;
 
   const ClassicWavyStyle({
     super.key,
-    this.onTap,
-    this.onTapDown,
+    required this.rippleAnimation,
   });
 
   @override
-  State<ClassicWavyStyle> createState() => _ClassicWavyStyleState();
-}
-
-class _ClassicWavyStyleState extends State<ClassicWavyStyle>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late AnimationController _rippleController;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 100),
-    );
-    _rippleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _rippleController.dispose();
-    super.dispose();
-  }
-
-  void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
-    _rippleController.forward(from: 0.0);
-    widget.onTapDown?.call();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _controller.reverse();
-  }
-
-  void _handleTapCancel() {
-    _controller.reverse();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final bool isFrozen = widget.onTap == null;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: isFrozen ? null : _handleTapDown,
-      onTapUp: isFrozen ? null : _handleTapUp,
-      onTapCancel: isFrozen ? null : _handleTapCancel,
-      onTap: widget.onTap,
-      child: ScaleTransition(
-        scale: Tween<double>(begin: 1.0, end: 0.92).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
-        ),
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AnimatedBuilder(
-                animation: _rippleController,
-                builder: (context, child) {
-                  return Container(
-                    width: 240 * _rippleController.value,
-                    height: 240 * _rippleController.value,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colorScheme.primary.withValues(
-                          alpha: (1 - _rippleController.value) * 0.5,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: AnimatedBuilder(
+        animation: rippleAnimation,
+        builder: (context, child) {
+          final scale = 1.0 - (math.sin(rippleAnimation.value * math.pi) * 0.05);
+          final rotation = rippleAnimation.value * math.pi / 4;
+
+          return Transform.scale(
+            scale: scale,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxWidth = constraints.maxWidth;
+                
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Outer Wavy Circle (Background)
+                    Transform.rotate(
+                      angle: rotation * 0.5,
+                      child: CustomPaint(
+                        size: Size(maxWidth * 0.85, maxWidth * 0.85),
+                        painter: _WavyCirclePainter(
+                          color: colorScheme.primary.withValues(
+                            alpha: Theme.of(context).brightness == Brightness.dark ? 0.15 : 0.25,
+                          ),
+                          waves: 12,
+                          amplitude: maxWidth * 0.85 * 0.02,
                         ),
-                        width: 2,
                       ),
                     ),
-                  );
-                },
-              ),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final size = constraints.maxWidth * 0.8;
-                      return CustomPaint(
-                        size: Size(size, size),
+
+                    // Main Wavy Circle
+                    Transform.rotate(
+                      angle: -rotation,
+                      child: CustomPaint(
+                        size: Size(maxWidth * 0.65, maxWidth * 0.65),
                         painter: _WavyCirclePainter(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          waves: 10,
-                          amplitude: size * 0.03,
+                          color: colorScheme.primary,
+                          waves: 8,
+                          amplitude: maxWidth * 0.65 * 0.035,
                         ),
-                      );
-                    },
-                  ),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final size = constraints.maxWidth * 0.6;
-                      return CustomPaint(
-                        size: Size(size, size),
-                        painter: _WavyCirclePainter(
-                          color: Colors.white,
-                          waves: 7,
-                          amplitude: size * 0.03,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+                      ),
+                    ),
+
+                    // Center Icon
+                    Icon(
+                      Icons.fingerprint_rounded,
+                      color: colorScheme.onPrimary.withValues(alpha: 0.8),
+                      size: maxWidth * 0.25,
+                    ),
+                  ],
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }

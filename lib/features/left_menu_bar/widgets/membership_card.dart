@@ -24,7 +24,7 @@ class MembershipCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Our commitment to keep Easy Tasweeh ad-free is possible because of the support of people like you.',
+            'Our commitment to keep Easy Tasbeeh ad-free is possible because of the support of people like you.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 8),

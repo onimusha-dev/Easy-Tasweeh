@@ -14,6 +14,8 @@ Widget buildSettingTile(
   String? trailingLabel,
   VoidCallback? onTap,
   bool showChevron = true,
+  // Shape is injected by buildSettingsGroup to clip the ink splash correctly.
+  ShapeBorder shape = const RoundedRectangleBorder(),
 }) {
   Widget? trailingWidget;
 
@@ -49,7 +51,6 @@ Widget buildSettingTile(
       ],
     );
   } else if (showChevron && onTap != null) {
-    // Default: just chevron for tappable tiles
     trailingWidget = Icon(
       Icons.chevron_right_rounded,
       size: 18,
@@ -58,6 +59,7 @@ Widget buildSettingTile(
   }
 
   return ListTile(
+    shape: shape,
     dense: true,
     visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -93,6 +95,28 @@ Widget buildSettingsGroup(
   String? title,
   required List<Widget> children,
 }) {
+  const r = Radius.circular(20);
+  const none = Radius.zero;
+  final n = children.length;
+
+  // Assign each child the border radius that matches its position in the card
+  // so the ListTile ink splash is clipped to the card's rounded corners.
+  final shaped = List<Widget>.generate(n, (i) {
+    final borderRadius = BorderRadius.only(
+      topLeft: i == 0 ? r : none,
+      topRight: i == 0 ? r : none,
+      bottomLeft: i == n - 1 ? r : none,
+      bottomRight: i == n - 1 ? r : none,
+    );
+
+    return Material(
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: borderRadius,
+      child: children[i],
+    );
+  });
+
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -113,7 +137,7 @@ Widget buildSettingsGroup(
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: Column(children: children),
+          child: Column(children: shaped),
         ),
       ),
     ],

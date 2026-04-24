@@ -1,5 +1,5 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/counter/widgets/counter_button.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:flutter/material.dart';
 
 class CounterPreview extends StatelessWidget {
@@ -55,18 +55,26 @@ class CounterPreview extends StatelessWidget {
     return Positioned.fill(
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
-        child: Container(
+        child: Builder(
           key: ValueKey(selectedBackground),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(selectedBackground),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withValues(alpha: backgroundOpacity),
-                BlendMode.darken,
+          builder: (context) {
+            final colorScheme = Theme.of(context).colorScheme;
+            return Container(
+              decoration: BoxDecoration(
+                color: selectedBackground.isEmpty ? colorScheme.surface : null,
+                image: selectedBackground.isEmpty
+                    ? null
+                    : DecorationImage(
+                        image: AssetImage(selectedBackground),
+                        fit: BoxFit.cover,
+                        colorFilter: ColorFilter.mode(
+                          Colors.black.withValues(alpha: backgroundOpacity),
+                          BlendMode.darken,
+                        ),
+                      ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

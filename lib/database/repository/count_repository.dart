@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:easy_tasweeh/database/dao/count_history_dao.dart';
-import 'package:easy_tasweeh/database/dao/current_count_dao.dart';
-import 'package:easy_tasweeh/database/db.dart';
+import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
+import 'package:easy_tasbeeh/database/dao/current_count_dao.dart';
+import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -32,12 +32,14 @@ class CountRepository {
     if (counts.isEmpty) {
       await _currentCountDao.insertCount(
         const CurrentCountTableCompanion(
-          targetCount: Value(0),
+          targetCount: Value(33),
           currentCount: Value(0),
         ),
       );
       final newCounts = await _currentCountDao.getAllCounts();
-      return newCounts.first;
+      return newCounts.isNotEmpty
+          ? newCounts.first
+          : throw Exception('Failed to initialize count');
     }
     return counts.first;
   }
@@ -80,6 +82,7 @@ class CountRepository {
         CountHistoryTableCompanion(
           targetCount: Value(current.targetCount),
           currentCount: Value(current.currentCount),
+          dhikrId: Value(current.dhikrId),
           createdAt: Value(DateTime.now()),
         ),
       );
@@ -95,6 +98,18 @@ class CountRepository {
       CurrentCountTableCompanion(
         id: Value(current.id),
         targetCount: Value(target),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  // Set current dhikr ID
+  Future<void> setDhikrId(String dhikrId) async {
+    final current = await getOrCreateCurrentCount();
+    await _currentCountDao.updateCount(
+      CurrentCountTableCompanion(
+        id: Value(current.id),
+        dhikrId: Value(dhikrId),
         updatedAt: Value(DateTime.now()),
       ),
     );

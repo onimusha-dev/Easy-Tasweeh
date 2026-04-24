@@ -1,5 +1,6 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance/widgets/counter_preview.dart';
+import 'package:easy_tasbeeh/core/models/appearance_data.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/features/settings/screens/appearance/widgets/counter_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,14 +16,6 @@ class _BgChangerPreviewScreenState
     extends ConsumerState<BgChangerPreviewScreen> {
   String? _selectedBackground;
   int _demoCount = 33;
-
-  final List<Map<String, String>> _availableBackgrounds = [
-    {'name': 'Ocean Mist', 'path': 'assets/images/bg/bg-1.png'},
-    {'name': 'Emerald Forest', 'path': 'assets/images/bg/bg-2.png'},
-    {'name': 'Dusk Rose', 'path': 'assets/images/bg/bg-3.png'},
-    {'name': 'manhaten', 'path': 'assets/images/bg/bg-4.png'},
-    {'name': 'fire craket', 'path': 'assets/images/bg/bg-5.png'},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +63,13 @@ class _BgChangerPreviewScreenState
                   if (hasChanges)
                     TextButton(
                       onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
                             .setBackground(activeBg);
                         if (mounted) {
                           setState(() => _selectedBackground = null);
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(
                               content: Text('Appearance updated!'),
                             ),
@@ -99,18 +93,21 @@ class _BgChangerPreviewScreenState
           ),
 
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  ),
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
-                child: _buildBackgroundGrid(activeBg),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: _buildBackgroundGrid(activeBg),
+                ),
               ),
             ),
           ),
@@ -129,14 +126,14 @@ class _BgChangerPreviewScreenState
         mainAxisSpacing: 16,
         childAspectRatio: 0.75,
       ),
-      itemCount: _availableBackgrounds.length,
+      itemCount: availableBackgrounds.length,
       itemBuilder: (context, index) {
-        final bg = _availableBackgrounds[index];
-        final isSelected = activeBg == bg['path'];
+        final bg = availableBackgrounds[index];
+        final isSelected = activeBg == bg.path;
         final colorScheme = Theme.of(context).colorScheme;
 
         return GestureDetector(
-          onTap: () => setState(() => _selectedBackground = bg['path']),
+          onTap: () => setState(() => _selectedBackground = bg.path),
           child: Column(
             children: [
               Expanded(
@@ -156,7 +153,17 @@ class _BgChangerPreviewScreenState
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        Image.asset(bg['path']!, fit: BoxFit.cover),
+                        if (bg.path.isEmpty)
+                          Container(
+                            color: colorScheme.surface,
+                            child: Icon(
+                              Icons.block_rounded,
+                              color: colorScheme.outline.withValues(alpha: 0.3),
+                              size: 24,
+                            ),
+                          )
+                        else
+                          Image.asset(bg.path, fit: BoxFit.cover),
                         if (isSelected)
                           Container(
                             color: colorScheme.primary.withValues(alpha: 0.2),
@@ -182,7 +189,7 @@ class _BgChangerPreviewScreenState
               ),
               const SizedBox(height: 8),
               Text(
-                bg['name']!.toUpperCase(),
+                bg.name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(

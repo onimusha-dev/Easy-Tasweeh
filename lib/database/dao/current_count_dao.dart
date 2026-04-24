@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:easy_tasweeh/database/db.dart';
-import 'package:easy_tasweeh/database/tables/current_count_table.dart';
+import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/database/tables/current_count_table.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'current_count_dao.g.dart';

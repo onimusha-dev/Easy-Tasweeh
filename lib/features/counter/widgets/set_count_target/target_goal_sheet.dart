@@ -1,6 +1,7 @@
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/database/repository/count_repository.dart';
-import 'package:easy_tasweeh/features/counter/widgets/set_count_target/archive_dialog.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/archive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,7 +26,7 @@ class TargetGoalSheet extends ConsumerWidget {
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 48),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -99,8 +100,28 @@ class TargetGoalSheet extends ConsumerWidget {
 
                 return InkWell(
                   onTap: () {
-                    ref.read(countRepositoryProvider).setTarget(target);
-                    Navigator.pop(context);
+                    final currentCount =
+                        countAsync.asData?.value?.currentCount ?? 0;
+                    if (currentCount > 0) {
+                      showDialog(
+                        context: context,
+                        builder: (_) => PremiumDialog(
+                          icon: Icons.track_changes_rounded,
+                          title: 'Save session?',
+                          description:
+                              'This will save your current progress to history.',
+                          confirmLabel: 'Archive',
+                          onConfirm: () {
+                            ref.read(countRepositoryProvider).saveAndReset();
+                            ref.read(countRepositoryProvider).setTarget(target);
+                            Navigator.pop(context); // Close sheet
+                          },
+                        ),
+                      );
+                    } else {
+                      ref.read(countRepositoryProvider).setTarget(target);
+                      Navigator.pop(context);
+                    }
                   },
                   borderRadius: BorderRadius.circular(16),
                   child: AnimatedContainer(
@@ -132,19 +153,6 @@ class TargetGoalSheet extends ConsumerWidget {
                                       : colorScheme.onSurface,
                                 ),
                           ),
-                          if (isInfinite)
-                            Text(
-                              'INFINITE',
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    fontSize: 8,
-                                    color: isSelected
-                                        ? colorScheme.onPrimary.withValues(
-                                            alpha: 0.7,
-                                          )
-                                        : colorScheme.outline,
-                                  ),
-                            ),
                         ],
                       ),
                     ),
@@ -179,7 +187,7 @@ Widget _sessionActionButton(
   if (currentCount > 0) {
     return SizedBox(
       width: double.infinity,
-      child: TextButton.icon(
+      child: FilledButton.icon(
         onPressed: () {
           Navigator.pop(context);
           showDialog(
@@ -187,23 +195,16 @@ Widget _sessionActionButton(
             builder: (context) => const ArchiveDialog(),
           );
         },
-        icon: Icon(
-          Icons.archive_outlined,
-          size: 18,
-          color: appColors?.destructiveColor,
+        icon: const Icon(Icons.archive_outlined, size: 18),
+        label: const Text(
+          'Archive Session',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        label: Text(
-          'ARCHIVE SESSION',
-          style: TextStyle(
-            color: appColors?.destructiveColor,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            fontSize: 12,
-          ),
-        ),
-        style: TextButton.styleFrom(
+        style: FilledButton.styleFrom(
+          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.1),
+          foregroundColor: appColors?.destructiveColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -213,7 +214,7 @@ Widget _sessionActionButton(
   } else {
     return SizedBox(
       width: double.infinity,
-      child: TextButton.icon(
+      child: FilledButton.icon(
         onPressed: () async {
           final success = await ref
               .read(countRepositoryProvider)
@@ -233,19 +234,16 @@ Widget _sessionActionButton(
             );
           }
         },
-        icon: Icon(Icons.restore_rounded, size: 18, color: colorScheme.primary),
-        label: Text(
-          'RESTORE LAST SESSION',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            fontSize: 12,
-          ),
+        icon: const Icon(Icons.restore_rounded, size: 18),
+        label: const Text(
+          'Restore Last Session',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        style: TextButton.styleFrom(
+        style: FilledButton.styleFrom(
+          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+          foregroundColor: colorScheme.primary,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: colorScheme.primary.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

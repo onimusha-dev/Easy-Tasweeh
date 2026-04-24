@@ -1,4 +1,4 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,63 +52,60 @@ class ReminderTimeTile extends ConsumerWidget {
       children: [
         ListTile(
           dense: true,
-          visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-          leading: Icon(
-            icon,
-            color: iconColor ?? scheme.primary,
-            size: 22,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 4,
+          ),
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: (iconColor ?? scheme.primary).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: iconColor ?? scheme.primary, size: 20),
           ),
           title: Text(
             title,
-            style: textTheme.titleSmall,
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
             subtitle,
-            style: TextStyle(
-              color: scheme.outline,
-              fontSize: textTheme.bodySmall?.fontSize,
-            ),
+            style: textTheme.bodySmall?.copyWith(color: scheme.outline),
           ),
-          trailing: Switch(
-            value: enabled,
-            onChanged: onToggle,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-        ),
-        // Time picker row – shown always but dimmed when disabled
-        AnimatedOpacity(
-          opacity: enabled ? 1.0 : 0.4,
-          duration: const Duration(milliseconds: 200),
-          child: Padding(
-            padding: const EdgeInsets.only(
-                left: 72, right: 24, bottom: 8),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.schedule_rounded,
-                  size: 14,
-                  color: iconColor?.withValues(alpha: 0.6) ?? scheme.outline,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Scheduled at',
-                  style: textTheme.bodySmall?.copyWith(
-                    color: scheme.outline,
+          trailing: enabled
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _TimeChip(
+                      label: time.label,
+                      color: iconColor,
+                      onTap: () => _pickTime(context),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 18),
+                      onPressed: () => onToggle(false),
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      color: scheme.outline,
+                    ),
+                  ],
+                )
+              : TextButton.icon(
+                  onPressed: () => _pickTime(context),
+                  icon: const Icon(Icons.add_rounded, size: 18),
+                  label: const Text('Set Time'),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    backgroundColor: (iconColor ?? scheme.primary).withValues(
+                      alpha: 0.05,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                _TimeChip(
-                  label: time.label,
-                  color: iconColor,
-                  onTap: enabled
-                      ? () => _pickTime(context)
-                      : null,
-                ),
-              ],
-            ),
-          ),
         ),
       ],
     );
@@ -123,7 +120,7 @@ class ReminderTimeTile extends ConsumerWidget {
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
+          child: child ?? const SizedBox.shrink(),
         );
       },
     );
@@ -151,9 +148,7 @@ class _TimeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: effectiveColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: effectiveColor.withValues(alpha: 0.25),
-          ),
+          border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -161,9 +156,9 @@ class _TimeChip extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: effectiveColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: effectiveColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             if (onTap != null) ...[
               const SizedBox(width: 4),

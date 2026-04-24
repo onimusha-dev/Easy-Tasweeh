@@ -1,6 +1,6 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,6 +97,37 @@ class SoundHapticsScreen extends ConsumerWidget {
 
           const SizedBox(height: 16),
 
+          // ── Behavior Section ─────────────────────────────────────────────
+          buildSettingsGroup(
+            context,
+            title: 'BEHAVIOR',
+            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.timer_outlined,
+                title: 'Tap freeze',
+                subtitle: 'Prevent accidental rapid tapping',
+                iconColor: Colors.blueGrey,
+                trailing: Switch(
+                  value: settings.tapFreezeEnabled,
+                  onChanged: (v) => notifier.toggleTapFreeze(v),
+                ),
+              ),
+              if (settings.tapFreezeEnabled)
+                buildSettingTile(
+                  context,
+                  icon: Icons.speed_rounded,
+                  title: 'Freeze duration',
+                  subtitle: 'Delay: ${settings.tapFreezeDuration} ms',
+                  iconColor: AppIconColors.sage(context),
+                  onTap: () => _showFreezeDurationDialog(context, ref),
+                  showChevron: false,
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
           // ── Milestones Section ──────────────────────────────────────────
           buildSettingsGroup(
             context,
@@ -132,6 +163,37 @@ class SoundHapticsScreen extends ConsumerWidget {
     );
   }
 
+  void _showFreezeDurationDialog(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(settingsProvider.notifier);
+    final current = ref.watch(settingsProvider).tapFreezeDuration;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Select Delay'),
+        content: RadioGroup<int>(
+          groupValue: current,
+          onChanged: (v) {
+            if (v != null) {
+              notifier.setTapFreezeDuration(v);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [50, 100, 150, 200, 300, 500].map((val) {
+              return RadioListTile<int>(
+                title: Text('$val ms'),
+                value: val,
+                activeColor: Theme.of(context).colorScheme.primary,
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
 
   void _showMilestoneDialog(BuildContext context, WidgetRef ref) {
     final notifier = ref.read(settingsProvider.notifier);
@@ -142,25 +204,27 @@ class SoundHapticsScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Milestone'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [33, 100, 1000].map((val) {
-            return RadioListTile<int>(
-              title: Text('Every $val counts'),
-              value: val,
-              groupValue: current,
-              activeColor: Theme.of(context).colorScheme.primary,
-              onChanged: (v) {
-                if (v != null) {
-                  notifier.setMilestoneValue(v);
-                  // Preview haptic + vibration
-                  HapticFeedback.mediumImpact();
-                  Vibration.vibrate(duration: 60);
-                }
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        content: RadioGroup<int>(
+          groupValue: current,
+          onChanged: (v) {
+            if (v != null) {
+              notifier.setMilestoneValue(v);
+              // Preview haptic + vibration
+              HapticFeedback.mediumImpact();
+              Vibration.vibrate(duration: 60);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [33, 100, 1000].map((val) {
+              return RadioListTile<int>(
+                title: Text('Every $val counts'),
+                value: val,
+                activeColor: Theme.of(context).colorScheme.primary,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

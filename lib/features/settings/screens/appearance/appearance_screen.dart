@@ -1,8 +1,9 @@
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
-import 'package:easy_tasweeh/core/theme/theme.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
-import 'package:easy_tasweeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
+import 'package:easy_tasbeeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/color_scheme_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +34,7 @@ class AppearanceScreen extends ConsumerWidget {
                 subtitle: 'Choose your app\'s color scheme',
                 iconColor: AppIconColors.pink(context),
                 trailing: const _ColourDot(),
-                onTap: () => _showColorSchemeDialog(context, ref),
+                onTap: () => ColorSchemeSheet.show(context),
                 showChevron: false,
               ),
               buildSettingTile(
@@ -58,7 +59,7 @@ class AppearanceScreen extends ConsumerWidget {
                 icon: Icons.touch_app_outlined,
                 title: 'Counter style',
                 subtitle: 'Circle, minimal, or full screen tap',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 onTap: () =>
                     _push(context, const PressBtnChangerPreviewScreen()),
               ),
@@ -75,7 +76,7 @@ class AppearanceScreen extends ConsumerWidget {
                 icon: Icons.auto_awesome_outlined,
                 title: 'Particle effect',
                 subtitle: 'Enable floating background particles',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 trailing: Switch(
                   value: ref.watch(settingsProvider).showParticles,
                   onChanged: (v) => ref
@@ -127,54 +128,28 @@ class AppearanceScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Theme'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: ThemeMode.values.map((mode) {
-            return RadioListTile<ThemeMode>(
-              title: Text(mode.name.toUpperCase()),
-              value: mode,
-              groupValue: ref.watch(settingsProvider).themeMode,
-              onChanged: (v) {
-                if (v != null) {
-                  ref.read(settingsProvider.notifier).setThemeMode(v);
-                }
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
+        content: RadioGroup<ThemeMode>(
+          groupValue: ref.watch(settingsProvider).themeMode,
+          onChanged: (v) {
+            if (v != null) {
+              ref.read(settingsProvider.notifier).setThemeMode(v);
+            }
+            Navigator.pop(context);
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: ThemeMode.values.map((mode) {
+              return RadioListTile<ThemeMode>(
+                title: Text(mode.name.toUpperCase()),
+                value: mode,
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
   }
 
-  void _showColorSchemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        final current = ref.watch(settingsProvider).colorScheme;
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-          title: const Text('Select Accent'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: AppColorScheme.values.map((scheme) {
-              return RadioListTile<AppColorScheme>(
-                title: Text(scheme.name.toUpperCase()),
-                value: scheme,
-                groupValue: current,
-                onChanged: (v) {
-                  if (v != null) {
-                    ref.read(settingsProvider.notifier).setColorScheme(v);
-                  }
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class _ColourDot extends StatelessWidget {

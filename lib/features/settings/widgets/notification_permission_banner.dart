@@ -1,5 +1,5 @@
 import 'package:app_settings/app_settings.dart';
-import 'package:easy_tasweeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,8 +21,8 @@ class NotificationPermissionBanner extends ConsumerWidget {
       color: scheme.errorContainer,
       icon: Icons.notifications_off_rounded,
       iconColor: scheme.error,
-      title: 'PERMISSION REQUIRED',
-      subtitle: 'Enable notifications to receive daily reminders.',
+      title: 'Notification Permissions',
+      subtitle: 'Turn on notifications to receive daily reminders.',
       trailing: TextButton(
         style: TextButton.styleFrom(
           foregroundColor: scheme.error,

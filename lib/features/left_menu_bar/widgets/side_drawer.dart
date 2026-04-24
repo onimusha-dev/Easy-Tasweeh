@@ -1,8 +1,8 @@
-import 'package:easy_tasweeh/core/constants/app_constants.dart';
-import 'package:easy_tasweeh/features/analytics/screens/analytics_screen.dart';
-import 'package:easy_tasweeh/features/history/screens/history_screen.dart';
-import 'package:easy_tasweeh/features/settings/screens/settings_screen.dart';
-import 'package:easy_tasweeh/features/tasbeeh/screens/tasbeeh_screen.dart';
+import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/features/analytics/screens/analytics_screen.dart';
+import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
+import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
+import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class SideDrawer extends StatelessWidget {
@@ -91,15 +91,17 @@ class SideDrawer extends StatelessWidget {
                     child: Column(
                       children: [
                         _DrawerTile(
-                          context,
                           icon: Icons.auto_graph_rounded,
                           title: 'Analytics',
                           iconColor: Colors.blue,
                           screen: const AnalyticsScreen(),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24),
+                          ),
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.history_rounded,
                           title: 'History Log',
                           iconColor: Colors.orange,
@@ -107,19 +109,21 @@ class SideDrawer extends StatelessWidget {
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.menu_book_rounded,
-                          title: 'Learn Tasweeh',
+                          title: 'Learning Hub',
                           iconColor: Colors.green,
-                          screen: const TasweehScreen(),
+                          screen: const LearnScreen(),
                         ),
                         _divider(context),
                         _DrawerTile(
-                          context,
                           icon: Icons.settings_rounded,
                           title: 'Settings',
                           iconColor: Colors.grey,
                           screen: const SettingsScreen(),
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
+                          ),
                         ),
                       ],
                     ),
@@ -163,54 +167,60 @@ class _DrawerTile extends StatelessWidget {
   final String title;
   final Color iconColor;
   final Widget screen;
+  final BorderRadius? borderRadius;
 
-  const _DrawerTile(
-    BuildContext context, {
+  const _DrawerTile({
     required this.icon,
     required this.title,
     required this.iconColor,
     required this.screen,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context); // Close drawer
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => screen),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
+    return Material(
+      color: Colors.transparent,
+      clipBehavior: Clip.antiAlias,
+      borderRadius: borderRadius ?? BorderRadius.zero,
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context); // Close drawer
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => screen),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
               ),
-              child: Icon(icon, color: iconColor, size: 20),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                ),
               ),
-            ),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: colorScheme.outlineVariant,
-              size: 20,
-            ),
-          ],
+              Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.outlineVariant,
+                size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

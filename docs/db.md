@@ -4,7 +4,7 @@ This project uses **Drift** (formerly Moor) as a persistent reactive database fo
 
 ## Database File
 - **Location**: `lib/database/db.dart`
-- **Native Path**: `getApplicationSupportDirectory` / `easy_tasweeh_db`
+- **Native Path**: `getApplicationSupportDirectory` / `easy_tasbeeh_db`
 
 ## Tables
 
