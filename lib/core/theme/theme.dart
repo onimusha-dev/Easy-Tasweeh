@@ -4,6 +4,6 @@ export 'app_theme.dart';
 export 'schemes/app_colors.dart';
 export 'schemes/base_scheme.dart';
 export 'schemes/sage_scheme.dart';
-export 'schemes/slate_scheme.dart';
+export 'schemes/sunset_scheme.dart';
 
-enum AppColorScheme { sage, slate }
+enum AppColorScheme { sage, sunset }

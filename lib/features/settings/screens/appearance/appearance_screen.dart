@@ -3,6 +3,7 @@ import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/color_scheme_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +34,7 @@ class AppearanceScreen extends ConsumerWidget {
                 subtitle: 'Choose your app\'s color scheme',
                 iconColor: AppIconColors.pink(context),
                 trailing: const _ColourDot(),
-                onTap: () => _showColorSchemeDialog(context, ref),
+                onTap: () => ColorSchemeSheet.show(context),
                 showChevron: false,
               ),
               buildSettingTile(
@@ -149,38 +150,6 @@ class AppearanceScreen extends ConsumerWidget {
     );
   }
 
-  void _showColorSchemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        final current = ref.watch(settingsProvider).colorScheme;
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          title: const Text('Select Accent'),
-          content: RadioGroup<AppColorScheme>(
-            groupValue: current,
-            onChanged: (v) {
-              if (v != null) {
-                ref.read(settingsProvider.notifier).setColorScheme(v);
-              }
-              Navigator.pop(context);
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: AppColorScheme.values.map((scheme) {
-                return RadioListTile<AppColorScheme>(
-                  title: Text(scheme.name.toUpperCase()),
-                  value: scheme,
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
 
 class _ColourDot extends StatelessWidget {

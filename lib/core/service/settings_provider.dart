@@ -251,7 +251,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
           goalHapticPattern: prefs.getBool('goalHapticPattern') ?? true,
           vibrateOnMilestone: prefs.getBool('vibrateOnMilestone') ?? true,
           milestoneValue: prefs.getInt('milestoneValue') ?? 100,
-          showParticles: prefs.getBool('showParticles') ?? false,
+          showParticles: prefs.getBool('showParticles') ?? true,
           themeMode: _parseThemeMode(prefs.getString('themeMode')),
           colorScheme: _parseColorScheme(prefs.getString('colorScheme')),
           morningReminder: prefs.getBool('morningReminder') ?? false,
@@ -330,8 +330,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     switch (scheme) {
       case 'sage':
         return AppColorScheme.sage;
-      case 'slate':
-        return AppColorScheme.slate;
+      case 'sunset':
+        return AppColorScheme.sunset;
       default:
         return AppColorScheme.sage;
     }
