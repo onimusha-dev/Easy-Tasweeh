@@ -12,7 +12,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color subtleText;
   final Color sectionHeaderBg;
   final Color sectionLabelText;
-  final Color iconBgTeal;
+  final Color iconBgSage;
   final Color iconBgPurple;
   final Color iconBgAmber;
   final Color iconBgBlue;
@@ -33,7 +33,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.subtleText,
     required this.sectionHeaderBg,
     required this.sectionLabelText,
-    required this.iconBgTeal,
+    required this.iconBgSage,
     required this.iconBgPurple,
     required this.iconBgAmber,
     required this.iconBgBlue,
@@ -56,7 +56,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? subtleText,
     Color? sectionHeaderBg,
     Color? sectionLabelText,
-    Color? iconBgTeal,
+    Color? iconBgSage,
     Color? iconBgPurple,
     Color? iconBgAmber,
     Color? iconBgBlue,
@@ -76,7 +76,7 @@ class AppColors extends ThemeExtension<AppColors> {
     subtleText: subtleText ?? this.subtleText,
     sectionHeaderBg: sectionHeaderBg ?? this.sectionHeaderBg,
     sectionLabelText: sectionLabelText ?? this.sectionLabelText,
-    iconBgTeal: iconBgTeal ?? this.iconBgTeal,
+    iconBgSage: iconBgSage ?? this.iconBgSage,
     iconBgPurple: iconBgPurple ?? this.iconBgPurple,
     iconBgAmber: iconBgAmber ?? this.iconBgAmber,
     iconBgBlue: iconBgBlue ?? this.iconBgBlue,
@@ -101,7 +101,7 @@ class AppColors extends ThemeExtension<AppColors> {
       subtleText: Color.lerp(subtleText, other.subtleText, t)!,
       sectionHeaderBg: Color.lerp(sectionHeaderBg, other.sectionHeaderBg, t)!,
       sectionLabelText: Color.lerp(sectionLabelText, other.sectionLabelText, t)!,
-      iconBgTeal: Color.lerp(iconBgTeal, other.iconBgTeal, t)!,
+      iconBgSage: Color.lerp(iconBgSage, other.iconBgSage, t)!,
       iconBgPurple: Color.lerp(iconBgPurple, other.iconBgPurple, t)!,
       iconBgAmber: Color.lerp(iconBgAmber, other.iconBgAmber, t)!,
       iconBgBlue: Color.lerp(iconBgBlue, other.iconBgBlue, t)!,
@@ -117,7 +117,7 @@ class AppColors extends ThemeExtension<AppColors> {
 
 class AppIconColors {
   // Light
-  static const iconTeal = Color(0xFF0F6E56);
+  static const iconSage = Color(0xFF5A7863);
   static const iconPurple = Color(0xFF534AB7);
   static const iconAmber = Color(0xFF854F0B);
   static const iconBlue = Color(0xFF185FA5);
@@ -128,7 +128,7 @@ class AppIconColors {
   static const iconOrange = Color(0xFFB45309);
 
   // Dark variants
-  static const iconTealDark = Color(0xFF5DCAA5);
+  static const iconSageDark = Color(0xFFA6CFB6);
   static const iconPurpleDark = Color(0xFFAFA9EC);
   static const iconAmberDark = Color(0xFFFAC775);
   static const iconBlueDark = Color(0xFF85B7EB);
@@ -142,7 +142,7 @@ class AppIconColors {
     return Theme.of(context).brightness == Brightness.light ? light : dark;
   }
 
-  static Color teal(BuildContext context) => _get(context, iconTeal, iconTealDark);
+  static Color sage(BuildContext context) => _get(context, iconSage, iconSageDark);
   static Color purple(BuildContext context) => _get(context, iconPurple, iconPurpleDark);
   static Color amber(BuildContext context) => _get(context, iconAmber, iconAmberDark);
   static Color blue(BuildContext context) => _get(context, iconBlue, iconBlueDark);

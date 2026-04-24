@@ -328,12 +328,12 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
   static AppColorScheme _parseColorScheme(String? scheme) {
     switch (scheme) {
-      case 'teal':
-        return AppColorScheme.teal;
+      case 'sage':
+        return AppColorScheme.sage;
       case 'slate':
         return AppColorScheme.slate;
       default:
-        return AppColorScheme.teal;
+        return AppColorScheme.sage;
     }
   }
 

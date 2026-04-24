@@ -141,13 +141,6 @@ class _AnimatedProgressBar extends StatelessWidget {
                           ],
                         ),
                         borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.2),
-                            blurRadius: 6,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
                       ),
                     ),
                   ),
@@ -160,13 +153,6 @@ class _AnimatedProgressBar extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                        ],
                         border: Border.all(
                           color: colorScheme.primary,
                           width: 3.5,

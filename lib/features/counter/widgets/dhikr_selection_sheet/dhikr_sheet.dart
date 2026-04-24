@@ -80,7 +80,7 @@ class DhikrSheet extends ConsumerWidget {
               ),
             ),
           ),
-          const SizedBox(height: 64),
+          const SizedBox(height: 24),
         ],
       ),
     );

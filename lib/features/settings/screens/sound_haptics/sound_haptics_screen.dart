@@ -119,7 +119,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                   icon: Icons.speed_rounded,
                   title: 'Freeze duration',
                   subtitle: 'Delay: ${settings.tapFreezeDuration} ms',
-                  iconColor: Colors.teal,
+                  iconColor: AppIconColors.sage(context),
                   onTap: () => _showFreezeDurationDialog(context, ref),
                   showChevron: false,
                 ),

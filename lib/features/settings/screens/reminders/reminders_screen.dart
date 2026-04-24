@@ -159,7 +159,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
                 icon: Icons.mosque_outlined,
                 title: 'After salah reminder',
                 subtitle: 'Prompt after each prayer time',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 trailing: Switch(
                   value: settings.afterSalahReminder,
                   onChanged: (v) {
@@ -178,7 +178,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
                   icon: Icons.wb_twilight_rounded,
                   enabled: settings.afterSalahFajr,
                   time: settings.afterSalahFajrTime,
-                  iconColor: AppIconColors.teal(context),
+                  iconColor: AppIconColors.sage(context),
                   onToggle: (v) => notifier.toggleAfterSalahFajr(v),
                   onTimePicked: (picked) => notifier.setAfterSalahFajrTime(
                     picked.hour,

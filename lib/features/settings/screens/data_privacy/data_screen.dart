@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class DataPrivacyScreen extends ConsumerWidget {
                 subtitle:
                     ref.watch(settingsProvider).backupDirectory ??
                     'No location selected',
-                iconColor: Colors.teal,
+                iconColor: AppIconColors.sage(context),
                 onTap: () => _selectDirectory(context, ref),
               ),
               buildSettingTile(

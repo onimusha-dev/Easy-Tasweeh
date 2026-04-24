@@ -12,17 +12,17 @@ class GlowingBallStyle extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final size = constraints.maxWidth;
-          final starSize = size * 0.45; // Scale star relative to button size
+          final starSize = size * 0.45;
 
           return AnimatedBuilder(
             animation: rippleAnimation,
             builder: (context, child) {
               // Create a peaked factor (0 -> 1 -> 0) for the star flash
               final double flashFactor = rippleAnimation.value < 0.2
-                  ? rippleAnimation.value * 5 // Rapid climb to white
-                  : (1.0 - rippleAnimation.value) * 1.25; // Slower fade back to dark
+                  ? rippleAnimation.value * 5
+                  : (1.0 - rippleAnimation.value) * 1.25;
 
-              // Transition for the ball's brightness
+              // Transition for the ball's brightness (softened)
               final double brightnessFactor = rippleAnimation.value;
 
               return Container(
@@ -31,18 +31,20 @@ class GlowingBallStyle extends StatelessWidget {
                   gradient: RadialGradient(
                     colors: [
                       Color.lerp(
-                        Colors.orange.shade600,
-                        Colors.amber.shade200,
+                        const Color(0xFF90AB8B), // Secondary Sage
+                        const Color(
+                          0xFFD9E4C5,
+                        ), // Muted Light Sage (was EBF4DD)
                         brightnessFactor,
                       )!,
                       Color.lerp(
-                        Colors.orange.shade800,
-                        Colors.orange.shade400,
+                        const Color(0xFF5A7863), // Primary Sage
+                        const Color(0xFF90AB8B), // Secondary Sage
                         brightnessFactor,
                       )!,
                       Color.lerp(
-                        const Color(0xFF6D3C00), // Slightly less dark than before (was 4E2C00)
-                        Colors.orange.shade900,
+                        const Color(0xFF2D3C32), // Deep Sage
+                        const Color(0xFF5A7863), // Primary Sage
                         brightnessFactor,
                       )!,
                     ],
@@ -51,11 +53,18 @@ class GlowingBallStyle extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.3),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: size * 0.06,
                       offset: Offset(0, size * 0.03),
                     ),
-                    // Outer glow removed as requested
+                    if (brightnessFactor > 0)
+                      BoxShadow(
+                        color: const Color(0xFF90AB8B).withValues(
+                          alpha: brightnessFactor * 0.25, // Reduced from 0.4
+                        ),
+                        blurRadius: size * 0.08, // Reduced from 0.1
+                        spreadRadius: size * 0.01 * brightnessFactor,
+                      ),
                   ],
                 ),
                 child: Stack(
@@ -71,7 +80,7 @@ class GlowingBallStyle extends StatelessWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white.withValues(
-                            alpha: 0.2 + (0.2 * brightnessFactor),
+                            alpha: 0.08 + (0.1 * brightnessFactor),
                           ),
                         ),
                       ),
@@ -80,7 +89,7 @@ class GlowingBallStyle extends StatelessWidget {
                     Icon(
                       Icons.star_rounded,
                       color: Color.lerp(
-                        const Color(0xFF330000), // Very Dark Idle
+                        const Color(0xFF4A5D51), // Muted Sage Idle
                         Colors.white, // Bright White Click
                         flashFactor.clamp(0.0, 1.0),
                       ),
@@ -88,8 +97,8 @@ class GlowingBallStyle extends StatelessWidget {
                       shadows: [
                         if (rippleAnimation.value > 0)
                           Shadow(
-                            color: Colors.amber.withValues(
-                              alpha: (1 - rippleAnimation.value) * 0.6,
+                            color: const Color(0xFFEBF4DD).withValues(
+                              alpha: (1 - rippleAnimation.value) * 0.1,
                             ),
                             blurRadius: starSize * 0.3 * rippleAnimation.value,
                           ),

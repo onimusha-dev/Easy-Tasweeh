@@ -58,7 +58,7 @@ class AppearanceScreen extends ConsumerWidget {
                 icon: Icons.touch_app_outlined,
                 title: 'Counter style',
                 subtitle: 'Circle, minimal, or full screen tap',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 onTap: () =>
                     _push(context, const PressBtnChangerPreviewScreen()),
               ),
@@ -75,7 +75,7 @@ class AppearanceScreen extends ConsumerWidget {
                 icon: Icons.auto_awesome_outlined,
                 title: 'Particle effect',
                 subtitle: 'Enable floating background particles',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 trailing: Switch(
                   value: ref.watch(settingsProvider).showParticles,
                   onChanged: (v) => ref

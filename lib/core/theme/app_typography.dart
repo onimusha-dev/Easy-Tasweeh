@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTypography {
   // ─── Font Sizes ────────────────────────────────────────────────────────────
@@ -20,97 +21,97 @@ class AppTypography {
   // ─── Text Theme Factory ─────────────────────────────────────────────────────
   static TextTheme buildTextTheme(Color primary, Color secondary) {
     return TextTheme(
-      displayLarge: TextStyle(
+      displayLarge: GoogleFonts.outfit(
         fontSize: sizeDisplayLarge,
-        fontWeight: FontWeight.w900,
-        letterSpacing: -1.5,
-        color: primary,
-      ),
-      displayMedium: TextStyle(
-        fontSize: sizeDisplayMedium,
-        fontWeight: FontWeight.w900,
-        letterSpacing: -1,
-        color: primary,
-      ),
-      displaySmall: TextStyle(
-        fontSize: sizeDisplaySmall,
         fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
+        color: primary,
+      ),
+      displayMedium: GoogleFonts.outfit(
+        fontSize: sizeDisplayMedium,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -0.8,
+        color: primary,
+      ),
+      displaySmall: GoogleFonts.outfit(
+        fontSize: sizeDisplaySmall,
+        fontWeight: FontWeight.w700,
         letterSpacing: -0.5,
         color: primary,
       ),
       // Big counter number
-      headlineMedium: TextStyle(
+      headlineMedium: GoogleFonts.outfit(
         fontSize: sizeHeadlineMedium,
-        fontWeight: FontWeight.w900,
-        letterSpacing: -3,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -2.0,
         color: primary,
       ),
-      headlineSmall: TextStyle(
+      headlineSmall: GoogleFonts.outfit(
         fontSize: sizeHeadlineSmall,
-        fontWeight: FontWeight.w900,
-        letterSpacing: -1.5,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0,
         color: primary,
       ),
-      titleLarge: TextStyle(
+      titleLarge: GoogleFonts.outfit(
         fontSize: sizeTitleLarge,
-        fontWeight: FontWeight.w900,
-        letterSpacing: -0.5,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2,
         color: primary,
       ),
-      titleMedium: TextStyle(
+      titleMedium: GoogleFonts.outfit(
         fontSize: sizeTitleMedium,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.1,
+        color: primary,
+      ),
+      titleSmall: GoogleFonts.outfit(
+        fontSize: sizeTitleSmall,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.1,
+        color: primary,
+      ),
+      bodyLarge: GoogleFonts.outfit(
+        fontSize: sizeBodyLarge,
+        fontWeight: FontWeight.w400,
+        color: primary,
+      ),
+      bodyMedium: GoogleFonts.outfit(
+        fontSize: sizeBodyMedium,
+        fontWeight: FontWeight.w400,
+        color: primary,
+      ),
+      bodySmall: GoogleFonts.outfit(
+        fontSize: sizeBodySmall,
+        fontWeight: FontWeight.w400,
+        color: secondary,
+      ),
+      labelLarge: GoogleFonts.outfit(
+        fontSize: sizeLabelLarge,
+        fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
         color: primary,
       ),
-      titleSmall: TextStyle(
-        fontSize: sizeTitleSmall,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 0.2,
-        color: primary,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: sizeBodyLarge,
-        fontWeight: FontWeight.w500,
-        color: primary,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: sizeBodyMedium,
-        fontWeight: FontWeight.w500,
-        color: primary,
-      ),
-      bodySmall: TextStyle(
-        fontSize: sizeBodySmall,
-        fontWeight: FontWeight.w500,
-        color: secondary,
-      ),
-      labelLarge: TextStyle(
-        fontSize: sizeLabelLarge,
-        fontWeight: FontWeight.w800,
-        letterSpacing: 1.0,
-        color: primary,
-      ),
-      labelMedium: TextStyle(
+      labelMedium: GoogleFonts.outfit(
         fontSize: sizeLabelMedium,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 0.8,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.5,
         color: secondary,
       ),
       // Section headers (ALL-CAPS small label above card groups)
-      labelSmall: TextStyle(
+      labelSmall: GoogleFonts.outfit(
         fontSize: sizeLabelSmall,
-        fontWeight: FontWeight.w900,
-        letterSpacing: 2.0,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1.2,
         color: secondary,
       ),
     );
   }
 
   // Helper for AppBar titles
-  static TextStyle appBarTitle(Color color) => TextStyle(
+  static TextStyle appBarTitle(Color color) => GoogleFonts.outfit(
     fontSize: sizeTitleMedium,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w700,
     color: color,
-    letterSpacing: 1.5,
+    letterSpacing: 0.5,
   );
 }

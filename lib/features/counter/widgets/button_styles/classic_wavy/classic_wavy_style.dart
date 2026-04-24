@@ -11,57 +11,62 @@ class ClassicWavyStyle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
 
     return AspectRatio(
       aspectRatio: 1,
       child: AnimatedBuilder(
         animation: rippleAnimation,
         builder: (context, child) {
-          // Calculate values based on rippleAnimation (0.0 to 1.0)
           final scale = 1.0 - (math.sin(rippleAnimation.value * math.pi) * 0.05);
           final rotation = rippleAnimation.value * math.pi / 4;
 
           return Transform.scale(
             scale: scale,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Outer Wavy Circle (Background)
-                Transform.rotate(
-                  angle: rotation * 0.5,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final size = constraints.maxWidth * 0.85;
-                      return CustomPaint(
-                        size: Size(size, size),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final maxWidth = constraints.maxWidth;
+                
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Outer Wavy Circle (Background)
+                    Transform.rotate(
+                      angle: rotation * 0.5,
+                      child: CustomPaint(
+                        size: Size(maxWidth * 0.85, maxWidth * 0.85),
                         painter: _WavyCirclePainter(
-                          color: Colors.white.withValues(alpha: 0.1),
+                          color: colorScheme.primary.withValues(
+                            alpha: Theme.of(context).brightness == Brightness.dark ? 0.15 : 0.25,
+                          ),
                           waves: 12,
-                          amplitude: size * 0.02,
+                          amplitude: maxWidth * 0.85 * 0.02,
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
+                    ),
 
-                // Main Wavy Circle
-                Transform.rotate(
-                  angle: -rotation,
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final size = constraints.maxWidth * 0.65;
-                      return CustomPaint(
-                        size: Size(size, size),
+                    // Main Wavy Circle
+                    Transform.rotate(
+                      angle: -rotation,
+                      child: CustomPaint(
+                        size: Size(maxWidth * 0.65, maxWidth * 0.65),
                         painter: _WavyCirclePainter(
-                          color: Colors.white,
+                          color: colorScheme.primary,
                           waves: 8,
-                          amplitude: size * 0.035,
+                          amplitude: maxWidth * 0.65 * 0.035,
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+
+                    // Center Icon
+                    Icon(
+                      Icons.fingerprint_rounded,
+                      color: colorScheme.onPrimary.withValues(alpha: 0.8),
+                      size: maxWidth * 0.25,
+                    ),
+                  ],
+                );
+              },
             ),
           );
         },

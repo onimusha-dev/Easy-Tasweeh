@@ -1,6 +1,6 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
-import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
 import 'package:flutter/material.dart';

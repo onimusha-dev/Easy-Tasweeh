@@ -80,45 +80,25 @@ class PremiumDialog extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
                     child: Text(
                       cancelLabel,
-                      style: TextStyle(
-                        color: colorScheme.outline,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: TextButton(
+                  child: FilledButton(
                     onPressed: () {
                       Navigator.pop(context);
                       onConfirm();
                     },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      backgroundColor: primaryColor.withValues(alpha: 0.1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: primaryColor,
                     ),
                     child: Text(
                       confirmLabel,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),

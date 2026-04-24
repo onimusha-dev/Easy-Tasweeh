@@ -83,7 +83,7 @@ class AboutSupportScreen extends StatelessWidget {
                 icon: Icons.mail_outline_rounded,
                 title: 'Send feedback',
                 subtitle: 'Suggest features or report bugs',
-                iconColor: AppIconColors.teal(context),
+                iconColor: AppIconColors.sage(context),
                 onTap: () => _launchEmail(context),
                 showChevron: false,
               ),

@@ -26,7 +26,7 @@ class TargetGoalSheet extends ConsumerWidget {
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 48),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -187,7 +187,7 @@ Widget _sessionActionButton(
   if (currentCount > 0) {
     return SizedBox(
       width: double.infinity,
-      child: TextButton.icon(
+      child: FilledButton.icon(
         onPressed: () {
           Navigator.pop(context);
           showDialog(
@@ -195,23 +195,12 @@ Widget _sessionActionButton(
             builder: (context) => const ArchiveDialog(),
           );
         },
-        icon: Icon(
-          Icons.archive_outlined,
-          size: 18,
-          color: appColors?.destructiveColor,
-        ),
-        label: Text(
-          'Archive Session',
-          style: TextStyle(
-            color: appColors?.destructiveColor,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            fontSize: 12,
-          ),
-        ),
-        style: TextButton.styleFrom(
+        icon: const Icon(Icons.archive_outlined, size: 18),
+        label: const Text('Archive Session'),
+        style: FilledButton.styleFrom(
+          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.1),
+          foregroundColor: appColors?.destructiveColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -221,7 +210,7 @@ Widget _sessionActionButton(
   } else {
     return SizedBox(
       width: double.infinity,
-      child: TextButton.icon(
+      child: FilledButton.icon(
         onPressed: () async {
           final success = await ref
               .read(countRepositoryProvider)
@@ -241,19 +230,12 @@ Widget _sessionActionButton(
             );
           }
         },
-        icon: Icon(Icons.restore_rounded, size: 18, color: colorScheme.primary),
-        label: Text(
-          'Restore Last Session',
-          style: TextStyle(
-            color: colorScheme.primary,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            fontSize: 12,
-          ),
-        ),
-        style: TextButton.styleFrom(
+        icon: const Icon(Icons.restore_rounded, size: 18),
+        label: const Text('Restore Last Session'),
+        style: FilledButton.styleFrom(
+          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+          foregroundColor: colorScheme.primary,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          backgroundColor: colorScheme.primary.withValues(alpha: 0.08),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
