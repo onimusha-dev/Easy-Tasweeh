@@ -330,8 +330,8 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     switch (scheme) {
       case 'sage':
         return AppColorScheme.sage;
-      case 'slate':
-        return AppColorScheme.slate;
+      case 'sunset':
+        return AppColorScheme.sunset;
       default:
         return AppColorScheme.sage;
     }

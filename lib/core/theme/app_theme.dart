@@ -283,8 +283,8 @@ class AppTheme {
     switch (scheme) {
       case AppColorScheme.sage:
         return SageColorScheme(brightness);
-      case AppColorScheme.slate:
-        return SlateColorScheme(brightness);
+      case AppColorScheme.sunset:
+        return SunsetColorScheme(brightness);
     }
   }
 }
