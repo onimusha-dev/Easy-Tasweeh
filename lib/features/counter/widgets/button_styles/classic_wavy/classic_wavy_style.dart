@@ -11,63 +11,60 @@ class ClassicWavyStyle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return AspectRatio(
       aspectRatio: 1,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedBuilder(
-            animation: rippleAnimation,
-            builder: (context, child) {
-              return Container(
-                width: 240 * rippleAnimation.value,
-                height: 240 * rippleAnimation.value,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: colorScheme.primary.withValues(
-                      alpha: (1 - rippleAnimation.value) * 0.5,
-                    ),
-                    width: 2,
+      child: AnimatedBuilder(
+        animation: rippleAnimation,
+        builder: (context, child) {
+          // Calculate values based on rippleAnimation (0.0 to 1.0)
+          final scale = 1.0 - (math.sin(rippleAnimation.value * math.pi) * 0.05);
+          final rotation = rippleAnimation.value * math.pi / 4;
+
+          return Transform.scale(
+            scale: scale,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Outer Wavy Circle (Background)
+                Transform.rotate(
+                  angle: rotation * 0.5,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final size = constraints.maxWidth * 0.85;
+                      return CustomPaint(
+                        size: Size(size, size),
+                        painter: _WavyCirclePainter(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          waves: 12,
+                          amplitude: size * 0.02,
+                        ),
+                      );
+                    },
                   ),
                 ),
-              );
-            },
-          ),
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final size = constraints.maxWidth * 0.8;
-                  return CustomPaint(
-                    size: Size(size, size),
-                    painter: _WavyCirclePainter(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      waves: 10,
-                      amplitude: size * 0.03,
-                    ),
-                  );
-                },
-              ),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final size = constraints.maxWidth * 0.6;
-                  return CustomPaint(
-                    size: Size(size, size),
-                    painter: _WavyCirclePainter(
-                      color: Colors.white,
-                      waves: 7,
-                      amplitude: size * 0.03,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
+
+                // Main Wavy Circle
+                Transform.rotate(
+                  angle: -rotation,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final size = constraints.maxWidth * 0.65;
+                      return CustomPaint(
+                        size: Size(size, size),
+                        painter: _WavyCirclePainter(
+                          color: Colors.white,
+                          waves: 8,
+                          amplitude: size * 0.035,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

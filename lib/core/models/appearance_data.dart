@@ -11,11 +11,9 @@ class BackgroundItem {
 
 const List<BackgroundItem> availableBackgrounds = [
   BackgroundItem(name: 'None', path: ''),
-  BackgroundItem(name: 'Ocean Mist', path: 'assets/images/bg/bg-1.png'),
-  BackgroundItem(name: 'Emerald Forest', path: 'assets/images/bg/bg-2.png'),
-  BackgroundItem(name: 'Dusk Rose', path: 'assets/images/bg/bg-3.png'),
-  BackgroundItem(name: 'Manhattan', path: 'assets/images/bg/bg-4.png'),
-  BackgroundItem(name: 'Firecracker', path: 'assets/images/bg/bg-5.png'),
+  BackgroundItem(name: 'Spiral Text', path: 'assets/images/bg/spiral-text.png'),
+  BackgroundItem(name: 'Paper Mint', path: 'assets/images/bg/paper-mint.png'),
+  BackgroundItem(name: 'Lamon', path: 'assets/images/bg/lamon.png'),
 ];
 
 // ── Button Styles ───────────────────────────────────────────────────────────
