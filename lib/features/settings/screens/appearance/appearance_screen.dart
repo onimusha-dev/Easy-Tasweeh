@@ -1,9 +1,10 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/color_scheme_sheet.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,6 +27,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
+            title: 'THEME & COLORS',
             children: [
               buildSettingTile(
                 context,
@@ -53,16 +55,8 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
+            title: 'VISUAL STYLE',
             children: [
-              buildSettingTile(
-                context,
-                icon: Icons.touch_app_outlined,
-                title: 'Counter style',
-                subtitle: 'Circle, minimal, or full screen tap',
-                iconColor: AppIconColors.sage(context),
-                onTap: () =>
-                    _push(context, const PressBtnChangerPreviewScreen()),
-              ),
               buildSettingTile(
                 context,
                 icon: Icons.wallpaper_outlined,
@@ -77,32 +71,42 @@ class AppearanceScreen extends ConsumerWidget {
                 title: 'Particle effect',
                 subtitle: 'Enable floating background particles',
                 iconColor: AppIconColors.sage(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: ref.watch(settingsProvider).showParticles,
                   onChanged: (v) => ref
                       .read(settingsProvider.notifier)
                       .toggleShowParticles(v),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          buildSettingsGroup(
-            context,
-            title: 'SIZE',
-            children: [
               buildSettingTile(
                 context,
+                icon: Icons.touch_app_outlined,
+                title: 'Counter style',
+                subtitle: 'Circle, minimal, or full screen tap',
+                iconColor: AppIconColors.sage(context),
+                onTap: () =>
+                    _push(context, const PressBtnChangerPreviewScreen()),
+              ),
+              buildSettingTile(
+                context,
+                icon: Icons.center_focus_strong_outlined,
+                title: 'Center counter button',
+                subtitle: 'Switch position of dhikr and button',
+                iconColor: AppIconColors.blue(context),
+                trailing: AppSwitch(
+                  value: ref.watch(settingsProvider).centerButton,
+                  onChanged: (v) =>
+                      ref.read(settingsProvider.notifier).toggleCenterButton(v),
+                ),
+              ),
+              buildTwoPartSettingTile(
+                context,
                 icon: Icons.photo_size_select_small_rounded,
-                title: 'Button size',
+                title: 'Counter button size',
                 subtitle:
                     'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
                 iconColor: AppIconColors.pink(context),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(56, 0, 16, 16),
-                child: Slider(
+                action: Slider(
                   value: ref.watch(settingsProvider).buttonSize,
                   min: 150,
                   max: 320,
@@ -149,7 +153,6 @@ class AppearanceScreen extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 class _ColourDot extends StatelessWidget {

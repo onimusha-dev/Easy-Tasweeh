@@ -1,10 +1,10 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DataPrivacyScreen extends ConsumerWidget {
@@ -33,10 +33,10 @@ class DataPrivacyScreen extends ConsumerWidget {
               buildSettingTile(
                 context,
                 icon: Icons.upload_rounded,
-                title: 'Export Backup',
+                title: 'Create Backup',
                 subtitle: 'Share or save settings and history to a file',
                 iconColor: Colors.blue,
-                onTap: () => _handleExport(context, ref),
+                onTap: () => _handleCreateBackup(context, ref),
               ),
               buildSettingTile(
                 context,
@@ -44,13 +44,12 @@ class DataPrivacyScreen extends ConsumerWidget {
                 title: 'Restore Backup',
                 subtitle: 'Restore from a previously saved file',
                 iconColor: Colors.orange,
-                onTap: () => _handleRestore(context, ref),
+                onTap: () => _confirmRestore(context, ref),
               ),
             ],
           ),
 
           const SizedBox(height: 16),
-
           buildSettingsGroup(
             context,
             title: 'Data Portability',
@@ -65,7 +64,6 @@ class DataPrivacyScreen extends ConsumerWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
 
           buildSettingsGroup(
@@ -88,7 +86,7 @@ class DataPrivacyScreen extends ConsumerWidget {
                 title: 'Daily Auto-Backup',
                 subtitle: 'Back up your data every 24 hours',
                 iconColor: Colors.indigo,
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: ref.watch(settingsProvider).periodicBackupEnabled,
                   onChanged: (v) {
                     if (ref.read(settingsProvider).backupDirectory == null &&
@@ -139,81 +137,18 @@ class DataPrivacyScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _handleExport(BuildContext context, WidgetRef ref) async {
+  Future<void> _handleCreateBackup(BuildContext context, WidgetRef ref) async {
     try {
-      final success = await ref
-          .read(backupServiceProvider.notifier)
-          .exportBackup();
-      if (success && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Backup exported successfully!')),
-        );
-      }
+      await ref.read(backupServiceProvider).createAndSaveBackup();
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Export failed: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _handleRestore(BuildContext context, WidgetRef ref) async {
-    // Warn the user first
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => PremiumDialog(
-        icon: Icons.download_rounded,
-        title: 'Restore Backup?',
-        description:
-            'This will overwrite your current data and settings. '
-            'The app will restart afterwards. Continue?',
-        confirmLabel: 'Continue',
-        color: Colors.orange,
-        onConfirm: () => Navigator.of(ctx).pop(true),
-      ),
-    );
-    if (confirmed != true) return;
-
-    try {
-      final success = await ref
-          .read(backupServiceProvider.notifier)
-          .restoreBackup();
-      if (success && context.mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => PremiumDialog(
-            icon: Icons.restart_alt_rounded,
-            title: 'Restore Complete',
-            description: 'The app needs to restart to apply the changes.',
-            confirmLabel: 'Restart Now',
-            color: Colors.green,
-            onConfirm: () => Phoenix.rebirth(context),
-          ),
-        );
-      } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Restore cancelled or failed.')),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
-      }
+      // Errors are now handled in the service
     }
   }
 
   Future<void> _handleCSVExport(BuildContext context, WidgetRef ref) async {
     try {
       final success = await ref
-          .read(backupServiceProvider.notifier)
+          .read(backupServiceProvider)
           .exportHistoryToCSV();
       if (!success && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -229,10 +164,31 @@ class DataPrivacyScreen extends ConsumerWidget {
     }
   }
 
+  void _confirmRestore(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (_) => PremiumDialog(
+        icon: Icons.download_rounded,
+        title: 'Restore Backup?',
+        description:
+            'This will overwrite your current data and settings. You will need to restart the app to apply changes.',
+        confirmLabel: 'Restore',
+        color: Colors.orange,
+        onConfirm: () async {
+          try {
+            await ref.read(backupServiceProvider).restoreBackup();
+          } catch (e) {
+            // Errors are now handled in the service
+          }
+        },
+      ),
+    );
+  }
+
   Future<void> _selectDirectory(BuildContext context, WidgetRef ref) async {
     try {
       final path = await ref
-          .read(backupServiceProvider.notifier)
+          .read(backupServiceProvider)
           .selectBackupDirectory();
       if (path != null) {
         await ref.read(settingsProvider.notifier).setBackupDirectory(path);
@@ -258,7 +214,7 @@ class DataPrivacyScreen extends ConsumerWidget {
         color: Colors.orange,
         onConfirm: () async {
           try {
-            await ref.read(backupServiceProvider.notifier).clearHistoryOnly();
+            await ref.read(backupServiceProvider).clearHistoryOnly();
             if (context.mounted) {
               ScaffoldMessenger.of(
                 context,
@@ -288,9 +244,11 @@ class DataPrivacyScreen extends ConsumerWidget {
         color: Theme.of(context).colorScheme.error,
         onConfirm: () async {
           try {
-            await ref.read(backupServiceProvider.notifier).clearAllData();
+            await ref.read(backupServiceProvider).clearAllData();
             if (context.mounted) {
-              Phoenix.rebirth(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('All data and settings reset.')),
+              );
             }
           } catch (e) {
             if (context.mounted) {
@@ -300,44 +258,6 @@ class DataPrivacyScreen extends ConsumerWidget {
             }
           }
         },
-      ),
-    );
-  }
-}
-
-enum _ExportAction { share, saveToFolder }
-
-// ignore: unused_element
-class _ExportOptionsSheet extends StatelessWidget {
-  const _ExportOptionsSheet();
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Export Backup',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            ListTile(
-              leading: const Icon(Icons.share_rounded),
-              title: const Text('Share'),
-              subtitle: const Text('Send via email, cloud, messaging, etc.'),
-              onTap: () => Navigator.pop(context, _ExportAction.share),
-            ),
-            ListTile(
-              leading: const Icon(Icons.save_alt_rounded),
-              title: const Text('Save to Folder'),
-              subtitle: const Text('Choose a folder on this device'),
-              onTap: () => Navigator.pop(context, _ExportAction.saveToFolder),
-            ),
-          ],
-        ),
       ),
     );
   }

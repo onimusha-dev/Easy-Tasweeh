@@ -4,11 +4,15 @@ import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutSupportScreen extends StatelessWidget {
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class AboutSupportScreen extends ConsumerWidget {
   const AboutSupportScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appVersion = ref.watch(appVersionProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -42,13 +46,13 @@ class AboutSupportScreen extends StatelessWidget {
                       'assets/logo.png',
                       width: 100,
                       height: 100,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Version ${AppConstants.appVersion}',
+                  'Version $appVersion',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.outline,
                   ),

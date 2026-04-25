@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ class CounterPreview extends StatelessWidget {
   final double backgroundOpacity;
   final int count;
   final PressButtonStyle previewStyle;
+  final bool centerButton;
   final VoidCallback onTap;
 
   const CounterPreview({
@@ -15,6 +18,7 @@ class CounterPreview extends StatelessWidget {
     required this.backgroundOpacity,
     required this.count,
     required this.previewStyle,
+    required this.centerButton,
     required this.onTap,
   });
 
@@ -23,7 +27,7 @@ class CounterPreview extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      height: size.height * 0.35, // Reduced from 0.45 to prevent overflow
+      height: size.height * 0.45, // Increased height for better visibility
       width: size.width * 0.6, // Slightly wider for better balance
       margin: const EdgeInsets.symmetric(horizontal: 24),
       clipBehavior: Clip.antiAlias,
@@ -42,9 +46,13 @@ class CounterPreview extends StatelessWidget {
         children: [
           _buildBackground(),
           _buildBadge(),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: FittedBox(fit: BoxFit.scaleDown, child: _buildContent()),
+          Positioned.fill(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: FittedBox(fit: BoxFit.scaleDown, child: _buildContent()),
+              ),
+            ),
           ),
         ],
       ),
@@ -104,40 +112,81 @@ class CounterPreview extends StatelessWidget {
   }
 
   Widget _buildContent() {
+    final glassyContainer = ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '$count',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'تقبل الله منا ومنكم',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'May Allah accept your dhikr',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.7),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final button = SizedBox(
+      width: 90,
+      height: 90,
+      child: CounterButton(onTap: onTap, previewStyle: previewStyle),
+    );
+
+    if (centerButton) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          button,
+          const SizedBox(height: 24),
+          glassyContainer,
+        ],
+      );
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 44),
-        Text(
-          '$count',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 32,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const Text(
-          'تقبل الله منا ومنكم',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-        Text(
-          'May Allah accept your dhikr',
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.5),
-            fontSize: 12,
-            fontWeight: FontWeight.w300,
-          ),
-        ),
-        const SizedBox(height: 44),
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CounterButton(onTap: onTap, previewStyle: previewStyle),
-        ),
+        glassyContainer,
+        const SizedBox(height: 24),
+        button,
       ],
     );
   }

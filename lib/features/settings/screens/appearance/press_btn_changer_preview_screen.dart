@@ -34,6 +34,16 @@ class _PressBtnChangerPreviewScreenState
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => ref
+                .read(settingsProvider.notifier)
+                .toggleCenterButton(!settings.centerButton),
+            icon: const Icon(Icons.swap_vert_rounded),
+            tooltip: 'Swap Layout',
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -42,6 +52,7 @@ class _PressBtnChangerPreviewScreenState
             backgroundOpacity: settings.backgroundOpacity,
             count: _demoCount,
             previewStyle: activeStyle,
+            centerButton: settings.centerButton,
             onTap: () => setState(() => _demoCount++),
           ),
 
@@ -67,7 +78,7 @@ class _PressBtnChangerPreviewScreenState
                         final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
-                            .setPressButtonStyle(activeStyle);
+                            .setButtonStyle(activeStyle);
                         if (mounted) {
                           setState(() => _selectedStyle = null);
                           messenger.showSnackBar(
@@ -144,10 +155,8 @@ class _PressBtnChangerPreviewScreenState
                   : colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isSelected
-                    ? colorScheme.primary
-                    : colorScheme.outlineVariant.withValues(alpha: 0.3),
-                width: isSelected ? 2 : 1,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                width: 1,
               ),
             ),
             child: Stack(

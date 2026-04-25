@@ -1,7 +1,12 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
+import 'package:easy_tasbeeh/core/service/notification_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/settings/settings_service.dart';
+import 'package:easy_tasbeeh/core/service/settings/reminder_manager.dart';
 import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +21,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     if (task == 'dailyBackup') {
-      await BackupService.performAutomaticBackup();
+      await performAutomaticBackupTask();
     }
     return true;
   });
@@ -26,9 +31,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
+  final packageInfo = await PackageInfo.fromPlatform();
   await AppPreferences.init(); // Add this line
 
   await Workmanager().initialize(callbackDispatcher);
+  await NotificationService().init(); // Initialize notifications early
 
   // Only schedule periodic backup if the user has enabled it.
   final periodicEnabled = prefs.getBool('periodicBackupEnabled') ?? false;
@@ -74,7 +81,8 @@ void main() async {
     Phoenix(
       child: ProviderScope(
         overrides: [
-          settingsProvider.overrideWith((ref) => SettingsNotifier(prefs)),
+          settingsServiceProvider.overrideWithValue(SettingsService(prefs)),
+          packageInfoProvider.overrideWithValue(packageInfo),
         ],
         child: const MyApp(),
       ),
@@ -87,6 +95,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize managers
+    ref.watch(reminderManagerProvider);
+    
     final settings = ref.watch(settingsProvider);
     final themeMode = settings.themeMode;
     final colorScheme = settings.colorScheme;

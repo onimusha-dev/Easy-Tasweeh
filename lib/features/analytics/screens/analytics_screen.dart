@@ -33,7 +33,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.bar_chart_rounded,
+                    Icons.insights_rounded,
                     size: 64,
                     color: Theme.of(context).colorScheme.outlineVariant,
                   ),
@@ -86,7 +86,7 @@ class AnalyticsScreen extends ConsumerWidget {
                 children: [
                   buildSettingTile(
                     context,
-                    icon: Icons.auto_graph_rounded,
+                    icon: Icons.insights_rounded,
                     title: 'Total sessions',
                     subtitle: 'Sessions completed',
                     iconColor: Theme.of(context).colorScheme.primary,
@@ -95,7 +95,7 @@ class AnalyticsScreen extends ConsumerWidget {
                   ),
                   buildSettingTile(
                     context,
-                    icon: Icons.star_rounded,
+                    icon: Icons.workspace_premium_rounded,
                     title: 'Best session',
                     subtitle: 'Single highest count',
                     iconColor: Colors.amber,
@@ -104,7 +104,7 @@ class AnalyticsScreen extends ConsumerWidget {
                   ),
                   buildSettingTile(
                     context,
-                    icon: Icons.functions_rounded,
+                    icon: Icons.all_inclusive_rounded,
                     title: 'Total count',
                     subtitle: 'Lifetime tasbeeh count',
                     iconColor: Colors.orange,

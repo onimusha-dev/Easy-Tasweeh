@@ -5,11 +5,15 @@ import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
-class SideDrawer extends StatelessWidget {
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SideDrawer extends ConsumerWidget {
   const SideDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appVersion = ref.watch(appVersionProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Drawer(
@@ -42,7 +46,7 @@ class SideDrawer extends StatelessWidget {
                         'assets/logo.png',
                         width: 52,
                         height: 52,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -62,7 +66,7 @@ class SideDrawer extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          'v${AppConstants.appVersion}',
+                          'v$appVersion',
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(color: colorScheme.outline),
                         ),
@@ -196,14 +200,11 @@ class _DrawerTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: iconColor, size: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(icon, color: iconColor, size: 22),
               ),
               const SizedBox(width: 16),
               Expanded(
