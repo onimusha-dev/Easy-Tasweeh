@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:archive/archive.dart';
 import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 
 class BackupEngine {
   static Future<String> getDatabasePath() async {
@@ -23,20 +25,27 @@ class BackupEngine {
 
       final tempDir = await getTemporaryDirectory();
       final backupWorkDir = Directory(
-        p.join(tempDir.path, 'backup_work_${DateTime.now().millisecondsSinceEpoch}'),
+        p.join(
+          tempDir.path,
+          'backup_work_${DateTime.now().millisecondsSinceEpoch}',
+        ),
       );
       await backupWorkDir.create(recursive: true);
 
       final filesToZip = <String>[];
 
       // Copy Database & Sidecars
-      final dbBackup = await dbFile.copy(p.join(backupWorkDir.path, 'database.sqlite'));
+      final dbBackup = await dbFile.copy(
+        p.join(backupWorkDir.path, 'database.sqlite'),
+      );
       filesToZip.add(dbBackup.path);
 
       for (var ext in ['-wal', '-shm']) {
         final sidecar = File('$dbPath$ext');
         if (await sidecar.exists()) {
-          final sidecarBackup = await sidecar.copy(p.join(backupWorkDir.path, 'database.sqlite$ext'));
+          final sidecarBackup = await sidecar.copy(
+            p.join(backupWorkDir.path, 'database.sqlite$ext'),
+          );
           filesToZip.add(sidecarBackup.path);
         }
       }
@@ -48,10 +57,11 @@ class BackupEngine {
       filesToZip.add(prefsFile.path);
 
       // Metadata
+      final packageInfo = await PackageInfo.fromPlatform();
       final metadata = {
         'app_name': AppConstants.appName,
         'backup_date': DateTime.now().toIso8601String(),
-        'version': AppConstants.appVersion,
+        'version': packageInfo.version,
         'platform': defaultTargetPlatform.toString(),
       };
       final metadataFile = File(p.join(backupWorkDir.path, 'metadata.json'));
@@ -68,7 +78,9 @@ class BackupEngine {
 
       final zipData = ZipEncoder().encode(archive);
       final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final zipFile = File(p.join(tempDir.path, 'EasyTasbeeh_Backup_$timestamp.zip'));
+      final zipFile = File(
+        p.join(tempDir.path, 'EasyTasbeeh_Backup_$timestamp.zip'),
+      );
       await zipFile.writeAsBytes(zipData);
 
       await backupWorkDir.delete(recursive: true);

@@ -5,11 +5,15 @@ import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
-class SideDrawer extends StatelessWidget {
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class SideDrawer extends ConsumerWidget {
   const SideDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appVersion = ref.watch(appVersionProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     return Drawer(
@@ -42,7 +46,7 @@ class SideDrawer extends StatelessWidget {
                         'assets/logo.png',
                         width: 52,
                         height: 52,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
@@ -62,7 +66,7 @@ class SideDrawer extends StatelessWidget {
                               ),
                         ),
                         Text(
-                          'v${AppConstants.appVersion}',
+                          'v$appVersion',
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(color: colorScheme.outline),
                         ),

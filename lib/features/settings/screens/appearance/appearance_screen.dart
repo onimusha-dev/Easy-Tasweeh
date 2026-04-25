@@ -27,6 +27,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
+            title: 'THEME & COLORS',
             children: [
               buildSettingTile(
                 context,
@@ -54,16 +55,8 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
+            title: 'VISUAL STYLE',
             children: [
-              buildSettingTile(
-                context,
-                icon: Icons.touch_app_outlined,
-                title: 'Counter style',
-                subtitle: 'Circle, minimal, or full screen tap',
-                iconColor: AppIconColors.sage(context),
-                onTap: () =>
-                    _push(context, const PressBtnChangerPreviewScreen()),
-              ),
               buildSettingTile(
                 context,
                 icon: Icons.wallpaper_outlined,
@@ -85,18 +78,19 @@ class AppearanceScreen extends ConsumerWidget {
                       .toggleShowParticles(v),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          buildSettingsGroup(
-            context,
-            title: 'SIZE',
-            children: [
+              buildSettingTile(
+                context,
+                icon: Icons.touch_app_outlined,
+                title: 'Counter style',
+                subtitle: 'Circle, minimal, or full screen tap',
+                iconColor: AppIconColors.sage(context),
+                onTap: () =>
+                    _push(context, const PressBtnChangerPreviewScreen()),
+              ),
               buildTwoPartSettingTile(
                 context,
                 icon: Icons.photo_size_select_small_rounded,
-                title: 'Button size',
+                title: 'Counter button size',
                 subtitle:
                     'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
                 iconColor: AppIconColors.pink(context),

@@ -1,14 +1,17 @@
 import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/features/settings/screens/barrel.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appVersion = ref.watch(appVersionProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
@@ -76,7 +79,7 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 100),
           Center(
             child: Text(
-              '${AppConstants.appName} v${AppConstants.appVersion} · Non-profit',
+              '${AppConstants.appName} v$appVersion · Non-profit',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outlineVariant,
               ),

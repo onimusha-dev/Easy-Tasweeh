@@ -122,7 +122,7 @@ Widget buildTwoPartSettingTile(
     onTap: onTap,
     customBorder: shape,
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,7 +159,7 @@ Widget buildTwoPartSettingTile(
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 8),
           action,
         ],
       ),
