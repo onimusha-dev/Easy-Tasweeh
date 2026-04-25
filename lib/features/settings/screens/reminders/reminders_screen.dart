@@ -1,5 +1,6 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/notification_permission_banner.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/reminder_time_tile.dart';
@@ -108,7 +109,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
                 title: "Prophet's Sayings",
                 subtitle: 'Random hadith throughout the day',
                 iconColor: AppIconColors.pink(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: settings.sayingReminders,
                   onChanged: (v) {
                     if (v && !settings.notificationPermissionGranted) {
@@ -147,97 +148,6 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             ],
           ),
 
-          const SizedBox(height: 16),
-
-          // ── Other reminders ──────────────────────────────────────────────
-          buildSettingsGroup(
-            context,
-            title: 'OTHER',
-            children: [
-              buildSettingTile(
-                context,
-                icon: Icons.mosque_outlined,
-                title: 'After salah reminder',
-                subtitle: 'Prompt after each prayer time',
-                iconColor: AppIconColors.sage(context),
-                trailing: Switch(
-                  value: settings.afterSalahReminder,
-                  onChanged: (v) {
-                    if (v && !settings.notificationPermissionGranted) {
-                      _showPermissionSnack();
-                      return;
-                    }
-                    notifier.toggleAfterSalahReminder(v);
-                  },
-                ),
-              ),
-              if (settings.afterSalahReminder) ...[
-                ReminderTimeTile(
-                  title: 'Fajr',
-                  subtitle: 'Early morning dhikr prompt',
-                  icon: Icons.wb_twilight_rounded,
-                  enabled: settings.afterSalahFajr,
-                  time: settings.afterSalahFajrTime,
-                  iconColor: AppIconColors.sage(context),
-                  onToggle: (v) => notifier.toggleAfterSalahFajr(v),
-                  onTimePicked: (picked) => notifier.setAfterSalahFajrTime(
-                    picked.hour,
-                    picked.minute,
-                  ),
-                ),
-                ReminderTimeTile(
-                  title: 'Dhuhr',
-                  subtitle: 'Midday dhikr prompt',
-                  icon: Icons.wb_sunny_rounded,
-                  enabled: settings.afterSalahDhuhr,
-                  time: settings.afterSalahDhuhrTime,
-                  iconColor: AppIconColors.amber(context),
-                  onToggle: (v) => notifier.toggleAfterSalahDhuhr(v),
-                  onTimePicked: (picked) => notifier.setAfterSalahDhuhrTime(
-                    picked.hour,
-                    picked.minute,
-                  ),
-                ),
-                ReminderTimeTile(
-                  title: 'Asr',
-                  subtitle: 'Afternoon dhikr prompt',
-                  icon: Icons.sunny_snowing,
-                  enabled: settings.afterSalahAsr,
-                  time: settings.afterSalahAsrTime,
-                  iconColor: AppIconColors.orange(context),
-                  onToggle: (v) => notifier.toggleAfterSalahAsr(v),
-                  onTimePicked: (picked) =>
-                      notifier.setAfterSalahAsrTime(picked.hour, picked.minute),
-                ),
-                ReminderTimeTile(
-                  title: 'Maghrib',
-                  subtitle: 'Sunset dhikr prompt',
-                  icon: Icons.wb_twilight_sharp,
-                  enabled: settings.afterSalahMaghrib,
-                  time: settings.afterSalahMaghribTime,
-                  iconColor: AppIconColors.pink(context),
-                  onToggle: (v) => notifier.toggleAfterSalahMaghrib(v),
-                  onTimePicked: (picked) => notifier.setAfterSalahMaghribTime(
-                    picked.hour,
-                    picked.minute,
-                  ),
-                ),
-                ReminderTimeTile(
-                  title: 'Isha',
-                  subtitle: 'Night dhikr prompt',
-                  icon: Icons.nights_stay_rounded,
-                  enabled: settings.afterSalahIsha,
-                  time: settings.afterSalahIshaTime,
-                  iconColor: AppIconColors.purple(context),
-                  onToggle: (v) => notifier.toggleAfterSalahIsha(v),
-                  onTimePicked: (picked) => notifier.setAfterSalahIshaTime(
-                    picked.hour,
-                    picked.minute,
-                  ),
-                ),
-              ],
-            ],
-          ),
           const SizedBox(height: 16),
           buildSettingsGroup(
             context,

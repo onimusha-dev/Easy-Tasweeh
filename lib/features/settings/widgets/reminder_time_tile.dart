@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -50,62 +51,67 @@ class ReminderTimeTile extends ConsumerWidget {
 
     return Column(
       children: [
-        ListTile(
-          dense: true,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 4,
-          ),
-          leading: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: (iconColor ?? scheme.primary).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: iconColor ?? scheme.primary, size: 20),
-          ),
-          title: Text(
-            title,
-            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Text(
-            subtitle,
-            style: textTheme.bodySmall?.copyWith(color: scheme.outline),
-          ),
-          trailing: enabled
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _TimeChip(
-                      label: time.label,
-                      color: iconColor,
-                      onTap: () => _pickTime(context),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: (iconColor ?? scheme.primary).withValues(
+                        alpha: 0.1,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded, size: 18),
-                      onPressed: () => onToggle(false),
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      color: scheme.outline,
-                    ),
-                  ],
-                )
-              : TextButton.icon(
-                  onPressed: () => _pickTime(context),
-                  icon: const Icon(Icons.add_rounded, size: 18),
-                  label: const Text('Set Time'),
-                  style: TextButton.styleFrom(
-                    visualDensity: VisualDensity.compact,
-                    backgroundColor: (iconColor ?? scheme.primary).withValues(
-                      alpha: 0.05,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    child: Icon(
+                      icon,
+                      color: iconColor ?? scheme.primary,
+                      size: 20,
                     ),
                   ),
-                ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          subtitle,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: scheme.outline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _TimeChip(
+                    label: time.label,
+                    color: enabled ? iconColor : scheme.outline,
+                    onTap: () => _pickTime(context),
+                  ),
+                  AppSwitch(
+                    value: enabled,
+                    onChanged: onToggle,
+                    activeColor: iconColor,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     );

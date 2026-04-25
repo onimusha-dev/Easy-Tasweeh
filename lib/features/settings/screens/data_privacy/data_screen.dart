@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
@@ -85,7 +86,7 @@ class DataPrivacyScreen extends ConsumerWidget {
                 title: 'Daily Auto-Backup',
                 subtitle: 'Back up your data every 24 hours',
                 iconColor: Colors.indigo,
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: ref.watch(settingsProvider).periodicBackupEnabled,
                   onChanged: (v) {
                     if (ref.read(settingsProvider).backupDirectory == null &&

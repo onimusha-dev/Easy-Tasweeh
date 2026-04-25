@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 title: 'Tap sound',
                 subtitle: 'Play a soft click on each count',
                 iconColor: AppIconColors.amber(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: settings.tapSound,
                   onChanged: (v) => notifier.toggleTapSound(v),
                 ),
@@ -47,7 +48,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 title: 'Goal reached sound',
                 subtitle: 'Play a tone when target is hit',
                 iconColor: AppIconColors.coral(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: settings.goalReachedSound,
                   onChanged: (v) => notifier.toggleGoalReachedSound(v),
                 ),
@@ -68,7 +69,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 title: 'Haptic feedback',
                 subtitle: 'Vibrate on each tap',
                 iconColor: AppIconColors.amber(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: settings.hapticEnabled,
                   onChanged: (v) {
                     notifier.toggleHaptic(v);
@@ -85,7 +86,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 title: 'Goal haptic pattern',
                 subtitle: 'Special pulse when goal reached',
                 iconColor: AppIconColors.coral(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: settings.goalHapticPattern,
                   onChanged: (v) => notifier.toggleGoalHapticPattern(v),
                 ),
@@ -104,25 +105,26 @@ class SoundHapticsScreen extends ConsumerWidget {
             children: [
               buildSettingTile(
                 context,
-                icon: Icons.timer_outlined,
-                title: 'Tap freeze',
+                icon: Icons.speed_rounded,
+                title: 'Freeze duration',
                 subtitle: 'Prevent accidental rapid tapping',
-                iconColor: Colors.blueGrey,
-                trailing: Switch(
-                  value: settings.tapFreezeEnabled,
-                  onChanged: (v) => notifier.toggleTapFreeze(v),
+                iconColor: AppIconColors.sage(context),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _DurationChip(
+                      label: '${settings.tapFreezeDuration} ms',
+                      enabled: settings.tapFreezeEnabled,
+                      onTap: () => _showFreezeDurationDialog(context, ref),
+                    ),
+                    const SizedBox(width: 8),
+                    AppSwitch(
+                      value: settings.tapFreezeEnabled,
+                      onChanged: (v) => notifier.toggleTapFreeze(v),
+                    ),
+                  ],
                 ),
               ),
-              if (settings.tapFreezeEnabled)
-                buildSettingTile(
-                  context,
-                  icon: Icons.speed_rounded,
-                  title: 'Freeze duration',
-                  subtitle: 'Delay: ${settings.tapFreezeDuration} ms',
-                  iconColor: AppIconColors.sage(context),
-                  onTap: () => _showFreezeDurationDialog(context, ref),
-                  showChevron: false,
-                ),
             ],
           ),
 
@@ -136,24 +138,25 @@ class SoundHapticsScreen extends ConsumerWidget {
               buildSettingTile(
                 context,
                 icon: Icons.repeat_rounded,
-                title: 'Vibrate on milestone',
+                title: 'Milestone vibration',
                 subtitle: 'Vibrate every X counts',
                 iconColor: AppIconColors.blue(context),
-                trailing: Switch(
-                  value: settings.vibrateOnMilestone,
-                  onChanged: (v) => notifier.toggleVibrateOnMilestone(v),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _DurationChip(
+                      label: '${settings.milestoneValue}',
+                      enabled: settings.vibrateOnMilestone,
+                      onTap: () => _showMilestoneDialog(context, ref),
+                    ),
+                    const SizedBox(width: 8),
+                    AppSwitch(
+                      value: settings.vibrateOnMilestone,
+                      onChanged: (v) => notifier.toggleVibrateOnMilestone(v),
+                    ),
+                  ],
                 ),
               ),
-              if (settings.vibrateOnMilestone)
-                buildSettingTile(
-                  context,
-                  icon: Icons.numbers_rounded,
-                  title: 'Milestone value',
-                  subtitle: 'Current: every ${settings.milestoneValue} counts',
-                  iconColor: AppIconColors.purple(context),
-                  onTap: () => _showMilestoneDialog(context, ref),
-                  showChevron: false,
-                ),
             ],
           ),
 
@@ -225,6 +228,50 @@ class SoundHapticsScreen extends ConsumerWidget {
               );
             }).toList(),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DurationChip extends StatelessWidget {
+  final String label;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  const _DurationChip({
+    required this.label,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final color = enabled ? scheme.primary : scheme.outline;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.edit_rounded, size: 10, color: color),
+          ],
         ),
       ),
     );

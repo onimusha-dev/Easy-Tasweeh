@@ -46,7 +46,7 @@ class NotificationService {
           _handleNotificationResponseStatic,
     );
 
-    await requestPermissions(); // Ensure permissions are requested
+    requestPermissions(); // Ensure permissions are requested (non-blocking)
 
     _isInitialized = true;
   }
@@ -129,33 +129,43 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
-    if (!_isInitialized) await init();
-    await requestPermissions(); // Safety check for permissions before showing
+    try {
+      if (!_isInitialized) await init();
+      // Only request permissions if we haven't checked recently or if needed.
+      // However, for instant notifications, it's safer to ensure they are enabled.
+      // We'll skip the await for permissions here to avoid blocking the notification display
+      // if the permission was already granted.
+      requestPermissions(); 
 
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-          'instant_backup_and_restore_channel_id',
-          'Backup and restore',
-          importance: Importance.max,
-          priority: Priority.high,
-          actions: null,
-        );
+      final AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+            'instant_backup_and_restore_channel_id',
+            'Backup and restore',
+            importance: Importance.max,
+            priority: Priority.high,
+            actions: null,
+          );
 
-    const DarwinNotificationDetails iosNotificationDetails =
-        DarwinNotificationDetails();
+      const DarwinNotificationDetails iosNotificationDetails =
+          DarwinNotificationDetails();
 
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iosNotificationDetails,
-    );
+      final NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iosNotificationDetails,
+      );
 
-    await flutterLocalNotificationsPlugin.show(
-      id: id,
-      title: title,
-      body: body,
-      notificationDetails: platformChannelSpecifics,
-      payload: payload ?? 'info_notification',
-    );
+      debugPrint('Showing notification: id=$id, title=$title');
+      await flutterLocalNotificationsPlugin.show(
+        id: id,
+        title: title,
+        body: body,
+        notificationDetails: platformChannelSpecifics,
+        payload: payload ?? 'info_notification',
+      );
+      debugPrint('Notification shown successfully');
+    } catch (e) {
+      debugPrint('Error showing notification: $e');
+    }
   }
 
   Future<void> showBackupSuccessNotification() async {
@@ -189,5 +199,51 @@ class NotificationService {
       title: 'Restore Failed',
       body: 'Could not restore from file: $error',
     );
+  }
+
+  Future<void> showProgressNotification({
+    required int id,
+    required String title,
+    required String body,
+    required int progress,
+    required int maxProgress,
+    bool indeterminate = false,
+  }) async {
+    try {
+      if (!_isInitialized) await init();
+      requestPermissions();
+
+      final AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+            'progress_channel_id',
+            'Progress Tracking',
+            channelDescription: 'Showing progress of long running tasks',
+            importance: Importance.low,
+            priority: Priority.low,
+            showProgress: true,
+            maxProgress: maxProgress,
+            progress: progress,
+            indeterminate: indeterminate,
+            onlyAlertOnce: true,
+            ongoing: true, // Prevent user from swiping it away during progress
+          );
+
+      final NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+      );
+
+      await flutterLocalNotificationsPlugin.show(
+        id: id,
+        title: title,
+        body: body,
+        notificationDetails: platformChannelSpecifics,
+      );
+    } catch (e) {
+      debugPrint('Error showing progress notification: $e');
+    }
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id: id);
   }
 }

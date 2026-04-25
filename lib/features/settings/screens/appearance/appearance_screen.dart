@@ -1,9 +1,10 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/bg_changer_preview_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/appearance/press_btn_changer_preview_screen.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/color_scheme_sheet.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,7 +78,7 @@ class AppearanceScreen extends ConsumerWidget {
                 title: 'Particle effect',
                 subtitle: 'Enable floating background particles',
                 iconColor: AppIconColors.sage(context),
-                trailing: Switch(
+                trailing: AppSwitch(
                   value: ref.watch(settingsProvider).showParticles,
                   onChanged: (v) => ref
                       .read(settingsProvider.notifier)
@@ -149,7 +150,6 @@ class AppearanceScreen extends ConsumerWidget {
       ),
     );
   }
-
 }
 
 class _ColourDot extends StatelessWidget {

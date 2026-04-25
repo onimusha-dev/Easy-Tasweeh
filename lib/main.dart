@@ -1,6 +1,8 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/notification_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/settings/settings_service.dart';
+import 'package:easy_tasbeeh/core/service/settings/reminder_manager.dart';
 import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
@@ -76,7 +78,7 @@ void main() async {
     Phoenix(
       child: ProviderScope(
         overrides: [
-          settingsProvider.overrideWith((ref) => SettingsNotifier(prefs)),
+          settingsServiceProvider.overrideWithValue(SettingsService(prefs)),
         ],
         child: const MyApp(),
       ),
@@ -89,6 +91,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize managers
+    ref.watch(reminderManagerProvider);
+    
     final settings = ref.watch(settingsProvider);
     final themeMode = settings.themeMode;
     final colorScheme = settings.colorScheme;
