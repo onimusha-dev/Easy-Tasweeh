@@ -1,10 +1,10 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
+import 'package:easy_tasbeeh/core/service/notification_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DataPrivacyScreen extends ConsumerWidget {
@@ -33,10 +33,10 @@ class DataPrivacyScreen extends ConsumerWidget {
               buildSettingTile(
                 context,
                 icon: Icons.upload_rounded,
-                title: 'Export Backup',
+                title: 'Create Backup',
                 subtitle: 'Share or save settings and history to a file',
                 iconColor: Colors.blue,
-                onTap: () => _handleExport(context, ref),
+                onTap: () => _handleCreateBackup(context, ref),
               ),
               buildSettingTile(
                 context,
@@ -44,7 +44,7 @@ class DataPrivacyScreen extends ConsumerWidget {
                 title: 'Restore Backup',
                 subtitle: 'Restore from a previously saved file',
                 iconColor: Colors.orange,
-                onTap: () => _handleRestore(context, ref),
+                onTap: () => _confirmRestore(context, ref),
               ),
             ],
           ),
@@ -139,81 +139,62 @@ class DataPrivacyScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _handleExport(BuildContext context, WidgetRef ref) async {
+  Future<void> _handleCreateBackup(BuildContext context, WidgetRef ref) async {
     try {
       final success = await ref
-          .read(backupServiceProvider.notifier)
-          .exportBackup();
-      if (success && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Backup exported successfully!')),
-        );
+          .read(backupServiceProvider)
+          .createAndSaveBackup();
+
+      if (success) {
+        await NotificationService().showBackupSuccessNotification();
       }
     } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Export failed: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+      await NotificationService().showBackupErrorNotification(e.toString());
     }
   }
 
-  Future<void> _handleRestore(BuildContext context, WidgetRef ref) async {
-    // Warn the user first
-    final confirmed = await showDialog<bool>(
+  // Deprecated: keeping for reference as requested
+  // ignore: unused_element
+  Future<void> _handleExport(BuildContext context, WidgetRef ref) async {
+    // ... logic ignored for now
+  }
+
+  void _confirmRestore(BuildContext context, WidgetRef ref) {
+    showDialog(
       context: context,
-      builder: (ctx) => PremiumDialog(
+      builder: (_) => PremiumDialog(
         icon: Icons.download_rounded,
         title: 'Restore Backup?',
         description:
-            'This will overwrite your current data and settings. '
-            'The app will restart afterwards. Continue?',
-        confirmLabel: 'Continue',
+            'This will overwrite your current data and settings. You will need to restart the app to apply changes.',
+        confirmLabel: 'Restore',
         color: Colors.orange,
-        onConfirm: () => Navigator.of(ctx).pop(true),
+        onConfirm: () async {
+          try {
+            final success = await ref
+                .read(backupServiceProvider)
+                .restoreBackup();
+            if (success) {
+              await NotificationService().showRestoreSuccessNotification();
+            } else {
+              await NotificationService().showRestoreErrorNotification(
+                'Selection cancelled or invalid file.',
+              );
+            }
+          } catch (e) {
+            await NotificationService().showRestoreErrorNotification(
+              e.toString(),
+            );
+          }
+        },
       ),
     );
-    if (confirmed != true) return;
-
-    try {
-      final success = await ref
-          .read(backupServiceProvider.notifier)
-          .restoreBackup();
-      if (success && context.mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => PremiumDialog(
-            icon: Icons.restart_alt_rounded,
-            title: 'Restore Complete',
-            description: 'The app needs to restart to apply the changes.',
-            confirmLabel: 'Restart Now',
-            color: Colors.green,
-            onConfirm: () => Phoenix.rebirth(context),
-          ),
-        );
-      } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Restore cancelled or failed.')),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Restore failed: $e')));
-      }
-    }
   }
 
   Future<void> _handleCSVExport(BuildContext context, WidgetRef ref) async {
     try {
       final success = await ref
-          .read(backupServiceProvider.notifier)
+          .read(backupServiceProvider)
           .exportHistoryToCSV();
       if (!success && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -232,7 +213,7 @@ class DataPrivacyScreen extends ConsumerWidget {
   Future<void> _selectDirectory(BuildContext context, WidgetRef ref) async {
     try {
       final path = await ref
-          .read(backupServiceProvider.notifier)
+          .read(backupServiceProvider)
           .selectBackupDirectory();
       if (path != null) {
         await ref.read(settingsProvider.notifier).setBackupDirectory(path);
@@ -258,7 +239,7 @@ class DataPrivacyScreen extends ConsumerWidget {
         color: Colors.orange,
         onConfirm: () async {
           try {
-            await ref.read(backupServiceProvider.notifier).clearHistoryOnly();
+            await ref.read(backupServiceProvider).clearHistoryOnly();
             if (context.mounted) {
               ScaffoldMessenger.of(
                 context,
@@ -288,9 +269,15 @@ class DataPrivacyScreen extends ConsumerWidget {
         color: Theme.of(context).colorScheme.error,
         onConfirm: () async {
           try {
-            await ref.read(backupServiceProvider.notifier).clearAllData();
+            await ref.read(backupServiceProvider).clearAllData();
             if (context.mounted) {
-              Phoenix.rebirth(context);
+              await NotificationService()
+                  .showInstantBackupAndRestoreNotification(
+                    id: 100,
+                    title: 'Data Reset Complete',
+                    body: 'All data cleared. Click Restart to refresh the app.',
+                    showRestartButton: true,
+                  );
             }
           } catch (e) {
             if (context.mounted) {
@@ -320,7 +307,7 @@ class _ExportOptionsSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Export Backup',
+              'Create Backup',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),

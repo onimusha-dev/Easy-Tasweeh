@@ -16,7 +16,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     if (task == 'dailyBackup') {
-      await BackupService.performAutomaticBackup();
+      await performAutomaticBackupTask();
     }
     return true;
   });

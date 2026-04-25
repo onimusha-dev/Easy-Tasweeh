@@ -42,13 +42,15 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        if (response.payload == 'restart_app' ||
-            response.actionId == 'restart_app_action') {
+        // Only restart if the 'Restart App' button (action) was specifically clicked
+        if (response.actionId == 'restart_app_action') {
           final context = navigatorKey.currentContext;
           if (context != null) {
             Phoenix.rebirth(context);
           }
         }
+        // Tapping the notification body (no actionId) will just open the app 
+        // without restarting, allowing the user to continue their session.
       },
     );
 
@@ -157,7 +159,40 @@ class NotificationService {
       title: title,
       body: body,
       notificationDetails: platformChannelSpecifics,
-      payload: 'restart_app',
+      payload: payload ?? 'info_notification',
+    );
+  }
+
+  Future<void> showBackupSuccessNotification() async {
+    await showInstantBackupAndRestoreNotification(
+      id: 101,
+      title: 'Backup Successful',
+      body: 'Your data has been safely saved to your chosen location.',
+    );
+  }
+
+  Future<void> showBackupErrorNotification(String error) async {
+    await showInstantBackupAndRestoreNotification(
+      id: 102,
+      title: 'Backup Failed',
+      body: 'Could not create backup: $error',
+    );
+  }
+
+  Future<void> showRestoreSuccessNotification() async {
+    await showInstantBackupAndRestoreNotification(
+      id: 103,
+      title: 'Restore Successful',
+      body: 'Data restored. Click Restart to apply all changes.',
+      showRestartButton: true,
+    );
+  }
+
+  Future<void> showRestoreErrorNotification(String error) async {
+    await showInstantBackupAndRestoreNotification(
+      id: 104,
+      title: 'Restore Failed',
+      body: 'Could not restore from file: $error',
     );
   }
 }

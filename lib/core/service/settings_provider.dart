@@ -309,6 +309,7 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
       case 'glowingBall':
         return PressButtonStyle.glowingBall;
       default:
+        // Force Classic Wavy as the fallback for new installs
         return PressButtonStyle.classicWavy;
     }
   }
