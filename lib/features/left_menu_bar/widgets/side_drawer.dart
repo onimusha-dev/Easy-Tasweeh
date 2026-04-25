@@ -196,14 +196,11 @@ class _DrawerTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: iconColor, size: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(icon, color: iconColor, size: 22),
               ),
               const SizedBox(width: 16),
               Expanded(

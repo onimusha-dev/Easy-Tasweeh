@@ -93,17 +93,14 @@ class AppearanceScreen extends ConsumerWidget {
             context,
             title: 'SIZE',
             children: [
-              buildSettingTile(
+              buildTwoPartSettingTile(
                 context,
                 icon: Icons.photo_size_select_small_rounded,
                 title: 'Button size',
                 subtitle:
                     'Current: ${ref.watch(settingsProvider).buttonSize.toInt()}px',
                 iconColor: AppIconColors.pink(context),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(56, 0, 16, 16),
-                child: Slider(
+                action: Slider(
                   value: ref.watch(settingsProvider).buttonSize,
                   min: 150,
                   max: 320,

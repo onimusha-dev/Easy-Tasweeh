@@ -103,37 +103,40 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             context,
             title: 'SAYINGS',
             children: [
-              buildSettingTile(
+              buildTwoPartSettingTile(
                 context,
                 icon: Icons.format_quote_rounded,
                 title: "Prophet's Sayings",
                 subtitle: 'Random hadith throughout the day',
                 iconColor: AppIconColors.pink(context),
-                trailing: AppSwitch(
-                  value: settings.sayingReminders,
-                  onChanged: (v) {
-                    if (v && !settings.notificationPermissionGranted) {
-                      _showPermissionSnack();
-                      return;
-                    }
-                    notifier.toggleSayingReminders(v);
-                  },
-                ),
-              ),
-              if (settings.sayingReminders)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(56, 0, 16, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'FREQUENCY: ${settings.sayingsPerDay} TIMES A DAY',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 10,
-                          letterSpacing: 0.5,
+                action: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'FREQUENCY: ${settings.sayingsPerDay} TIMES A DAY',
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 10,
+                                    letterSpacing: 0.5,
+                                  ),
                         ),
-                      ),
+                        AppSwitch(
+                          value: settings.sayingReminders,
+                          onChanged: (v) {
+                            if (v && !settings.notificationPermissionGranted) {
+                              _showPermissionSnack();
+                              return;
+                            }
+                            notifier.toggleSayingReminders(v);
+                          },
+                        ),
+                      ],
+                    ),
+                    if (settings.sayingReminders) ...[
                       const SizedBox(height: 8),
                       Slider(
                         value: settings.sayingsPerDay.toDouble(),
@@ -143,8 +146,9 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
                         onChanged: (v) => notifier.setSayingsPerDay(v.toInt()),
                       ),
                     ],
-                  ),
+                  ],
                 ),
+              ),
             ],
           ),
 

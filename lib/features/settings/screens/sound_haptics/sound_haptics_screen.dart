@@ -103,21 +103,20 @@ class SoundHapticsScreen extends ConsumerWidget {
             context,
             title: 'BEHAVIOR',
             children: [
-              buildSettingTile(
+              buildTwoPartSettingTile(
                 context,
                 icon: Icons.speed_rounded,
                 title: 'Freeze duration',
                 subtitle: 'Prevent accidental rapid tapping',
                 iconColor: AppIconColors.sage(context),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+                action: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _DurationChip(
                       label: '${settings.tapFreezeDuration} ms',
                       enabled: settings.tapFreezeEnabled,
                       onTap: () => _showFreezeDurationDialog(context, ref),
                     ),
-                    const SizedBox(width: 8),
                     AppSwitch(
                       value: settings.tapFreezeEnabled,
                       onChanged: (v) => notifier.toggleTapFreeze(v),
@@ -135,21 +134,20 @@ class SoundHapticsScreen extends ConsumerWidget {
             context,
             title: 'MILESTONES',
             children: [
-              buildSettingTile(
+              buildTwoPartSettingTile(
                 context,
                 icon: Icons.repeat_rounded,
                 title: 'Milestone vibration',
                 subtitle: 'Vibrate every X counts',
                 iconColor: AppIconColors.blue(context),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
+                action: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _DurationChip(
                       label: '${settings.milestoneValue}',
                       enabled: settings.vibrateOnMilestone,
                       onTap: () => _showMilestoneDialog(context, ref),
                     ),
-                    const SizedBox(width: 8),
                     AppSwitch(
                       value: settings.vibrateOnMilestone,
                       onChanged: (v) => notifier.toggleVibrateOnMilestone(v),

@@ -58,35 +58,112 @@ Widget buildSettingTile(
     );
   }
 
-  return ListTile(
-    shape: shape,
-    dense: true,
-    visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-    leading: Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: (iconColor ?? Theme.of(context).colorScheme.primary).withValues(
-          alpha: 0.1,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(
-        icon,
-        color: iconColor ?? Theme.of(context).colorScheme.primary,
-        size: 20,
-      ),
-    ),
-    title: Text(title, style: Theme.of(context).textTheme.titleSmall),
-    subtitle: Text(
-      subtitle,
-      style: TextStyle(
-        color: Theme.of(context).colorScheme.outline,
-        fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
-      ),
-    ),
-    trailing: trailingWidget,
+  return InkWell(
     onTap: onTap,
+    customBorder: shape,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Icon(
+              icon,
+              color: iconColor ?? Theme.of(context).colorScheme.primary,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.outline,
+                    fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (trailingWidget != null) ...[
+            const SizedBox(width: 8),
+            trailingWidget,
+          ],
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildTwoPartSettingTile(
+  BuildContext context, {
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required Widget action,
+  Color? iconColor,
+  VoidCallback? onTap,
+  ShapeBorder shape = const RoundedRectangleBorder(),
+}) {
+  final scheme = Theme.of(context).colorScheme;
+
+  return InkWell(
+    onTap: onTap,
+    customBorder: shape,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(icon, color: iconColor ?? scheme.primary, size: 22),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        color: scheme.outline,
+                        fontSize: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.fontSize,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          action,
+        ],
+      ),
+    ),
   );
 }
 
