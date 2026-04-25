@@ -15,7 +15,7 @@ class BgChangerPreviewScreen extends ConsumerStatefulWidget {
 class _BgChangerPreviewScreenState
     extends ConsumerState<BgChangerPreviewScreen> {
   String? _selectedBackground;
-  int _demoCount = 33;
+  int _demoCount = 1000;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +33,16 @@ class _BgChangerPreviewScreenState
             context,
           ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => ref
+                .read(settingsProvider.notifier)
+                .toggleCenterButton(!settings.centerButton),
+            icon: const Icon(Icons.swap_vert_rounded),
+            tooltip: 'Swap Layout',
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Column(
         children: [
@@ -41,6 +51,7 @@ class _BgChangerPreviewScreenState
             backgroundOpacity: settings.backgroundOpacity,
             count: _demoCount,
             previewStyle: settings.pressButtonStyle,
+            centerButton: settings.centerButton,
             onTap: () => setState(() => _demoCount++),
           ),
 
@@ -122,9 +133,9 @@ class _BgChangerPreviewScreenState
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 12,
+        crossAxisSpacing: 14,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.8,
       ),
       itemCount: availableBackgrounds.length,
       itemBuilder: (context, index) {
@@ -138,18 +149,14 @@ class _BgChangerPreviewScreenState
             children: [
               Expanded(
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOutCubic,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isSelected
-                          ? colorScheme.primary
-                          : Colors.transparent,
-                      width: 2,
-                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.transparent, width: 0),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(isSelected ? 17 : 18),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -164,20 +171,31 @@ class _BgChangerPreviewScreenState
                           )
                         else
                           Image.asset(bg.path, fit: BoxFit.cover),
+
+                        // Selection Overlay
                         if (isSelected)
                           Container(
-                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            color: colorScheme.primary.withValues(alpha: 0.1),
                             child: Center(
                               child: Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.check_rounded,
+                                decoration: BoxDecoration(
                                   color: colorScheme.primary,
-                                  size: 16,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.white,
+                                  size: 14,
                                 ),
                               ),
                             ),
@@ -187,16 +205,16 @@ class _BgChangerPreviewScreenState
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Text(
                 bg.name.toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontSize: 8,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontSize: 9,
+                  fontWeight: isSelected ? FontWeight.w900 : FontWeight.bold,
                   color: isSelected ? colorScheme.primary : colorScheme.outline,
-                  letterSpacing: 0.5,
+                  letterSpacing: 0.8,
                 ),
               ),
             ],

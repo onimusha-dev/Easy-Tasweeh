@@ -89,6 +89,11 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                 ),
                 actions: [
                   IconButton(
+                    onPressed: _showLayoutDialog,
+                    icon: const Icon(Icons.swap_vert_rounded),
+                    tooltip: 'Swap Layout',
+                  ),
+                  IconButton(
                     onPressed: _showSetTargetSheet,
                     icon: const Icon(Icons.track_changes_rounded),
                     tooltip: 'Set Target',
@@ -120,30 +125,52 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  children: [
-                                    CounterProgress(
-                                      colorScheme: colorScheme,
-                                      percentage: percentage,
-                                      progress: progress,
-                                      textTheme: textTheme,
-                                      currentCountData: current,
-                                      targetCount: target,
-                                    ),
-                                    const SizedBox(height: 16),
-                                    DhikrDisplay(currentDhikr: currentDhikr),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: settings.buttonSize,
-                                  height: settings.buttonSize,
-                                  child: _getCounterStyle(
-                                    settings.pressButtonStyle,
-                                    _isFrozen
-                                        ? null
-                                        : () => _incrementCounter(countData),
+                                if (!settings.centerButton) ...[
+                                  Column(
+                                    children: [
+                                      CounterProgress(
+                                        colorScheme: colorScheme,
+                                        percentage: percentage,
+                                        progress: progress,
+                                        textTheme: textTheme,
+                                        currentCountData: current,
+                                        targetCount: target,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      DhikrDisplay(currentDhikr: currentDhikr),
+                                    ],
                                   ),
-                                ),
+                                  SizedBox(
+                                    width: settings.buttonSize,
+                                    height: settings.buttonSize,
+                                    child: _getCounterStyle(
+                                      settings.pressButtonStyle,
+                                      _isFrozen
+                                          ? null
+                                          : () => _incrementCounter(countData),
+                                    ),
+                                  ),
+                                ] else ...[
+                                  CounterProgress(
+                                    colorScheme: colorScheme,
+                                    percentage: percentage,
+                                    progress: progress,
+                                    textTheme: textTheme,
+                                    currentCountData: current,
+                                    targetCount: target,
+                                  ),
+                                  SizedBox(
+                                    width: settings.buttonSize,
+                                    height: settings.buttonSize,
+                                    child: _getCounterStyle(
+                                      settings.pressButtonStyle,
+                                      _isFrozen
+                                          ? null
+                                          : () => _incrementCounter(countData),
+                                    ),
+                                  ),
+                                  DhikrDisplay(currentDhikr: currentDhikr),
+                                ],
                                 const SizedBox(height: 32),
                               ],
                             ),
@@ -226,6 +253,39 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         });
       }
     }
+  }
+
+  void _showLayoutDialog() {
+    final settings = ref.read(settingsProvider);
+    final isCentered = settings.centerButton;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Change Layout'),
+        content: Text(
+          isCentered
+              ? 'Do you want to move the counter button to the bottom?'
+              : 'Do you want to move the counter button to the middle?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCEL'),
+          ),
+          FilledButton(
+            onPressed: () {
+              ref
+                  .read(settingsProvider.notifier)
+                  .updateCenterButtonTemporary(!isCentered);
+              Navigator.pop(context);
+            },
+            child: const Text('SWITCH'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showSetTargetSheet() {

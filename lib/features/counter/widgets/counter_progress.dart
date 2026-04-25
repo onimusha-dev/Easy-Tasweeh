@@ -38,7 +38,14 @@ class CounterProgress extends StatelessWidget {
                   '$currentCountData',
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w900,
-                    color: colorScheme.onSurface,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 8,
+                        color: Colors.black.withValues(alpha: 0.5),
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
                   ),
                 ),
                 if (hasTarget)
@@ -46,8 +53,8 @@ class CounterProgress extends StatelessWidget {
                     ' / $targetCount',
                     style: textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.4,
+                      color: Colors.white.withValues(
+                        alpha: 0.5,
                       ),
                     ),
                   ),
@@ -60,7 +67,7 @@ class CounterProgress extends StatelessWidget {
                 'ENDLESS',
                 style: textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                  color: Colors.white.withValues(alpha: 0.6),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -74,7 +81,7 @@ class CounterProgress extends StatelessWidget {
             height: 4,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: colorScheme.onSurface.withValues(alpha: 0.06),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -122,7 +129,7 @@ class _AnimatedProgressBar extends StatelessWidget {
                     child: Container(
                       height: 8,
                       decoration: BoxDecoration(
-                        color: colorScheme.onSurface.withValues(alpha: 0.08),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),

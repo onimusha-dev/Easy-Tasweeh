@@ -87,6 +87,18 @@ class AppearanceScreen extends ConsumerWidget {
                 onTap: () =>
                     _push(context, const PressBtnChangerPreviewScreen()),
               ),
+              buildSettingTile(
+                context,
+                icon: Icons.center_focus_strong_outlined,
+                title: 'Center counter button',
+                subtitle: 'Switch position of dhikr and button',
+                iconColor: AppIconColors.blue(context),
+                trailing: AppSwitch(
+                  value: ref.watch(settingsProvider).centerButton,
+                  onChanged: (v) =>
+                      ref.read(settingsProvider.notifier).toggleCenterButton(v),
+                ),
+              ),
               buildTwoPartSettingTile(
                 context,
                 icon: Icons.photo_size_select_small_rounded,

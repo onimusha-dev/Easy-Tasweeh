@@ -18,6 +18,7 @@ class SettingsService {
         buttonSize: prefs.getDouble('buttonSize') ?? 240.0,
         themeMode: _parseThemeMode(prefs.getString('themeMode')),
         colorScheme: _parseColorScheme(prefs.getString('colorScheme')),
+        centerButton: prefs.getBool('centerButton') ?? false,
       ),
       feedback: FeedbackSettings(
         hapticEnabled: prefs.getBool('hapticEnabled') ?? true,

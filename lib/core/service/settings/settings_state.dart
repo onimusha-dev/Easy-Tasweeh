@@ -32,6 +32,7 @@ class AppearanceSettings {
   final double buttonSize;
   final ThemeMode themeMode;
   final AppColorScheme colorScheme;
+  final bool centerButton;
 
   const AppearanceSettings({
     required this.background,
@@ -40,6 +41,7 @@ class AppearanceSettings {
     required this.buttonSize,
     required this.themeMode,
     required this.colorScheme,
+    required this.centerButton,
   });
 
   AppearanceSettings copyWith({
@@ -49,6 +51,7 @@ class AppearanceSettings {
     double? buttonSize,
     ThemeMode? themeMode,
     AppColorScheme? colorScheme,
+    bool? centerButton,
   }) {
     return AppearanceSettings(
       background: background ?? this.background,
@@ -57,6 +60,7 @@ class AppearanceSettings {
       buttonSize: buttonSize ?? this.buttonSize,
       themeMode: themeMode ?? this.themeMode,
       colorScheme: colorScheme ?? this.colorScheme,
+      centerButton: centerButton ?? this.centerButton,
     );
   }
 }
@@ -293,6 +297,7 @@ class SettingsState {
   double get backgroundOpacity => appearance.backgroundOpacity;
   PressButtonStyle get pressButtonStyle => appearance.pressButtonStyle;
   double get buttonSize => appearance.buttonSize;
+  bool get centerButton => appearance.centerButton;
 
   bool get hapticEnabled => feedback.hapticEnabled;
   double get hapticIntensity => feedback.hapticIntensity;

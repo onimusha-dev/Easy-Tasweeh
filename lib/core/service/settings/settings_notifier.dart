@@ -115,6 +115,15 @@ class SettingsNotifier extends Notifier<SettingsState> {
     state = state.copyWith(appearance: state.appearance.copyWith(buttonSize: value));
   }
 
+  Future<void> toggleCenterButton(bool value) async {
+    await _service.setBool('centerButton', value);
+    state = state.copyWith(appearance: state.appearance.copyWith(centerButton: value));
+  }
+
+  void updateCenterButtonTemporary(bool value) {
+    state = state.copyWith(appearance: state.appearance.copyWith(centerButton: value));
+  }
+
   // --- Dhikr ---
   Future<void> setLastDhikrId(String id) async {
     await _service.setString('lastDhikrId', id);
