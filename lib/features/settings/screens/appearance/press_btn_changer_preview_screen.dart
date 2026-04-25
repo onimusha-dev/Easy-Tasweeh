@@ -67,7 +67,7 @@ class _PressBtnChangerPreviewScreenState
                         final messenger = ScaffoldMessenger.of(context);
                         await ref
                             .read(settingsProvider.notifier)
-                            .setPressButtonStyle(activeStyle);
+                            .setButtonStyle(activeStyle);
                         if (mounted) {
                           setState(() => _selectedStyle = null);
                           messenger.showSnackBar(

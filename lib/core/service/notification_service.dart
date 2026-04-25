@@ -1,6 +1,6 @@
-import 'package:easy_tasbeeh/main.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -41,20 +41,28 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.initialize(
       settings: initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        // Only restart if the 'Restart App' button (action) was specifically clicked
-        if (response.actionId == 'restart_app_action') {
-          final context = navigatorKey.currentContext;
-          if (context != null) {
-            Phoenix.rebirth(context);
-          }
-        }
-        // Tapping the notification body (no actionId) will just open the app 
-        // without restarting, allowing the user to continue their session.
-      },
+      onDidReceiveNotificationResponse: _handleNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse:
+          _handleNotificationResponseStatic,
     );
 
+    await requestPermissions(); // Ensure permissions are requested
+
     _isInitialized = true;
+  }
+
+  static void _handleNotificationResponse(NotificationResponse response) {
+    _handleNotificationResponseStatic(response);
+  }
+
+  @pragma('vm:entry-point')
+  static void _handleNotificationResponseStatic(NotificationResponse response) {
+    debugPrint('Notification response received: ${response.payload}');
+    // If it's a restore success notification, any click (action or tap) should exit
+    if (response.payload == 'restore_success_payload') {
+      debugPrint('Exiting app for manual restart...');
+      SystemNavigator.pop();
+    }
   }
 
   Future<void> requestPermissions() async {
@@ -115,18 +123,14 @@ class NotificationService {
     );
   }
 
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id: id);
-  }
-
   Future<void> showInstantBackupAndRestoreNotification({
     required int id,
     required String title,
     required String body,
     String? payload,
-    bool showRestartButton = false,
   }) async {
     if (!_isInitialized) await init();
+    await requestPermissions(); // Safety check for permissions before showing
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
@@ -134,16 +138,7 @@ class NotificationService {
           'Backup and restore',
           importance: Importance.max,
           priority: Priority.high,
-          actions: showRestartButton
-              ? <AndroidNotificationAction>[
-                  const AndroidNotificationAction(
-                    'restart_app_action',
-                    'Restart App',
-                    cancelNotification: true,
-                    showsUserInterface: true,
-                  ),
-                ]
-              : null,
+          actions: null,
         );
 
     const DarwinNotificationDetails iosNotificationDetails =
@@ -183,8 +178,8 @@ class NotificationService {
     await showInstantBackupAndRestoreNotification(
       id: 103,
       title: 'Restore Successful',
-      body: 'Data restored. Click Restart to apply all changes.',
-      showRestartButton: true,
+      body: 'Data restored. Tap this notification to restart the app.',
+      payload: 'restore_success_payload',
     );
   }
 

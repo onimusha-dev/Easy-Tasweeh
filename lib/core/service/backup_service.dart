@@ -140,9 +140,11 @@ class BackupService {
       }
 
       debugPrint('Backup saved to: $outputFile');
+      await NotificationService().showBackupSuccessNotification();
       return true;
     } catch (e) {
       debugPrint('Error saving backup: $e');
+      await NotificationService().showBackupErrorNotification(e.toString());
       return false;
     }
   }
@@ -275,13 +277,16 @@ class BackupService {
 
         debugPrint('Restore: Database files restored successfully');
       }
-
+      await NotificationService().showRestoreSuccessNotification();
       await restoreDir.delete(recursive: true);
       return true;
     } catch (e) {
       debugPrint('Error during restore: $e');
+      await NotificationService().showRestoreErrorNotification(e.toString());
       if (restoreDir != null && await restoreDir.exists()) {
-        await restoreDir.delete(recursive: true).catchError((_) => null);
+        try {
+          await restoreDir.delete(recursive: true);
+        } catch (_) {}
       }
       return false;
     }

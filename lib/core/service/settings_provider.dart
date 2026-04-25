@@ -451,10 +451,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     state = state.copyWith(backgroundOpacity: value);
   }
 
-  Future<void> setPressButtonStyle(PressButtonStyle style) async {
-    await setButtonStyle(style);
-  }
-
   Future<void> setButtonStyle(PressButtonStyle style) async {
     await prefs.setString('pressButtonStyle', style.name);
     state = state.copyWith(pressButtonStyle: style);

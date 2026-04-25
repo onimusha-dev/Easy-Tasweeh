@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
+import 'package:easy_tasbeeh/core/service/notification_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
@@ -29,6 +30,7 @@ void main() async {
   await AppPreferences.init(); // Add this line
 
   await Workmanager().initialize(callbackDispatcher);
+  await NotificationService().init(); // Initialize notifications early
 
   // Only schedule periodic backup if the user has enabled it.
   final periodicEnabled = prefs.getBool('periodicBackupEnabled') ?? false;
