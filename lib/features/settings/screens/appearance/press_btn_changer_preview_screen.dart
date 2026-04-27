@@ -109,13 +109,13 @@ class _PressBtnChangerPreviewScreenState
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: _buildStyleGrid(activeStyle),
@@ -153,7 +153,7 @@ class _PressBtnChangerPreviewScreenState
               color: isSelected
                   ? colorScheme.primary.withValues(alpha: 0.05)
                   : colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: colorScheme.outlineVariant.withValues(alpha: 0.3),
                 width: 1,

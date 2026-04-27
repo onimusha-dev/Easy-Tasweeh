@@ -13,13 +13,15 @@ class DhikrSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentDhikr = ref.watch(currentDhikrProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
+      height: screenHeight * 0.75,
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.zero,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -32,55 +34,36 @@ class DhikrSheet extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 24),
-          Text('Select Dhikr', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          Text('Select Dhikr', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 16),
           Flexible(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-                ),
+            child: ListView.separated(
+              padding: EdgeInsets.zero,
+              itemCount: dhikrList.length,
+              separatorBuilder: (context, index) => Divider(
+                height: 1,
+                indent: 56,
+                color: colorScheme.outlineVariant.withValues(alpha: 0.3),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.zero,
-                  itemCount: dhikrList.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 1,
-                    indent: 64,
-                    endIndent: 16,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-                  ),
-                  itemBuilder: (context, index) {
-                    final item = dhikrList[index];
-                    final isSelected = item.id == currentDhikr.id;
+              itemBuilder: (context, index) {
+                final item = dhikrList[index];
+                final isSelected = item.id == currentDhikr.id;
 
-                    return DhikrTile(
-                      item: item,
-                      isSelected: isSelected,
-                      onTap: () {
-                        ref
-                            .read(settingsProvider.notifier)
-                            .setLastDhikrId(item.id);
-                        ref.read(countRepositoryProvider).setDhikrId(item.id);
-                        Navigator.pop(context);
-                      },
-                    );
+                return DhikrTile(
+                  item: item,
+                  index: index + 1,
+                  isSelected: isSelected,
+                  isLast: index == dhikrList.length - 1,
+                  onTap: () {
+                    ref.read(settingsProvider.notifier).setLastDhikrId(item.id);
+                    ref.read(countRepositoryProvider).setDhikrId(item.id);
+                    Navigator.pop(context);
                   },
-                ),
-              ),
+                );
+              },
             ),
           ),
-          const SizedBox(height: 24),
         ],
       ),
     );

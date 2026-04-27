@@ -9,7 +9,7 @@ class MembershipCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: Theme.of(context).colorScheme.outlineVariant,
           width: 0.5,

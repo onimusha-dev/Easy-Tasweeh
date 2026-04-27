@@ -38,7 +38,7 @@ class HistoryItemCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   isCompleted ? Icons.done_all_rounded : Icons.history_rounded,
@@ -53,21 +53,23 @@ class HistoryItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      dhikrList
-                          .firstWhere(
-                            (d) => d.id == data.dhikrId,
-                            orElse: () => dhikrList.first,
-                          )
-                          .arabic,
-                      style: theme.textTheme.titleSmall,
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        dhikrList
+                            .firstWhere(
+                              (d) => d.id == data.dhikrId,
+                              orElse: () => dhikrList.first,
+                            )
+                            .arabic,
+                        textAlign: TextAlign.left,
+                        style: theme.textTheme.titleMedium,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.outline,
-                      ),
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -82,17 +84,14 @@ class HistoryItemCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '${data.currentCount}',
-                          style: theme.textTheme.titleMedium?.copyWith(
+                          style: theme.textTheme.titleLarge?.copyWith(
                             color: statusColor,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         if (data.targetCount > 0)
                           TextSpan(
                             text: ' / ${data.targetCount}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.outline,
-                            ),
+                            style: theme.textTheme.bodySmall,
                           ),
                       ],
                     ),
@@ -102,7 +101,6 @@ class HistoryItemCard extends StatelessWidget {
                       '${percentage.toInt()}%',
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.outline.withValues(alpha: 0.7),
-                        fontSize: 10,
                       ),
                     ),
                 ],

@@ -76,7 +76,7 @@ class HistoryTotalsCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -87,9 +87,8 @@ class HistoryTotalsCard extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Text(
               value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -98,8 +97,6 @@ class HistoryTotalsCard extends StatelessWidget {
             label,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Colors.white.withValues(alpha: 0.7),
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class AppLayout {
   // ─── Border Radii ──────────────────────────────────────────────────────────
-  static const double radiusSmall = 8.0;
-  static const double radiusMedium = 14.0;
-  static const double radiusLarge = 16.0;
-  static const double radiusExtraLarge = 28.0;
+  static const double radiusSmall = 6.0;
+  static const double radiusMedium = 8.0;
+  static const double radiusLarge = 10.0;
+  static const double radiusExtraLarge = 12.0;
   static const double radiusFull = 100.0;
 
   static final BorderRadius brSmall = BorderRadius.circular(radiusSmall);
   static final BorderRadius brMedium = BorderRadius.circular(radiusMedium);
   static final BorderRadius brLarge = BorderRadius.circular(radiusLarge);
   static final BorderRadius brExtraLarge = BorderRadius.circular(radiusExtraLarge);
-  static final BorderRadius brChip = BorderRadius.circular(20.0);
+  static final BorderRadius brChip = BorderRadius.circular(8.0);
 
   // ─── Shapes ────────────────────────────────────────────────────────────────
   static final OutlinedBorder shapeSmall = RoundedRectangleBorder(borderRadius: brSmall);

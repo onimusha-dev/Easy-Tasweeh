@@ -128,7 +128,7 @@ class ColorSchemeSheet extends ConsumerWidget {
                               .setColorScheme(option.id);
                           Navigator.pop(context);
                         },
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(8),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           width: itemWidth,
@@ -137,7 +137,7 @@ class ColorSchemeSheet extends ConsumerWidget {
                             color: isSelected
                                 ? option.colors[0].withValues(alpha: 0.08)
                                 : colorScheme.surfaceContainerLow,
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               color: isSelected
                                   ? option.colors[0]

@@ -1,7 +1,6 @@
-import 'package:easy_tasbeeh/core/theme/theme.dart';
-import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/archive_dialog.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/session_action_button.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,7 +46,7 @@ class TargetGoalSheet extends ConsumerWidget {
               Container(
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.track_changes_rounded,
@@ -79,175 +78,20 @@ class TargetGoalSheet extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
 
-          // Target Selection Card
-          Container(
-            decoration: BoxDecoration(color: colorScheme.surfaceContainerLow),
-            child: GridView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 1.8,
-              ),
-              itemCount: targets.length + 1,
-              itemBuilder: (context, index) {
-                final isInfinite = index == targets.length;
-                final target = isInfinite ? 0 : targets[index];
-                final isSelected = currentTarget == target;
-
-                return InkWell(
-                  onTap: () {
-                    final currentCount =
-                        countAsync.asData?.value?.currentCount ?? 0;
-                    if (currentCount > 0) {
-                      showDialog(
-                        context: context,
-                        builder: (_) => PremiumDialog(
-                          icon: Icons.track_changes_rounded,
-                          title: 'Save session?',
-                          description:
-                              'This will save your current progress to history.',
-                          confirmLabel: 'Archive',
-                          onConfirm: () {
-                            ref.read(countRepositoryProvider).saveAndReset();
-                            ref.read(countRepositoryProvider).setTarget(target);
-                            Navigator.pop(context); // Close sheet
-                          },
-                        ),
-                      );
-                    } else {
-                      ref.read(countRepositoryProvider).setTarget(target);
-                      Navigator.pop(context);
-                    }
-                  },
-                  borderRadius: BorderRadius.circular(16),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.outlineVariant.withValues(alpha: 0.5),
-                        width: isSelected ? 2 : 1,
-                      ),
-                      boxShadow: const [],
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            isInfinite ? '∞' : '$target',
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: isSelected
-                                      ? colorScheme.onPrimary
-                                      : colorScheme.onSurface,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+          // Target Selection Grid
+          TargetGrid(
+            targets: targets,
+            currentTarget: currentTarget,
+            countAsync: countAsync,
           ),
           const SizedBox(height: 24),
 
           // Session Actions
-          _sessionActionButton(
-            context,
-            ref,
+          SessionActionButton(
             currentCount: countAsync.asData?.value?.currentCount ?? 0,
           ),
           const SizedBox(height: 24),
         ],
-      ),
-    );
-  }
-}
-
-Widget _sessionActionButton(
-  BuildContext context,
-  WidgetRef ref, {
-  required int currentCount,
-}) {
-  final colorScheme = Theme.of(context).colorScheme;
-  final appColors = Theme.of(context).extension<AppColors>();
-
-  if (currentCount > 0) {
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: () {
-          Navigator.pop(context);
-          showDialog(
-            context: context,
-            builder: (context) => const ArchiveDialog(),
-          );
-        },
-        icon: const Icon(Icons.archive_outlined, size: 18),
-        label: const Text(
-          'Archive Session',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        style: FilledButton.styleFrom(
-          backgroundColor: appColors?.destructiveColor.withValues(alpha: 0.1),
-          foregroundColor: appColors?.destructiveColor,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-      ),
-    );
-  } else {
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton.icon(
-        onPressed: () async {
-          final success = await ref
-              .read(countRepositoryProvider)
-              .restoreLastSession();
-          if (context.mounted) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  success
-                      ? 'Last incomplete session restored'
-                      : 'No eligible session found to restore',
-                ),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        icon: const Icon(Icons.restore_rounded, size: 18),
-        label: const Text(
-          'Restore Last Session',
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        style: FilledButton.styleFrom(
-          backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
-          foregroundColor: colorScheme.primary,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
       ),
     );
   }

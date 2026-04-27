@@ -108,13 +108,13 @@ class _BgChangerPreviewScreenState
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               decoration: BoxDecoration(
                 color: colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: colorScheme.outlineVariant.withValues(alpha: 0.5),
                 ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16),
                   child: _buildBackgroundGrid(activeBg),
@@ -152,11 +152,11 @@ class _BgChangerPreviewScreenState
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeInOutCubic,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.transparent, width: 0),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(isSelected ? 17 : 18),
+                    borderRadius: BorderRadius.circular(8),
                     child: Stack(
                       fit: StackFit.expand,
                       children: [

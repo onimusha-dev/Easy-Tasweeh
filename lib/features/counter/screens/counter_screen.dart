@@ -5,9 +5,9 @@ import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_progress.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_display.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/particle_background.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/side_drawer.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,102 +55,63 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
           SystemNavigator.pop();
         }
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: settings.background.isEmpty ? colorScheme.surface : null,
-          image: settings.background.isEmpty
-              ? null
-              : DecorationImage(
-                  image: AssetImage(settings.background),
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withValues(alpha: settings.backgroundOpacity),
-                    BlendMode.darken,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-        ),
-        child: Stack(
-          children: [
-            if (settings.showParticles)
-              const Positioned.fill(child: ParticleBackground()),
-            Scaffold(
-              backgroundColor: Colors.transparent,
-              drawer: const SideDrawer(),
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                surfaceTintColor: Colors.transparent,
-                leading: Builder(
-                  builder: (context) {
-                    return IconButton(
-                      icon: const Icon(Icons.menu_rounded),
-                      onPressed: () => Scaffold.of(context).openDrawer(),
-                    );
-                  },
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: _showLayoutDialog,
-                    icon: const Icon(Icons.swap_vert_rounded),
-                    tooltip: 'Swap Layout',
-                  ),
-                  IconButton(
-                    onPressed: _showSetTargetSheet,
-                    icon: const Icon(Icons.track_changes_rounded),
-                    tooltip: 'Set Target',
-                  ),
-                  const SizedBox(width: 8),
-                ],
+      child: CounterBackground(
+        settings: settings,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          drawer: const SideDrawer(),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: const Icon(Icons.menu_rounded),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                );
+              },
+            ),
+            actions: [
+              IconButton(
+                onPressed: _showLayoutDialog,
+                icon: const Icon(Icons.swap_vert_rounded),
+                tooltip: 'Swap Layout',
               ),
-              body: countAsync.when(
-                data: (countData) {
-                  final current = countData?.currentCount ?? 0;
-                  final target = countData?.targetCount ?? 33;
-                  final currentDhikr = ref.watch(currentDhikrProvider);
-                  final progress = target > 0
-                      ? (current / target).clamp(0.0, 1.0)
-                      : 0.0;
-                  final percentage = (progress * 100).toInt();
+              IconButton(
+                onPressed: _showSetTargetSheet,
+                icon: const Icon(Icons.track_changes_rounded),
+                tooltip: 'Set Target',
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+          body: countAsync.when(
+            data: (countData) {
+              final current = countData?.currentCount ?? 0;
+              final target = countData?.targetCount ?? 33;
+              final currentDhikr = ref.watch(currentDhikrProvider);
+              final progress = target > 0
+                  ? (current / target).clamp(0.0, 1.0)
+                  : 0.0;
+              final percentage = (progress * 100).toInt();
 
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                if (!settings.centerButton) ...[
-                                  Column(
-                                    children: [
-                                      CounterProgress(
-                                        colorScheme: colorScheme,
-                                        percentage: percentage,
-                                        progress: progress,
-                                        textTheme: textTheme,
-                                        currentCountData: current,
-                                        targetCount: target,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      DhikrDisplay(currentDhikr: currentDhikr),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: settings.buttonSize,
-                                    height: settings.buttonSize,
-                                    child: _getCounterStyle(
-                                      settings.pressButtonStyle,
-                                      _isFrozen
-                                          ? null
-                                          : () => _incrementCounter(countData),
-                                    ),
-                                  ),
-                                ] else ...[
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (!settings.centerButton) ...[
+                              Column(
+                                children: [
                                   CounterProgress(
                                     colorScheme: colorScheme,
                                     percentage: percentage,
@@ -159,32 +120,53 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                                     currentCountData: current,
                                     targetCount: target,
                                   ),
-                                  SizedBox(
-                                    width: settings.buttonSize,
-                                    height: settings.buttonSize,
-                                    child: _getCounterStyle(
-                                      settings.pressButtonStyle,
-                                      _isFrozen
-                                          ? null
-                                          : () => _incrementCounter(countData),
-                                    ),
-                                  ),
+                                  const SizedBox(height: 16),
                                   DhikrDisplay(currentDhikr: currentDhikr),
                                 ],
-                                const SizedBox(height: 32),
-                              ],
-                            ),
-                          ),
+                              ),
+                              SizedBox(
+                                width: settings.buttonSize,
+                                height: settings.buttonSize,
+                                child: _getCounterStyle(
+                                  settings.pressButtonStyle,
+                                  _isFrozen
+                                      ? null
+                                      : () => _incrementCounter(countData),
+                                ),
+                              ),
+                            ] else ...[
+                              CounterProgress(
+                                colorScheme: colorScheme,
+                                percentage: percentage,
+                                progress: progress,
+                                textTheme: textTheme,
+                                currentCountData: current,
+                                targetCount: target,
+                              ),
+                              SizedBox(
+                                width: settings.buttonSize,
+                                height: settings.buttonSize,
+                                child: _getCounterStyle(
+                                  settings.pressButtonStyle,
+                                  _isFrozen
+                                      ? null
+                                      : () => _incrementCounter(countData),
+                                ),
+                              ),
+                              DhikrDisplay(currentDhikr: currentDhikr),
+                            ],
+                            const SizedBox(height: 32),
+                          ],
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text('Error: $err')),
-              ),
-            ),
-          ],
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
         ),
       ),
     );
@@ -262,7 +244,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: const Text('Change Layout'),
         content: Text(
           isCentered

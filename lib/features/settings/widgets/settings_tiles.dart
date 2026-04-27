@@ -81,17 +81,12 @@ Widget buildSettingTile(
               children: [
                 Text(
                   title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.outline,
-                    fontSize: Theme.of(context).textTheme.bodySmall?.fontSize,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -140,19 +135,12 @@ Widget buildTwoPartSettingTile(
                   children: [
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: TextStyle(
-                        color: scheme.outline,
-                        fontSize: Theme.of(
-                          context,
-                        ).textTheme.bodySmall?.fontSize,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -161,6 +149,7 @@ Widget buildTwoPartSettingTile(
           ),
           const SizedBox(height: 8),
           action,
+          const SizedBox(height: 16),
         ],
       ),
     ),
@@ -171,8 +160,9 @@ Widget buildSettingsGroup(
   BuildContext context, {
   String? title,
   required List<Widget> children,
+  bool showBorder = true,
 }) {
-  const r = Radius.circular(20);
+  const r = Radius.circular(8);
   const none = Radius.zero;
   final n = children.length;
 
@@ -205,15 +195,17 @@ Widget buildSettingsGroup(
       Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Theme.of(
-              context,
-            ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-          ),
+          borderRadius: BorderRadius.circular(8),
+          border: showBorder
+              ? Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                )
+              : null,
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           child: Column(children: shaped),
         ),
       ),
