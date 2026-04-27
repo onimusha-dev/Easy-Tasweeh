@@ -36,8 +36,7 @@ class CounterProgress extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   '$currentCountData',
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
+                  style: textTheme.headlineLarge?.copyWith(
                     color: Colors.white,
                     shadows: [
                       Shadow(
@@ -52,7 +51,6 @@ class CounterProgress extends StatelessWidget {
                   Text(
                     ' / $targetCount',
                     style: textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
                       color: Colors.white.withValues(
                         alpha: 0.5,
                       ),
@@ -61,14 +59,12 @@ class CounterProgress extends StatelessWidget {
               ],
             ),
             if (hasTarget)
-              SizedBox.shrink()
+              const SizedBox.shrink()
             else
               Text(
                 'ENDLESS',
                 style: textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
                   color: Colors.white.withValues(alpha: 0.6),
-                  letterSpacing: 0.8,
                 ),
               ),
           ],

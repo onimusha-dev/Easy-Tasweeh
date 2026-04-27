@@ -1,6 +1,8 @@
 import 'dart:ui';
+
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,14 +23,11 @@ class DhikrDisplay extends ConsumerWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.1),
-            ),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 600),
@@ -43,7 +42,8 @@ class DhikrDisplay extends ConsumerWidget {
               children: [
                 if (settings.showArabic)
                   SizedBox(
-                    height: 70, // Fixed height for consistency during transitions
+                    height:
+                        70, // Fixed height for consistency during transitions
                     width: double.infinity,
                     child: FittedBox(
                       fit: BoxFit.contain,
@@ -51,10 +51,7 @@ class DhikrDisplay extends ConsumerWidget {
                         currentDhikr.arabic,
                         textAlign: TextAlign.center,
                         textDirection: TextDirection.rtl,
-                        style: textTheme.displayMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                        style: AppTypography.arabicDisplay(Colors.white),
                       ),
                     ),
                   ),
@@ -67,10 +64,8 @@ class DhikrDisplay extends ConsumerWidget {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+                    style: textTheme.titleLarge?.copyWith(
                       color: Colors.white.withValues(alpha: 0.9),
-                      letterSpacing: 0.2,
                     ),
                   ),
                 if (settings.showTransliteration && settings.showTranslation)
@@ -84,7 +79,6 @@ class DhikrDisplay extends ConsumerWidget {
                     style: textTheme.bodyMedium?.copyWith(
                       color: Colors.white.withValues(alpha: 0.6),
                       fontStyle: FontStyle.italic,
-                      height: 1.4,
                     ),
                   ),
                 const SizedBox(height: 24),

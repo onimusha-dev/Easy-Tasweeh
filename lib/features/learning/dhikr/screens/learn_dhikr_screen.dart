@@ -53,9 +53,7 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 'Learn Dhikr',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: textTheme.titleLarge,
               ),
               centerTitle: true,
             ),
@@ -146,7 +144,9 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
         onChanged: _filterDhikrs,
         decoration: InputDecoration(
           hintText: 'Search dhikr...',
-          hintStyle: TextStyle(color: colorScheme.outline),
+          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colorScheme.outline,
+          ),
           prefixIcon: Icon(Icons.search_rounded, color: colorScheme.outline),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(

@@ -1,7 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DhikrDetailScreen extends StatelessWidget {
   final DhikrItem item;
@@ -71,7 +71,7 @@ class DhikrDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        // borderRadius removed
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
@@ -83,20 +83,10 @@ class DhikrDetailScreen extends StatelessWidget {
             'EXPLANATION',
             style: textTheme.labelSmall?.copyWith(
               color: accentColor.withValues(alpha: 0.7),
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 16),
-          SelectableText(
-            explanation,
-            style: textTheme.bodyLarge?.copyWith(
-              height: 1.6,
-              color: colorScheme.onSurface,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          SelectableText(explanation, style: textTheme.bodyLarge),
         ],
       ),
     );
@@ -115,6 +105,7 @@ class DhikrDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
@@ -126,8 +117,6 @@ class DhikrDetailScreen extends StatelessWidget {
             'REFERENCE',
             style: textTheme.labelSmall?.copyWith(
               color: accentColor.withValues(alpha: 0.7),
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 16),
@@ -158,7 +147,6 @@ class DhikrDetailScreen extends StatelessWidget {
     DhikrReference ref,
     Color accentColor,
   ) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -177,11 +165,7 @@ class DhikrDetailScreen extends StatelessWidget {
               child: SelectableText(
                 ref.text,
                 style: textTheme.bodyLarge?.copyWith(
-                  height: 1.6,
-                  color: colorScheme.onSurface,
-                  fontSize: 16,
                   fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),
@@ -190,11 +174,7 @@ class DhikrDetailScreen extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           ref.source,
-          style: textTheme.labelLarge?.copyWith(
-            color: accentColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
+          style: textTheme.labelLarge?.copyWith(color: accentColor),
         ),
       ],
     );
@@ -210,17 +190,13 @@ class DhikrDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
       decoration: BoxDecoration(
         color: accentColor.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: accentColor.withValues(alpha: 0.1)),
       ),
       child: SelectableText(
         item.arabic,
         textAlign: TextAlign.center,
-        style: GoogleFonts.amiri(
-          fontSize: 36,
-          height: 1.3,
-          fontWeight: FontWeight.w600,
-          color: accentColor,
-        ),
+        style: AppTypography.arabicDisplay(accentColor),
       ),
     );
   }
@@ -234,6 +210,7 @@ class DhikrDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
@@ -248,12 +225,7 @@ class DhikrDetailScreen extends StatelessWidget {
             children: [
               SelectableText(
                 item.transliteration,
-                style: textTheme.headlineSmall?.copyWith(
-                  fontSize: 22,
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: -0.3,
-                ),
+                style: textTheme.headlineSmall,
               ),
               if (item.category != null)
                 Text(
@@ -280,9 +252,6 @@ class DhikrDetailScreen extends StatelessWidget {
             item.translation,
             style: textTheme.bodyLarge?.copyWith(
               color: colorScheme.onSurfaceVariant,
-              height: 1.5,
-              fontSize: 17,
-              fontWeight: FontWeight.w400,
             ),
           ),
         ],
@@ -307,8 +276,6 @@ class DhikrDetailScreen extends StatelessWidget {
               'VIRTUES',
               style: textTheme.labelSmall?.copyWith(
                 color: accentColor.withValues(alpha: 0.7),
-                letterSpacing: 1.5,
-                fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(width: 12),
@@ -334,10 +301,7 @@ class DhikrDetailScreen extends StatelessWidget {
           child: SelectableText(
             benefit,
             style: textTheme.bodyLarge?.copyWith(
-              height: 1.7,
               color: colorScheme.onSurfaceVariant,
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
             ),
           ),
         ),

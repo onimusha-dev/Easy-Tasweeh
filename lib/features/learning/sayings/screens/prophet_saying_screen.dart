@@ -49,9 +49,7 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 'Prophet\'s Sayings',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: textTheme.titleLarge,
               ),
               centerTitle: true,
             ),
@@ -138,7 +136,9 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
         onChanged: _filterHadiths,
         decoration: InputDecoration(
           hintText: 'Search sayings...',
-          hintStyle: TextStyle(color: colorScheme.outline),
+          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: colorScheme.outline,
+          ),
           prefixIcon: Icon(Icons.search_rounded, color: colorScheme.outline),
           suffixIcon: _searchController.text.isNotEmpty
               ? IconButton(

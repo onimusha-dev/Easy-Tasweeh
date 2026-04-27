@@ -144,17 +144,15 @@ class AnalyticsScreen extends ConsumerWidget {
                                 vertical: 8,
                               ),
                               tooltipMargin: 8,
-                              getTooltipItem:
-                                  (group, groupIndex, rod, rodIndex) {
-                                    return BarTooltipItem(
+                              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                return BarTooltipItem(
                                       '${rod.toY.toInt()}',
                                       Theme.of(
                                         context,
-                                      ).textTheme.titleSmall!.copyWith(
+                                      ).textTheme.titleMedium!.copyWith(
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.primary,
-                                        fontWeight: FontWeight.bold,
                                       ),
                                     );
                                   },
@@ -191,10 +189,6 @@ class AnalyticsScreen extends ConsumerWidget {
                                           .textTheme
                                           .labelSmall
                                           ?.copyWith(
-                                            fontSize: 9,
-                                            fontWeight: isToday
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
                                             color: isToday
                                                 ? Theme.of(
                                                     context,

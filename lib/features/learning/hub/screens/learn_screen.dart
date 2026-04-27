@@ -15,7 +15,7 @@ class LearnScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text('Learning Hub', style: textTheme.titleMedium),
+        title: Text('Learning Hub', style: textTheme.titleLarge),
         centerTitle: true,
       ),
       body: ListView(
@@ -25,8 +25,6 @@ class LearnScreen extends StatelessWidget {
             'EXPLORE & LEARN',
             style: textTheme.labelSmall?.copyWith(
               color: colorScheme.outline,
-              letterSpacing: 2.0,
-              fontWeight: FontWeight.w900,
             ),
           ),
 
@@ -117,8 +115,6 @@ class LearnScreen extends StatelessWidget {
                 'DAILY TIP',
                 style: textTheme.labelSmall?.copyWith(
                   color: AppIconColors.blue(context),
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.2,
                 ),
               ),
             ],
@@ -127,9 +123,7 @@ class LearnScreen extends StatelessWidget {
           Text(
             'The best way to remember Allah is through constant, small acts of devotion throughout your day. Consistency is the key to a tranquil heart.',
             style: textTheme.bodyMedium?.copyWith(
-              height: 1.6,
               color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w400,
             ),
           ),
         ],

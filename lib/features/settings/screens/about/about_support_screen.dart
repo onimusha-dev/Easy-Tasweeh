@@ -16,7 +16,7 @@ class AboutSupportScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'About & Support',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       ),
       body: ListView(

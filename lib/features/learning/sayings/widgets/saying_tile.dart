@@ -1,7 +1,7 @@
 import 'package:easy_tasbeeh/core/models/saying_model.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SayingTile extends StatelessWidget {
   final SayingItem item;
@@ -47,11 +47,7 @@ class SayingTile extends StatelessWidget {
                         child: Center(
                           child: Text(
                             DhikrUtils.toArabicDigits(index),
-                            style: GoogleFonts.amiri(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.onSurface,
-                            ),
+                            style: AppTypography.arabicLabel(colorScheme.onSurface),
                           ),
                         ),
                       ),
@@ -77,12 +73,7 @@ class SayingTile extends StatelessWidget {
                       child: Text(
                         item.arabic!,
                         textAlign: TextAlign.right,
-                        style: GoogleFonts.amiri(
-                          fontSize: 18,
-                          height: 1.5,
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTypography.arabicBody(colorScheme.onSurface),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -90,11 +81,8 @@ class SayingTile extends StatelessWidget {
                   Text(
                     '"${item.content}"',
                     style: textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                      fontSize: 15,
-                      color: colorScheme.onSurfaceVariant,
-                      fontWeight: FontWeight.w400,
                       fontStyle: FontStyle.italic,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -103,10 +91,7 @@ class SayingTile extends StatelessWidget {
                     children: [
                       Text(
                         '- ${item.source}',
-                        style: textTheme.labelSmall?.copyWith(
-                          color: colorScheme.outline,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: textTheme.labelSmall,
                       ),
                     ],
                   ),

@@ -1,8 +1,8 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
 import 'package:easy_tasbeeh/features/learning/dhikr/screens/dhikr_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DhikrTile extends StatelessWidget {
   final DhikrItem item;
@@ -55,11 +55,7 @@ class DhikrTile extends StatelessWidget {
                           child: Center(
                             child: Text(
                               DhikrUtils.toArabicDigits(index),
-                              style: GoogleFonts.amiri(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: accentColor,
-                              ),
+                              style: AppTypography.arabicTitle(accentColor),
                             ),
                           ),
                         ),
@@ -74,13 +70,12 @@ class DhikrTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          item.arabic,
-                          style: GoogleFonts.amiri(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                            height: 1.2,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            item.arabic,
+                            textAlign: TextAlign.right,
+                            style: AppTypography.arabicBody(colorScheme.onSurface),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -88,10 +83,7 @@ class DhikrTile extends StatelessWidget {
                           item.translation,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.outline,
-                            fontSize: 12,
-                          ),
+                          style: textTheme.bodySmall,
                         ),
                       ],
                     ),

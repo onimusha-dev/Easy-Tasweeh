@@ -1,12 +1,13 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DhikrTile extends StatelessWidget {
   final DhikrItem item;
   final int index;
   final bool isSelected;
+  final bool isLast;
   final VoidCallback onTap;
 
   const DhikrTile({
@@ -14,6 +15,7 @@ class DhikrTile extends StatelessWidget {
     required this.item,
     required this.index,
     this.isSelected = false,
+    this.isLast = false,
     required this.onTap,
   });
 
@@ -47,10 +49,8 @@ class DhikrTile extends StatelessWidget {
                   child: Center(
                     child: Text(
                       DhikrUtils.toArabicDigits(index),
-                      style: GoogleFonts.amiri(
-                        color: isSelected ? accentColor : colorScheme.onSurface,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                      style: AppTypography.arabicTitle(
+                        isSelected ? accentColor : colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -59,46 +59,29 @@ class DhikrTile extends StatelessWidget {
                 // Text Info
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+                    padding: EdgeInsets.fromLTRB(16, 12, 12, isLast ? 40 : 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          item.arabic,
-                          style: GoogleFonts.amiri(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
-                            color: isSelected
-                                ? accentColor
-                                : colorScheme.onSurface,
-                            height: 1.3,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            item.arabic,
+                            textAlign: TextAlign.right,
+                            style: AppTypography.arabicBody(
+                              isSelected ? accentColor : colorScheme.onSurface,
+                            ),
                           ),
                         ),
                         Text(
                           item.transliteration,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: colorScheme.outline,
-                            fontWeight: isSelected
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                if (isSelected)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.check_circle_rounded,
-                      color: accentColor,
-                      size: 22,
-                    ),
-                  ),
               ],
             ),
           ),
