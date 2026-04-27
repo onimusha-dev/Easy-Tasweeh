@@ -2,7 +2,7 @@ name: easy_tasbeeh
 description: A simple and elegant dhikr counter app for Muslims to track tasbeeh, zikr, and daily remembrance. Stay consistent with your spiritual routine using a clean, distraction-free digital tasbeeh counter.
 publish_to: 'none'
 
-version: 1.0.9+7
+version: 1.0.10+8
 
 environment:
   sdk: ^3.11.4

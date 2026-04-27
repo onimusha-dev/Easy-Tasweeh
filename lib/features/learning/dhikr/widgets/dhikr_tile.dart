@@ -44,8 +44,6 @@ class DhikrTile extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Solid accent strip
-                      Container(width: 3, color: accentColor),
                       // Translucent numbering box (expands)
                       Expanded(
                         child: Container(
@@ -75,7 +73,9 @@ class DhikrTile extends StatelessWidget {
                           child: Text(
                             item.arabic,
                             textAlign: TextAlign.right,
-                            style: AppTypography.arabicBody(colorScheme.onSurface),
+                            style: AppTypography.arabicBody(
+                              colorScheme.onSurface,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -90,7 +90,7 @@ class DhikrTile extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+                  padding: const EdgeInsets.fromLTRB(0, 16, 8, 16),
                   child: Align(
                     alignment: isLast ? Alignment.topCenter : Alignment.center,
                     child: Icon(

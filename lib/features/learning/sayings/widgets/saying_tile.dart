@@ -32,8 +32,6 @@ class SayingTile extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Solid accent strip
-                Container(width: 3, color: accentColor),
                 // Numbering area
                 Expanded(
                   child: Column(
