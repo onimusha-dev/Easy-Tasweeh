@@ -1,14 +1,18 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DhikrTile extends StatelessWidget {
   final DhikrItem item;
+  final int index;
   final bool isSelected;
   final VoidCallback onTap;
 
   const DhikrTile({
     super.key,
     required this.item,
+    required this.index,
     this.isSelected = false,
     required this.onTap,
   });
@@ -16,74 +20,88 @@ class DhikrTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final accentColor = DhikrUtils.getCategoryColor(context, item.category);
 
-    return InkWell(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.primary.withValues(alpha: 0.05)
-              : null,
-        ),
-        child: Row(
-          children: [
-            // Icon/Indicator
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color:
-                    (isSelected
-                            ? colorScheme.primary
-                            : colorScheme.outlineVariant)
-                        .withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Text(
-                  item.arabic.characters.first,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.outline,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // Text Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.arabic,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? accentColor.withValues(alpha: 0.08)
+            : Colors.transparent,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                // Arabic Number Indicator
+                Container(
+                  width: 56,
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(
+                      alpha: isSelected ? 0.2 : 0.1,
                     ),
                   ),
-                  Text(
-                    item.transliteration,
-                    style: TextStyle(fontSize: 13, color: colorScheme.outline),
+                  child: Center(
+                    child: Text(
+                      DhikrUtils.toArabicDigits(index),
+                      style: GoogleFonts.amiri(
+                        color: isSelected ? accentColor : colorScheme.onSurface,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ],
-              ),
-            ),
+                ),
 
-            if (isSelected)
-              Icon(
-                Icons.check_circle_rounded,
-                color: colorScheme.primary,
-                size: 20,
-              ),
-          ],
+                // Text Info
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          item.arabic,
+                          style: GoogleFonts.amiri(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? accentColor
+                                : colorScheme.onSurface,
+                            height: 1.3,
+                          ),
+                        ),
+                        Text(
+                          item.transliteration,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: colorScheme.outline,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                if (isSelected)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: accentColor,
+                      size: 22,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

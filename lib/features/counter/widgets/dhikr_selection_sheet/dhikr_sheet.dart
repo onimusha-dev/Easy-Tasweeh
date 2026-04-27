@@ -54,11 +54,9 @@ class DhikrSheet extends ConsumerWidget {
                   itemCount: dhikrList.length,
                   separatorBuilder: (context, index) => Divider(
                     height: 1,
-                    indent: 64,
-                    endIndent: 16,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.outlineVariant.withValues(alpha: 0.3),
+                    indent:
+                        56, // Match the width of the Arabic number indicator
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.3),
                   ),
                   itemBuilder: (context, index) {
                     final item = dhikrList[index];
@@ -66,6 +64,7 @@ class DhikrSheet extends ConsumerWidget {
 
                     return DhikrTile(
                       item: item,
+                      index: index + 1,
                       isSelected: isSelected,
                       onTap: () {
                         ref
