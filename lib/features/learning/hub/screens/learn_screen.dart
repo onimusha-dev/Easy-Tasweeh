@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/features/learning/dhikr/screens/learn_dhikr_screen.dart';
+import 'package:easy_tasbeeh/features/learning/hub/widgets/featured_tip.dart';
 import 'package:easy_tasbeeh/features/learning/sayings/screens/prophet_saying_screen.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,7 @@ class LearnScreen extends StatelessWidget {
         children: [
           Text(
             'EXPLORE & LEARN',
-            style: textTheme.labelSmall?.copyWith(
-              color: colorScheme.outline,
-            ),
+            style: textTheme.labelSmall?.copyWith(color: colorScheme.outline),
           ),
 
           const SizedBox(height: 16),
@@ -70,7 +69,7 @@ class LearnScreen extends StatelessWidget {
 
           const SizedBox(height: 32),
 
-          _buildFeaturedTip(context),
+          const FeaturedTip(),
         ],
       ),
     );
@@ -84,50 +83,6 @@ class LearnScreen extends StatelessWidget {
       color: Theme.of(
         context,
       ).colorScheme.outlineVariant.withValues(alpha: 0.3),
-    );
-  }
-
-  Widget _buildFeaturedTip(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppIconColors.blue(context).withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppIconColors.blue(context).withValues(alpha: 0.1),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.lightbulb_outline_rounded,
-                color: AppIconColors.blue(context),
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'DAILY TIP',
-                style: textTheme.labelSmall?.copyWith(
-                  color: AppIconColors.blue(context),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'The best way to remember Allah is through constant, small acts of devotion throughout your day. Consistency is the key to a tranquil heart.',
-            style: textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

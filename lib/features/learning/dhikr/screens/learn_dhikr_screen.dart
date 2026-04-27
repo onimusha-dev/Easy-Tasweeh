@@ -1,4 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
+import 'package:easy_tasbeeh/core/widgets/empty_state.dart';
+import 'package:easy_tasbeeh/core/widgets/search_field.dart';
 import 'package:easy_tasbeeh/features/learning/dhikr/widgets/dhikr_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -61,36 +63,24 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSearchField(context),
-                  const SizedBox(height: 12),
-                ],
+              child: SearchField(
+                controller: _searchController,
+                hintText: 'Search dhikr...',
+                onChanged: _filterDhikrs,
+                onClear: () {
+                  _searchController.clear();
+                  _filterDhikrs('');
+                },
               ),
             ),
           ),
+          const SliverToBoxAdapter(child: SizedBox(height: 12)),
           _filteredDhikrs.isEmpty
-              ? SliverFillRemaining(
+              ? const SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search_off_rounded,
-                          size: 64,
-                          color: colorScheme.outlineVariant,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No dhikrs found',
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: colorScheme.outline,
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: EmptyState(
+                    icon: Icons.search_off_rounded,
+                    message: 'No dhikrs found',
                   ),
                 )
               : SliverToBoxAdapter(
@@ -122,44 +112,7 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
                     ),
                   ),
                 ),
-          // ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSearchField(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      child: TextField(
-        controller: _searchController,
-        onChanged: _filterDhikrs,
-        decoration: InputDecoration(
-          hintText: 'Search dhikr...',
-          hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: colorScheme.outline,
-          ),
-          prefixIcon: Icon(Icons.search_rounded, color: colorScheme.outline),
-          suffixIcon: _searchController.text.isNotEmpty
-              ? IconButton(
-                  icon: Icon(Icons.close_rounded, color: colorScheme.outline),
-                  onPressed: () {
-                    _searchController.clear();
-                    _filterDhikrs('');
-                  },
-                )
-              : null,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 12),
-        ),
       ),
     );
   }

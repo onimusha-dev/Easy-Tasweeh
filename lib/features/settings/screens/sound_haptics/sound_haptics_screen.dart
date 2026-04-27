@@ -1,6 +1,7 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/setting_chip.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -112,7 +113,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 action: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _DurationChip(
+                    SettingChip(
                       label: '${settings.tapFreezeDuration} ms',
                       enabled: settings.tapFreezeEnabled,
                       onTap: () => _showFreezeDurationDialog(context, ref),
@@ -143,7 +144,7 @@ class SoundHapticsScreen extends ConsumerWidget {
                 action: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _DurationChip(
+                    SettingChip(
                       label: '${settings.milestoneValue}',
                       enabled: settings.vibrateOnMilestone,
                       onTap: () => _showMilestoneDialog(context, ref),
@@ -232,46 +233,4 @@ class SoundHapticsScreen extends ConsumerWidget {
   }
 }
 
-class _DurationChip extends StatelessWidget {
-  final String label;
-  final bool enabled;
-  final VoidCallback onTap;
 
-  const _DurationChip({
-    required this.label,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final color = enabled ? scheme.primary : scheme.outline;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Icon(Icons.edit_rounded, size: 10, color: color),
-          ],
-        ),
-      ),
-    );
-  }
-}

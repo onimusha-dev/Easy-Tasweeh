@@ -1,9 +1,9 @@
-import 'package:easy_tasbeeh/core/constants/app_constants.dart';
 import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/features/analytics/screens/analytics_screen.dart';
 import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
 import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
+import 'package:easy_tasbeeh/features/left_menu_bar/widgets/drawer_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,62 +20,8 @@ class SideDrawer extends ConsumerWidget {
       backgroundColor: colorScheme.surface,
       child: Column(
         children: [
-          // Premium Header
-          SafeArea(
-            bottom: false,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        'assets/logo.png',
-                        width: 52,
-                        height: 52,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppConstants.appName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.5,
-                              ),
-                        ),
-                        Text(
-                          'v$appVersion',
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(color: colorScheme.outline),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          AppDrawerHeader(appVersion: appVersion),
+
 
           Expanded(
             child: ListView(

@@ -74,6 +74,7 @@ class DhikrTile extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 8),
                         Text(
                           item.transliteration,
                           style: Theme.of(context).textTheme.bodySmall,

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/features/history/widgets/empty_history_view.dart';
 import 'package:easy_tasbeeh/features/history/widgets/history_item_card.dart';
 import 'package:easy_tasbeeh/features/history/widgets/history_totals_card.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
@@ -31,23 +32,7 @@ class HistoryScreen extends ConsumerWidget {
           final historyList = snapshot.data ?? [];
 
           if (historyList.isEmpty) {
-            return Center(
-              child: Opacity(
-                opacity: 0.5,
-                child: Column(
-                  children: [
-                    const Spacer(flex: 2),
-                    const Icon(Icons.history_toggle_off_rounded, size: 64),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No sessions documented.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const Spacer(flex: 3),
-                  ],
-                ),
-              ),
-            );
+            return const EmptyHistoryView();
           }
 
           // Group by date
