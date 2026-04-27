@@ -161,6 +161,7 @@ Widget buildTwoPartSettingTile(
           ),
           const SizedBox(height: 8),
           action,
+          const SizedBox(height: 16),
         ],
       ),
     ),
