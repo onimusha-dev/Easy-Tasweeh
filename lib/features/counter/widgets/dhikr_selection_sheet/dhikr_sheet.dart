@@ -17,7 +17,7 @@ class DhikrSheet extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -39,7 +39,7 @@ class DhikrSheet extends ConsumerWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Theme.of(
                     context,
@@ -47,7 +47,7 @@ class DhikrSheet extends ConsumerWidget {
                 ),
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(8),
                 child: ListView.separated(
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,

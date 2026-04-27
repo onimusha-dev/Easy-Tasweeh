@@ -66,7 +66,7 @@ class AppTheme {
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               minimumSize: const Size(88, 48),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(8),
               ),
               elevation: isDark ? 0 : 2,
               shadowColor: scheme.colorScheme.primary.withValues(alpha: 0.3),
@@ -97,7 +97,7 @@ class AppTheme {
               backgroundColor: scheme.colorScheme.primary,
               foregroundColor: scheme.colorScheme.onPrimary,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               minimumSize: const Size(88, 48),
@@ -125,7 +125,7 @@ class AppTheme {
               foregroundColor: scheme.colorScheme.primary,
               side: BorderSide(color: scheme.colorScheme.primary, width: 1.2),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               minimumSize: const Size(88, 48),
@@ -150,7 +150,7 @@ class AppTheme {
           foregroundColor: scheme.colorScheme.primary,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
           ),
           textStyle: const TextStyle(
             fontSize: 15,

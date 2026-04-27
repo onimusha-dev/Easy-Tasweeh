@@ -97,7 +97,7 @@ class LearnScreen extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppIconColors.blue(context).withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: AppIconColors.blue(context).withValues(alpha: 0.1),
         ),

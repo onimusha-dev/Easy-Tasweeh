@@ -99,6 +99,7 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: ListView.separated(
                       shrinkWrap: true,
@@ -135,7 +136,7 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),

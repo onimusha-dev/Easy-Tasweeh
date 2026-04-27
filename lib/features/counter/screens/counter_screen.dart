@@ -262,7 +262,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: const Text('Change Layout'),
         content: Text(
           isCentered

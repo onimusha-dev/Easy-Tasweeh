@@ -90,7 +90,7 @@ class DhikrDisplay extends ConsumerWidget {
                 const SizedBox(height: 24),
                 InkWell(
                   onTap: () => DhikrSheet.show(context),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(8),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -98,7 +98,7 @@ class DhikrDisplay extends ConsumerWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.05),
                       ),

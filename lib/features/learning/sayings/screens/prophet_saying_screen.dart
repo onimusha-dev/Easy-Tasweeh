@@ -93,6 +93,7 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       color: colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: ListView.separated(
                       shrinkWrap: true,
@@ -127,7 +128,7 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),

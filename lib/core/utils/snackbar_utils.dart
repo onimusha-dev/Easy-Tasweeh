@@ -11,7 +11,7 @@ class SnackBarUtils {
           style: const TextStyle(fontWeight: FontWeight.w500),
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         duration: const Duration(seconds: 2),
       ),
     );

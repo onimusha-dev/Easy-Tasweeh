@@ -1,11 +1,10 @@
 import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/features/analytics/screens/analytics_screen.dart';
 import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
 import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
 import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SideDrawer extends ConsumerWidget {
@@ -31,7 +30,7 @@ class SideDrawer extends ConsumerWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.05),
@@ -41,7 +40,7 @@ class SideDrawer extends ConsumerWidget {
                       ],
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
                         'assets/logo.png',
                         width: 52,
@@ -80,68 +79,53 @@ class SideDrawer extends ConsumerWidget {
 
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.zero,
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: colorScheme.surfaceContainerLow,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(
-                      color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-                    ),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: Column(
-                      children: [
-                        _DrawerTile(
-                          icon: Icons.auto_graph_rounded,
-                          title: 'Analytics',
-                          iconColor: Colors.blue,
-                          screen: const AnalyticsScreen(),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(24),
-                            topRight: Radius.circular(24),
-                          ),
-                        ),
-                        _divider(context),
-                        _DrawerTile(
-                          icon: Icons.history_rounded,
-                          title: 'History Log',
-                          iconColor: Colors.orange,
-                          screen: const HistoryScreen(),
-                        ),
-                        _divider(context),
-                        _DrawerTile(
-                          icon: Icons.menu_book_rounded,
-                          title: 'Learning Hub',
-                          iconColor: Colors.green,
-                          screen: const LearnScreen(),
-                        ),
-                        _divider(context),
-                        _DrawerTile(
-                          icon: Icons.settings_rounded,
-                          title: 'Settings',
-                          iconColor: Colors.grey,
-                          screen: const SettingsScreen(),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(24),
-                            bottomRight: Radius.circular(24),
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      _DrawerTile(
+                        icon: Icons.auto_graph_rounded,
+                        title: 'Analytics',
+                        iconColor: Colors.blue,
+                        screen: const AnalyticsScreen(),
+                      ),
+                      _divider(context),
+                      _DrawerTile(
+                        icon: Icons.history_rounded,
+                        title: 'History Log',
+                        iconColor: Colors.orange,
+                        screen: const HistoryScreen(),
+                      ),
+                      _divider(context),
+                      _DrawerTile(
+                        icon: Icons.menu_book_rounded,
+                        title: 'Learning Hub',
+                        iconColor: Colors.green,
+                        screen: const LearnScreen(),
+                      ),
+                      _divider(context),
+                      _DrawerTile(
+                        icon: Icons.settings_rounded,
+                        title: 'Settings',
+                        iconColor: Colors.grey,
+                        screen: const SettingsScreen(),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
 
-          // Bottom Footer
+          // Bottom Footerw
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              'MADE WITH LOVE FOR THE UMMAH',
+              'Made with ❤️ for the Ummah',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: colorScheme.outline.withValues(alpha: 0.5),
                 fontSize: 8,
@@ -157,8 +141,8 @@ class SideDrawer extends ConsumerWidget {
   Widget _divider(BuildContext context) {
     return Divider(
       height: 1,
-      indent: 56,
-      endIndent: 16,
+      indent: 64, // Increased to match new internal padding
+      endIndent: 20,
       color: Theme.of(
         context,
       ).colorScheme.outlineVariant.withValues(alpha: 0.3),
@@ -171,14 +155,12 @@ class _DrawerTile extends StatelessWidget {
   final String title;
   final Color iconColor;
   final Widget screen;
-  final BorderRadius? borderRadius;
 
   const _DrawerTile({
     required this.icon,
     required this.title,
     required this.iconColor,
     required this.screen,
-    this.borderRadius,
   });
 
   @override
@@ -187,8 +169,6 @@ class _DrawerTile extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      clipBehavior: Clip.antiAlias,
-      borderRadius: borderRadius ?? BorderRadius.zero,
       child: InkWell(
         onTap: () {
           Navigator.pop(context); // Close drawer
@@ -198,7 +178,7 @@ class _DrawerTile extends StatelessWidget {
           );
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -210,9 +190,10 @@ class _DrawerTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.2,
+                  ),
                 ),
               ),
               Icon(

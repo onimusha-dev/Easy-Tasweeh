@@ -47,7 +47,7 @@ class TargetGoalSheet extends ConsumerWidget {
               Container(
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.track_changes_rounded,
@@ -123,14 +123,14 @@ class TargetGoalSheet extends ConsumerWidget {
                       Navigator.pop(context);
                     }
                   },
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary
                           : colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected
                             ? colorScheme.primary
@@ -206,7 +206,7 @@ Widget _sessionActionButton(
           foregroundColor: appColors?.destructiveColor,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),
@@ -245,7 +245,7 @@ Widget _sessionActionButton(
           foregroundColor: colorScheme.primary,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
         ),
       ),

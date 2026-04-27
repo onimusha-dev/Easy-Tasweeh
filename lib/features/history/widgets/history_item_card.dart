@@ -38,7 +38,7 @@ class HistoryItemCard extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   isCompleted ? Icons.done_all_rounded : Icons.history_rounded,

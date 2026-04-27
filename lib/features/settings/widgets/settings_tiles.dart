@@ -172,8 +172,9 @@ Widget buildSettingsGroup(
   BuildContext context, {
   String? title,
   required List<Widget> children,
+  bool showBorder = true,
 }) {
-  const r = Radius.circular(20);
+  const r = Radius.circular(8);
   const none = Radius.zero;
   final n = children.length;
 
@@ -206,15 +207,17 @@ Widget buildSettingsGroup(
       Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Theme.of(
-              context,
-            ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-          ),
+          borderRadius: BorderRadius.circular(8),
+          border: showBorder
+              ? Border.all(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                )
+              : null,
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           child: Column(children: shaped),
         ),
       ),

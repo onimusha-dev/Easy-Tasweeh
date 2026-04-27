@@ -1,11 +1,10 @@
 import 'package:easy_tasbeeh/core/constants/app_constants.dart';
+import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutSupportScreen extends ConsumerWidget {
   const AboutSupportScreen({super.key});
@@ -31,7 +30,7 @@ class AboutSupportScreen extends ConsumerWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.05),
@@ -41,7 +40,7 @@ class AboutSupportScreen extends ConsumerWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
                       'assets/logo.png',
                       width: 100,
@@ -63,6 +62,7 @@ class AboutSupportScreen extends ConsumerWidget {
           const SizedBox(height: 40),
           buildSettingsGroup(
             context,
+            showBorder: false,
             children: [
               buildSettingTile(
                 context,

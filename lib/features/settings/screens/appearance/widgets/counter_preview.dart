@@ -32,7 +32,11 @@ class CounterPreview extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),
@@ -113,14 +117,14 @@ class CounterPreview extends StatelessWidget {
 
   Widget _buildContent() {
     final glassyContainer = ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(8),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Colors.white.withValues(alpha: 0.1),
               width: 1,
