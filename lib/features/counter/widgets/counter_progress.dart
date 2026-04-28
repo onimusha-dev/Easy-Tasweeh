@@ -22,66 +22,67 @@ class CounterProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool hasTarget = targetCount > 0;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                const SizedBox(width: 8),
-                Text(
-                  '$currentCountData',
-                  style: textTheme.headlineLarge?.copyWith(
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 8,
-                        color: Colors.black.withValues(alpha: 0.5),
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                ),
-                if (hasTarget)
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  const SizedBox(width: 8),
                   Text(
-                    ' / $targetCount',
-                    style: textTheme.labelLarge?.copyWith(
-                      color: Colors.white.withValues(
-                        alpha: 0.5,
-                      ),
+                    '$currentCountData',
+                    style: textTheme.headlineLarge?.copyWith(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 8,
+                          color: Colors.black.withValues(alpha: 0.5),
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
                   ),
-              ],
-            ),
-            if (hasTarget)
-              const SizedBox.shrink()
-            else
-              Text(
-                'ENDLESS',
-                style: textTheme.labelSmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.6),
-                ),
+                  if (hasTarget)
+                    Text(
+                      ' / $targetCount',
+                      style: textTheme.labelLarge?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.5),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (hasTarget)
-          _AnimatedProgressBar(progress: progress, colorScheme: colorScheme)
-        else
-          Container(
-            height: 4,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(2),
-            ),
+              if (hasTarget)
+                const SizedBox.shrink()
+              else
+                Text(
+                  'ENDLESS',
+                  style: textTheme.labelSmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.6),
+                  ),
+                ),
+            ],
           ),
-      ],
+          const SizedBox(height: 12),
+          if (hasTarget)
+            _AnimatedProgressBar(progress: progress, colorScheme: colorScheme)
+          else
+            Container(
+              height: 4,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

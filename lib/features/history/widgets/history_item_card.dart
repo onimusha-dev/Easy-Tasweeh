@@ -8,12 +8,14 @@ class HistoryItemCard extends StatelessWidget {
   final CountHistoryTableData data;
   final int index;
   final bool isLast;
+  final bool showDivider;
 
   const HistoryItemCard({
     super.key,
     required this.data,
     required this.index,
     this.isLast = false,
+    this.showDivider = true,
   });
 
   @override
@@ -30,21 +32,15 @@ class HistoryItemCard extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Icon/Status Indicator
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  isCompleted ? Icons.done_all_rounded : Icons.history_rounded,
-                  color: statusColor,
-                  size: 20,
-                ),
+              Icon(
+                isCompleted ? Icons.done_all_rounded : Icons.history_rounded,
+                color: statusColor,
+                size: 24,
               ),
               const SizedBox(width: 16),
 
@@ -108,11 +104,11 @@ class HistoryItemCard extends StatelessWidget {
             ],
           ),
         ),
-        if (!isLast)
+        if (showDivider && !isLast)
           Divider(
             height: 1,
             indent: 56,
-            endIndent: 16,
+            endIndent: 0,
             color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
           ),
       ],

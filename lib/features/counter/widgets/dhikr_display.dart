@@ -18,15 +18,15 @@ class DhikrDisplay extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(8),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.fromLTRB(12, 28, 12, 12),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(28),
+            color: Colors.black.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: AnimatedSwitcher(

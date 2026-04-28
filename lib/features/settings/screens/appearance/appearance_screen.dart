@@ -27,7 +27,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
-            title: 'THEME & COLORS',
+            title: 'Theme & Colors',
             children: [
               buildSettingTile(
                 context,
@@ -55,7 +55,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
-            title: 'VISUAL STYLE',
+            title: 'Visual Style',
             children: [
               buildSettingTile(
                 context,

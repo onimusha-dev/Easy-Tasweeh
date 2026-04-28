@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasbeeh/database/dao/current_count_dao.dart';
 import 'package:easy_tasbeeh/database/db.dart';
@@ -11,7 +12,7 @@ part 'count_repository.g.dart';
 CountRepository countRepository(Ref ref) {
   final currentCountDao = ref.watch(currentCountDaoProvider);
   final countHistoryDao = ref.watch(countHistoryDaoProvider);
-  return CountRepository(currentCountDao, countHistoryDao);
+  return CountRepository(ref, currentCountDao, countHistoryDao);
 }
 
 final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
@@ -21,10 +22,11 @@ final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
 });
 
 class CountRepository {
+  final Ref _ref;
   final CurrentCountDao _currentCountDao;
   final CountHistoryDao _countHistoryDao;
 
-  CountRepository(this._currentCountDao, this._countHistoryDao);
+  CountRepository(this._ref, this._currentCountDao, this._countHistoryDao);
 
   // Get or initialize the current count session
   Future<CurrentCountTableData> getOrCreateCurrentCount() async {
@@ -132,19 +134,20 @@ class CountRepository {
         last.createdAt.month == now.month &&
         last.createdAt.day == now.day;
 
-    // Check if the session was incomplete and from today
-    if (isToday &&
-        last.targetCount > 0 &&
-        last.currentCount < last.targetCount) {
+    // Check if the session is from today
+    if (isToday) {
       final current = await getOrCreateCurrentCount();
       await _currentCountDao.updateCount(
         CurrentCountTableCompanion(
           id: Value(current.id),
           targetCount: Value(last.targetCount),
           currentCount: Value(last.currentCount),
+          dhikrId: Value(last.dhikrId),
           updatedAt: Value(DateTime.now()),
         ),
       );
+      // Sync the restored dhikr with settings
+      await _ref.read(settingsProvider.notifier).setLastDhikrId(last.dhikrId);
       await _countHistoryDao.deleteById(last.id);
       return true;
     }

@@ -32,8 +32,6 @@ class SayingTile extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Solid accent strip
-                Container(width: 3, color: accentColor),
                 // Numbering area
                 Expanded(
                   child: Column(
@@ -47,7 +45,9 @@ class SayingTile extends StatelessWidget {
                         child: Center(
                           child: Text(
                             DhikrUtils.toArabicDigits(index),
-                            style: AppTypography.arabicLabel(colorScheme.onSurface),
+                            style: AppTypography.arabicLabel(
+                              colorScheme.onSurface,
+                            ),
                           ),
                         ),
                       ),
@@ -62,7 +62,7 @@ class SayingTile extends StatelessWidget {
           // Content
           Expanded(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 10, isLast ? 40 : 12),
+              padding: EdgeInsets.fromLTRB(16, 16, 10, isLast ? 40 : 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -89,10 +89,7 @@ class SayingTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        '- ${item.source}',
-                        style: textTheme.labelSmall,
-                      ),
+                      Text('- ${item.source}', style: textTheme.labelSmall),
                     ],
                   ),
                 ],

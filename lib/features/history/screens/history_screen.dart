@@ -58,11 +58,11 @@ class HistoryScreen extends ConsumerWidget {
 
                 String label;
                 if (date == today) {
-                  label = 'TODAY';
+                  label = 'Today';
                 } else if (date == yesterday) {
-                  label = 'YESTERDAY';
+                  label = 'Yesterday';
                 } else {
-                  label = DateFormat('MMMM d, yyyy').format(date).toUpperCase();
+                  label = DateFormat('MMMM d, yyyy').format(date);
                 }
 
                 return Padding(
@@ -70,6 +70,8 @@ class HistoryScreen extends ConsumerWidget {
                   child: buildSettingsGroup(
                     context,
                     title: label,
+                    showBorder: false,
+                    isLargeTitle: true,
                     children: items.mapIndexed((idx, data) {
                       return HistoryItemCard(
                         data: data,

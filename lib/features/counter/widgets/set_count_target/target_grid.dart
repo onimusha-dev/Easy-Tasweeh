@@ -39,8 +39,10 @@ class TargetGrid extends ConsumerWidget {
 
           return InkWell(
             onTap: () {
+              final repo = ref.read(countRepositoryProvider);
               final currentCount =
                   (countAsync.value as dynamic)?.currentCount ?? 0;
+
               if (currentCount > 0) {
                 showDialog(
                   context: context,
@@ -51,14 +53,15 @@ class TargetGrid extends ConsumerWidget {
                         'This will save your current progress to history.',
                     confirmLabel: 'Archive',
                     onConfirm: () {
-                      ref.read(countRepositoryProvider).saveAndReset();
-                      ref.read(countRepositoryProvider).setTarget(target);
-                      Navigator.pop(context); // Close sheet
+                      repo.saveAndReset();
+                      repo.setTarget(target);
+                      Navigator.pop(context); // Close bottom sheet
                     },
                   ),
                 );
               } else {
-                ref.read(countRepositoryProvider).setTarget(target);
+                repo.saveAndReset();
+                repo.setTarget(target);
                 Navigator.pop(context);
               }
             },

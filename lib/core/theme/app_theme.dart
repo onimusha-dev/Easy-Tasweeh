@@ -212,7 +212,7 @@ class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: isDark ? const Color(0xFF1B2420) : scheme.card,
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: AppLayout.brExtraLarge),
+        shape: RoundedRectangleBorder(borderRadius: AppLayout.brDialog),
         titleTextStyle: TextStyle(
           color: scheme.textPrimary,
           fontSize: 18,

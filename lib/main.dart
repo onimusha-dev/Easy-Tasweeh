@@ -8,6 +8,7 @@ import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
+import 'package:easy_tasbeeh/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -113,7 +114,7 @@ class MyApp extends ConsumerWidget {
         AppTheme.resolveColorScheme(colorScheme, Brightness.dark),
       ),
       themeMode: themeMode,
-      home: const CounterScreen(),
+      home: settings.onboardingCompleted ? const CounterScreen() : const OnboardingScreen(),
     );
   }
 }

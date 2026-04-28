@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-Widget buildSettingSectionTitle(BuildContext context, String title) {
-  return Text(title, style: Theme.of(context).textTheme.labelSmall);
-}
-
 Widget buildSettingTile(
   BuildContext context, {
   required IconData icon,
@@ -79,15 +75,9 @@ Widget buildSettingTile(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -117,7 +107,7 @@ Widget buildTwoPartSettingTile(
     onTap: onTap,
     customBorder: shape,
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      padding: const EdgeInsets.fromLTRB(20, 12, 0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -133,10 +123,7 @@ Widget buildTwoPartSettingTile(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                    Text(title, style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
@@ -156,11 +143,28 @@ Widget buildTwoPartSettingTile(
   );
 }
 
+Widget buildSettingSectionTitle(
+  BuildContext context,
+  String title, {
+  bool isLarge = false,
+}) {
+  final theme = Theme.of(context);
+  final style = isLarge
+      ? theme.textTheme.titleMedium
+      : theme.textTheme.titleSmall;
+
+  return Text(
+    title,
+    style: style?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5),
+  );
+}
+
 Widget buildSettingsGroup(
   BuildContext context, {
   String? title,
   required List<Widget> children,
   bool showBorder = true,
+  bool isLargeTitle = false,
 }) {
   const r = Radius.circular(8);
   const none = Radius.zero;
@@ -188,10 +192,8 @@ Widget buildSettingsGroup(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (title != null)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 8),
-          child: buildSettingSectionTitle(context, title),
-        ),
+        buildSettingSectionTitle(context, title, isLarge: isLargeTitle),
+      const SizedBox(height: 12),
       Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLow,

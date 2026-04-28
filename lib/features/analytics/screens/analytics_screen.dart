@@ -1,7 +1,10 @@
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
-import 'package:easy_tasbeeh/features/analytics/widgets/activity_chart.dart';
-import 'package:easy_tasbeeh/features/analytics/widgets/analytics_summary.dart';
+import 'package:easy_tasbeeh/features/analytics/widgets/activity_heatmap.dart';
+import 'package:easy_tasbeeh/features/analytics/widgets/weekly_activity_bar.dart';
+import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
+import 'package:easy_tasbeeh/features/history/widgets/history_item_card.dart';
+import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +23,7 @@ class AnalyticsScreen extends ConsumerWidget {
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<List<CountHistoryTableData>>(
         stream: historyAsync,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -36,15 +39,69 @@ class AnalyticsScreen extends ConsumerWidget {
           final stats = _calculateStats(history);
 
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             children: [
-              AnalyticsSummary(
-                totalSessions: stats.totalSessions,
-                maxSession: stats.maxSession,
-                totalCount: stats.totalCount,
+              WeeklyActivityBar(dailyTotals: stats.dailyTotals),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ActivityHeatmap(dailyTotals: stats.dailyTotals),
               ),
-              const SizedBox(height: 24),
-              ActivityChart(dailyTotals: stats.dailyTotals),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: buildSettingSectionTitle(
+                  context,
+                  'Recent Activity',
+                  isLarge: true,
+                ),
+              ),
+              ...history
+                  .take(5)
+                  .indexed
+                  .map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: HistoryItemCard(
+                        data: entry.$2,
+                        index: entry.$1,
+                        isLast: entry.$1 == 4 || entry.$1 == history.length - 1,
+                      ),
+                    ),
+                  ),
+              if (history.length > 5)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Center(
+                    child: TextButton(
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const HistoryScreen(),
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.05),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        'Move to History',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               const SizedBox(height: 40),
             ],
           );
@@ -60,7 +117,8 @@ class AnalyticsScreen extends ConsumerWidget {
 
     Map<String, int> dailyTotals = {};
     final now = DateTime.now();
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 35; i++) {
+      // Covering ~5 weeks
       final date = now.subtract(Duration(days: i));
       dailyTotals[DateFormat('yyyy-MM-dd').format(date)] = 0;
     }
@@ -73,8 +131,7 @@ class AnalyticsScreen extends ConsumerWidget {
 
       final dateKey = DateFormat('yyyy-MM-dd').format(record.createdAt);
       if (dailyTotals.containsKey(dateKey)) {
-        dailyTotals[dateKey] =
-            (dailyTotals[dateKey] ?? 0) + record.currentCount;
+        dailyTotals[dateKey] = (dailyTotals[dateKey] ?? 0) + 1;
       }
     }
 

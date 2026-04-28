@@ -2,8 +2,8 @@ import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
 import 'package:easy_tasbeeh/features/analytics/screens/analytics_screen.dart';
 import 'package:easy_tasbeeh/features/history/screens/history_screen.dart';
 import 'package:easy_tasbeeh/features/learning/hub/screens/learn_screen.dart';
-import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/drawer_header.dart';
+import 'package:easy_tasbeeh/features/settings/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +21,6 @@ class SideDrawer extends ConsumerWidget {
       child: Column(
         children: [
           AppDrawerHeader(appVersion: appVersion),
-
 
           Expanded(
             child: ListView(
@@ -69,13 +68,13 @@ class SideDrawer extends ConsumerWidget {
 
           // Bottom Footerw
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(28.0),
             child: Text(
               'Made with ❤️ for the Ummah',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: colorScheme.outline.withValues(alpha: 0.5),
-                fontSize: 8,
                 letterSpacing: 1.2,
+                fontSize: 10,
               ),
             ),
           ),
