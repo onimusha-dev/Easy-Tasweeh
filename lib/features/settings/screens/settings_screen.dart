@@ -52,6 +52,9 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           const SizedBox(height: 16),
+          const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
+          buildSettingSectionTitle(context, "Others"),
+          const SizedBox(height: 8),
 
           buildSettingsGroup(
             context,

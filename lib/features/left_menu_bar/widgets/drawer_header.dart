@@ -54,9 +54,9 @@ class AppDrawerHeader extends StatelessWidget {
                   ),
                   Text(
                     'v$appVersion',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: colorScheme.outline,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: colorScheme.outline),
                   ),
                 ],
               ),

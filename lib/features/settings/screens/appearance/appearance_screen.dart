@@ -27,7 +27,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
-            title: 'THEME & COLORS',
+            title: 'Theme & Colors',
             children: [
               buildSettingTile(
                 context,
@@ -55,7 +55,7 @@ class AppearanceScreen extends ConsumerWidget {
 
           buildSettingsGroup(
             context,
-            title: 'VISUAL STYLE',
+            title: 'Visual Style',
             children: [
               buildSettingTile(
                 context,
@@ -130,6 +130,7 @@ class AppearanceScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Select Theme'),
         content: RadioGroup<ThemeMode>(
           groupValue: ref.watch(settingsProvider).themeMode,

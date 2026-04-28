@@ -58,7 +58,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
           // ── Daily reminders ──────────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'DAILY REMINDERS',
+            title: 'Daily Reminders',
             children: [
               ReminderTimeTile(
                 title: 'Morning Reminder',
@@ -101,7 +101,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
           // ── Prophet's Sayings ─────────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'SAYINGS',
+            title: 'Sayings',
             children: [
               buildTwoPartSettingTile(
                 context,

@@ -34,16 +34,11 @@ class CounterPreview extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.5),
+          color: Theme.of(
+            context,
+          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
       ),
       child: Stack(
         alignment: Alignment.center,
@@ -177,21 +172,13 @@ class CounterPreview extends StatelessWidget {
     if (centerButton) {
       return Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          button,
-          const SizedBox(height: 24),
-          glassyContainer,
-        ],
+        children: [button, const SizedBox(height: 24), glassyContainer],
       );
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        glassyContainer,
-        const SizedBox(height: 24),
-        button,
-      ],
+      children: [glassyContainer, const SizedBox(height: 24), button],
     );
   }
 }

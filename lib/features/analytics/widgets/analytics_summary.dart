@@ -19,7 +19,7 @@ class AnalyticsSummary extends StatelessWidget {
 
     return buildSettingsGroup(
       context,
-      title: 'SUMMARY',
+      title: 'Summary',
       children: [
         buildSettingTile(
           context,

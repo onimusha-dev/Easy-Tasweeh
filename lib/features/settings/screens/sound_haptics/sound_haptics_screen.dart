@@ -30,7 +30,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Sound Section ────────────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'SOUND',
+            title: 'Sound',
             children: [
               buildSettingTile(
                 context,
@@ -62,7 +62,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Haptics Section ──────────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'HAPTICS',
+            title: 'Haptics',
             children: [
               buildSettingTile(
                 context,
@@ -102,7 +102,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Behavior Section ─────────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'BEHAVIOR',
+            title: 'Behavior',
             children: [
               buildTwoPartSettingTile(
                 context,
@@ -133,7 +133,7 @@ class SoundHapticsScreen extends ConsumerWidget {
           // ── Milestones Section ──────────────────────────────────────────
           buildSettingsGroup(
             context,
-            title: 'MILESTONES',
+            title: 'Milestones',
             children: [
               buildTwoPartSettingTile(
                 context,

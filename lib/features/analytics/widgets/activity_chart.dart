@@ -21,7 +21,7 @@ class ActivityChart extends StatelessWidget {
 
     return buildSettingsGroup(
       context,
-      title: 'WEEKLY ACTIVITY',
+      title: 'Weekly Activity',
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
