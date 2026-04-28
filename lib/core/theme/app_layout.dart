@@ -6,12 +6,14 @@ class AppLayout {
   static const double radiusMedium = 8.0;
   static const double radiusLarge = 10.0;
   static const double radiusExtraLarge = 12.0;
+  static const double radiusDialog = 12.0;
   static const double radiusFull = 100.0;
 
   static final BorderRadius brSmall = BorderRadius.circular(radiusSmall);
   static final BorderRadius brMedium = BorderRadius.circular(radiusMedium);
   static final BorderRadius brLarge = BorderRadius.circular(radiusLarge);
   static final BorderRadius brExtraLarge = BorderRadius.circular(radiusExtraLarge);
+  static final BorderRadius brDialog = BorderRadius.circular(radiusDialog);
   static final BorderRadius brChip = BorderRadius.circular(8.0);
 
   // ─── Shapes ────────────────────────────────────────────────────────────────

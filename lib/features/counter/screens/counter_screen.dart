@@ -2,12 +2,12 @@ import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_progress.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_display.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/side_drawer.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,9 +103,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                         minHeight: constraints.maxHeight,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -244,7 +242,6 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         title: const Text('Change Layout'),
         content: Text(
           isCentered

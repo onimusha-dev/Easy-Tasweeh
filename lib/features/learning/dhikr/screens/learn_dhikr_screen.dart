@@ -53,10 +53,7 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
             elevation: 0,
             backgroundColor: colorScheme.surface,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                'Learn Dhikr',
-                style: textTheme.titleLarge,
-              ),
+              title: Text('Learn Dhikr', style: textTheme.titleLarge),
               centerTitle: true,
             ),
           ),
@@ -97,7 +94,6 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
                       separatorBuilder: (context, index) => Divider(
                         height: 1,
                         indent: 60,
-                        endIndent: 16,
                         color: colorScheme.outlineVariant.withValues(
                           alpha: 0.3,
                         ),

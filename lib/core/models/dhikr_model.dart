@@ -132,7 +132,8 @@ const List<DhikrItem> dhikrList = [
         source: 'Muhammad 47:19',
       ),
       DhikrReference(
-        text: 'Allah—there is no deity except Him, the Ever-Living, the Sustainer of existence.',
+        text:
+            'Allah—there is no deity except Him, the Ever-Living, the Sustainer of existence.',
         source: 'Al-Baqarah 2:255',
       ),
     ],
@@ -148,11 +149,13 @@ const List<DhikrItem> dhikrList = [
         'Istighfar (seeking forgiveness) is a way to cleanse the soul. It is an admission of our human flaws and a turn towards the infinite mercy of Allah. It brings peace to the heart and relief from the burden of sins.',
     references: [
       DhikrReference(
-        text: '...Ask forgiveness of your Lord. Indeed, He is ever a Perpetual Forgiver.',
+        text:
+            '...Ask forgiveness of your Lord. Indeed, He is ever a Perpetual Forgiver.',
         source: 'Nuh 71:10',
       ),
       DhikrReference(
-        text: 'And seek forgiveness of Allah. Indeed, Allah is ever Forgiving and Merciful.',
+        text:
+            'And seek forgiveness of Allah. Indeed, Allah is ever Forgiving and Merciful.',
         source: 'An-Nisa 4:106',
       ),
     ],
@@ -174,62 +177,6 @@ const List<DhikrItem> dhikrList = [
       DhikrReference(
         text: 'And whoever relies upon Allah—then He is sufficient for him.',
         source: 'At-Talaq 65:3',
-      ),
-    ],
-  ),
-  BaseDhikrItem(
-    id: 'salawat',
-    arabic: 'صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ',
-    transliteration: 'Sallallahu Alayhi wa Sallam',
-    translation: 'May Allah bless him and grant him peace',
-    category: 'Blessings',
-    benefit: 'Brings blessings to the person reciting it.',
-    explanation:
-        'Sending Salawat upon the Prophet Muhammad (PBUH) is a divine command. It shows our love for him and our appreciation for his guidance. For every one blessing we send, Allah sends ten blessings upon us.',
-    references: [
-      DhikrReference(
-        text: 'Indeed, Allah and His angels send blessings upon the Prophet. O you who have believed, ask [Allah to confer] blessing upon him and ask [Allah to grant him] peace.',
-        source: 'Al-Ahzab 33:56',
-      ),
-    ],
-  ),
-  BaseDhikrItem(
-    id: 'bismillah',
-    arabic: 'بِسْمِ اللَّهِ',
-    transliteration: 'Bismillah',
-    translation: 'In the name of Allah',
-    category: 'Start',
-    benefit: 'Brings barakah (blessing) to any task started.',
-    explanation:
-        'Starting with Bismillah connects our mundane actions to the Divine. It transforms ordinary tasks into acts of worship and invites Allah\'s presence and blessings into whatever we are about to do.',
-    references: [
-      DhikrReference(
-        text: 'Recite in the name of your Lord who created.',
-        source: 'Al-Alaq 96:1',
-      ),
-    ],
-  ),
-  BaseDhikrItem(
-    id: 'ar_rahman',
-    arabic: 'الرَّحْمَنُ',
-    transliteration: 'Ar-Rahmaan',
-    translation: 'The Beneficent',
-    category: 'Names of Allah',
-    explanation:
-        'Allah, Ar-Rahmaan, bestows His Mercy (Rahmah) upon all the creatures in this universe.',
-    references: [
-      DhikrReference(
-        text: 'In the name of Allah, the Beneficent, the Merciful.',
-        source: 'Al-Fatihah 1:1',
-      ),
-      DhikrReference(
-        text:
-            'There is none in the heavens and the earth but cometh unto the Beneficent as a slave.',
-        source: 'Maryam 19:93',
-      ),
-      DhikrReference(
-        text: 'The Beneficent One, Who is established on the Throne.',
-        source: 'Taha 20:5',
       ),
     ],
   ),

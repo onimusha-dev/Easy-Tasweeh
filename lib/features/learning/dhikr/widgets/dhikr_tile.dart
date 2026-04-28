@@ -89,17 +89,6 @@ class DhikrTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 16, 8, 16),
-                  child: Align(
-                    alignment: isLast ? Alignment.topCenter : Alignment.center,
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: colorScheme.outlineVariant,
-                      size: 14,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

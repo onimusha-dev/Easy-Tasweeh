@@ -10,7 +10,7 @@ class AppTypography {
   static const double sizeDisplayLarge = 36.0;
   static const double sizeDisplayMedium = 30.0;
   static const double sizeDisplaySmall = 24.0;
-  
+
   static const double sizeHeadlineLarge = 32.0;
   static const double sizeHeadlineMedium = 28.0;
   static const double sizeHeadlineSmall = 24.0;
@@ -129,38 +129,38 @@ class AppTypography {
   }
 
   // ─── Arabic Specific Styles ───────────────────────────────────────────────
-  
+
   static TextStyle arabicDisplay(Color color) => GoogleFonts.amiri(
     fontSize: 36,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w300,
     height: 1.2,
     color: color,
   );
 
   static TextStyle arabicTitle(Color color) => GoogleFonts.amiri(
     fontSize: 24,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w300,
     height: 1.3,
     color: color,
   );
 
   static TextStyle arabicBody(Color color) => GoogleFonts.amiri(
     fontSize: 20,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w200,
     height: 1.5,
     color: color,
   );
 
   static TextStyle arabicLabel(Color color) => GoogleFonts.amiri(
     fontSize: 16,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w200,
     color: color,
   );
 
   // Helper for AppBar titles
   static TextStyle appBarTitle(Color color) => GoogleFonts.outfit(
     fontSize: 17,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w300,
     color: color,
     letterSpacing: 0.2,
   );

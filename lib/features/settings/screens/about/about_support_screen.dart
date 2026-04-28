@@ -62,7 +62,7 @@ class AboutSupportScreen extends ConsumerWidget {
           const SizedBox(height: 40),
           buildSettingsGroup(
             context,
-            showBorder: false,
+            showBorder: true,
             children: [
               buildSettingTile(
                 context,
