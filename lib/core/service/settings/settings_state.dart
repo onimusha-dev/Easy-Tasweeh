@@ -262,6 +262,7 @@ class SettingsState {
   final BackupSettings backup;
   final DhikrSettings dhikr;
   final bool notificationPermissionGranted;
+  final bool onboardingCompleted;
 
   const SettingsState({
     required this.appearance,
@@ -270,6 +271,7 @@ class SettingsState {
     required this.backup,
     required this.dhikr,
     required this.notificationPermissionGranted,
+    required this.onboardingCompleted,
   });
 
   SettingsState copyWith({
@@ -279,6 +281,7 @@ class SettingsState {
     BackupSettings? backup,
     DhikrSettings? dhikr,
     bool? notificationPermissionGranted,
+    bool? onboardingCompleted,
   }) {
     return SettingsState(
       appearance: appearance ?? this.appearance,
@@ -287,6 +290,7 @@ class SettingsState {
       backup: backup ?? this.backup,
       dhikr: dhikr ?? this.dhikr,
       notificationPermissionGranted: notificationPermissionGranted ?? this.notificationPermissionGranted,
+      onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     );
   }
 

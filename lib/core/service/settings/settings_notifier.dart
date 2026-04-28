@@ -274,4 +274,9 @@ class SettingsNotifier extends Notifier<SettingsState> {
     }
     state = state.copyWith(backup: state.backup.copyWith(backupDirectory: path));
   }
+
+  Future<void> completeOnboarding() async {
+    await _service.setBool('onboardingCompleted', true);
+    state = state.copyWith(onboardingCompleted: true);
+  }
 }

@@ -70,6 +70,8 @@ class HistoryScreen extends ConsumerWidget {
                   child: buildSettingsGroup(
                     context,
                     title: label,
+                    showBorder: false,
+                    isLargeTitle: true,
                     children: items.mapIndexed((idx, data) {
                       return HistoryItemCard(
                         data: data,

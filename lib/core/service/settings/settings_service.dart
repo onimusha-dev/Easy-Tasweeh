@@ -64,6 +64,7 @@ class SettingsService {
         tapFreezeDuration: prefs.getInt('tapFreezeDuration') ?? 100,
       ),
       notificationPermissionGranted: false,
+      onboardingCompleted: prefs.getBool('onboardingCompleted') ?? false,
     );
   }
 

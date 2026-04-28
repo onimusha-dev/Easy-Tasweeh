@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-Widget buildSettingSectionTitle(BuildContext context, String title) {
-  return Text(title, style: Theme.of(context).textTheme.labelSmall);
-}
-
 Widget buildSettingTile(
   BuildContext context, {
   required IconData icon,
@@ -147,11 +143,28 @@ Widget buildTwoPartSettingTile(
   );
 }
 
+Widget buildSettingSectionTitle(
+  BuildContext context,
+  String title, {
+  bool isLarge = false,
+}) {
+  final theme = Theme.of(context);
+  final style = isLarge
+      ? theme.textTheme.titleMedium
+      : theme.textTheme.titleSmall;
+
+  return Text(
+    title,
+    style: style?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5),
+  );
+}
+
 Widget buildSettingsGroup(
   BuildContext context, {
   String? title,
   required List<Widget> children,
   bool showBorder = true,
+  bool isLargeTitle = false,
 }) {
   const r = Radius.circular(8);
   const none = Radius.zero;
@@ -179,10 +192,8 @@ Widget buildSettingsGroup(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       if (title != null)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 0, 8),
-          child: buildSettingSectionTitle(context, title),
-        ),
+        buildSettingSectionTitle(context, title, isLarge: isLargeTitle),
+      const SizedBox(height: 12),
       Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
