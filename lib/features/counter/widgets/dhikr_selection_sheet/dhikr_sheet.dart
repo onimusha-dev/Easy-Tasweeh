@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DhikrSheet extends ConsumerWidget {
-  const DhikrSheet({super.key});
+  final Function(DhikrItem)? onSelected;
+  const DhikrSheet({super.key, this.onSelected});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,6 +94,11 @@ class DhikrSheet extends ConsumerWidget {
                     isSelected: isSelected,
                     isLast: index == dhikrList.length - 1,
                     onTap: () {
+                      if (onSelected != null) {
+                        onSelected!(item);
+                        return;
+                      }
+                      
                       final repo = ref.read(countRepositoryProvider);
 
                       if (currentCount > 0) {
@@ -133,12 +139,12 @@ class DhikrSheet extends ConsumerWidget {
     );
   }
 
-  static Future<void> show(BuildContext context) {
+  static Future<void> show(BuildContext context, {Function(DhikrItem)? onSelected}) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const DhikrSheet(),
+      builder: (context) => DhikrSheet(onSelected: onSelected),
     );
   }
 }

@@ -190,7 +190,8 @@ class ReminderSettings {
       afterSalahAsr: afterSalahAsr ?? this.afterSalahAsr,
       afterSalahAsrTime: afterSalahAsrTime ?? this.afterSalahAsrTime,
       afterSalahMaghrib: afterSalahMaghrib ?? this.afterSalahMaghrib,
-      afterSalahMaghribTime: afterSalahMaghribTime ?? this.afterSalahMaghribTime,
+      afterSalahMaghribTime:
+          afterSalahMaghribTime ?? this.afterSalahMaghribTime,
       afterSalahIsha: afterSalahIsha ?? this.afterSalahIsha,
       afterSalahIshaTime: afterSalahIshaTime ?? this.afterSalahIshaTime,
     );
@@ -211,10 +212,55 @@ class BackupSettings {
     Object? backupDirectory = _sentinel,
   }) {
     return BackupSettings(
-      periodicBackupEnabled: periodicBackupEnabled ?? this.periodicBackupEnabled,
+      periodicBackupEnabled:
+          periodicBackupEnabled ?? this.periodicBackupEnabled,
       backupDirectory: identical(backupDirectory, _sentinel)
           ? this.backupDirectory
           : backupDirectory as String?,
+    );
+  }
+}
+
+class ComboPreset {
+  final String id;
+  final String name;
+  final List<String> dhikrIds;
+  final List<int> counts;
+
+  const ComboPreset({
+    required this.id,
+    required this.name,
+    required this.dhikrIds,
+    required this.counts,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'dhikrIds': dhikrIds,
+    'counts': counts,
+  };
+
+  factory ComboPreset.fromJson(Map<String, dynamic> json) {
+    return ComboPreset(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      dhikrIds: List<String>.from(json['dhikrIds'] as List),
+      counts: List<int>.from(json['counts'] as List),
+    );
+  }
+
+  ComboPreset copyWith({
+    String? id,
+    String? name,
+    List<String>? dhikrIds,
+    List<int>? counts,
+  }) {
+    return ComboPreset(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      dhikrIds: dhikrIds ?? this.dhikrIds,
+      counts: counts ?? this.counts,
     );
   }
 }
@@ -226,6 +272,10 @@ class DhikrSettings {
   final bool showTranslation;
   final bool tapFreezeEnabled;
   final int tapFreezeDuration;
+  final List<ComboPreset> comboPresets;
+  final int activeComboIndex; // -1 for Single Mode, >=0 for specific combo
+  final bool
+  comboEnabled; // This might be redundant now, but keeping it for compatibility if needed
 
   const DhikrSettings({
     required this.lastDhikrId,
@@ -234,6 +284,9 @@ class DhikrSettings {
     required this.showTranslation,
     required this.tapFreezeEnabled,
     required this.tapFreezeDuration,
+    required this.comboPresets,
+    required this.activeComboIndex,
+    required this.comboEnabled,
   });
 
   DhikrSettings copyWith({
@@ -243,6 +296,9 @@ class DhikrSettings {
     bool? showTranslation,
     bool? tapFreezeEnabled,
     int? tapFreezeDuration,
+    List<ComboPreset>? comboPresets,
+    int? activeComboIndex,
+    bool? comboEnabled,
   }) {
     return DhikrSettings(
       lastDhikrId: lastDhikrId ?? this.lastDhikrId,
@@ -251,6 +307,9 @@ class DhikrSettings {
       showTranslation: showTranslation ?? this.showTranslation,
       tapFreezeEnabled: tapFreezeEnabled ?? this.tapFreezeEnabled,
       tapFreezeDuration: tapFreezeDuration ?? this.tapFreezeDuration,
+      comboPresets: comboPresets ?? this.comboPresets,
+      activeComboIndex: activeComboIndex ?? this.activeComboIndex,
+      comboEnabled: comboEnabled ?? this.comboEnabled,
     );
   }
 }
@@ -289,7 +348,8 @@ class SettingsState {
       reminders: reminders ?? this.reminders,
       backup: backup ?? this.backup,
       dhikr: dhikr ?? this.dhikr,
-      notificationPermissionGranted: notificationPermissionGranted ?? this.notificationPermissionGranted,
+      notificationPermissionGranted:
+          notificationPermissionGranted ?? this.notificationPermissionGranted,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     );
   }
@@ -341,6 +401,9 @@ class SettingsState {
   bool get showTranslation => dhikr.showTranslation;
   bool get tapFreezeEnabled => dhikr.tapFreezeEnabled;
   int get tapFreezeDuration => dhikr.tapFreezeDuration;
+  List<ComboPreset> get comboPresets => dhikr.comboPresets;
+  int get activeComboIndex => dhikr.activeComboIndex;
+  bool get comboEnabled => dhikr.comboEnabled;
 }
 
 const Object _sentinel = Object();

@@ -5,6 +5,7 @@ import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_progress.dart';
+import 'package:easy_tasbeeh/features/counter/screens/combo_selection_screen.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_display.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/side_drawer.dart';
@@ -73,6 +74,11 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
             ),
             actions: [
               IconButton(
+                onPressed: _openComboScreen,
+                icon: const Icon(Icons.auto_awesome_motion_rounded),
+                tooltip: 'Dhikr Combo',
+              ),
+              IconButton(
                 onPressed: _showLayoutDialog,
                 icon: const Icon(Icons.swap_vert_rounded),
                 tooltip: 'Swap Layout',
@@ -90,10 +96,39 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
               final current = countData?.currentCount ?? 0;
               final target = countData?.targetCount ?? 33;
               final currentDhikr = ref.watch(currentDhikrProvider);
-              final progress = target > 0
-                  ? (current / target).clamp(0.0, 1.0)
-                  : 0.0;
-              final percentage = (progress * 100).toInt();
+              
+              double progress = 0.0;
+              if (target > 0) {
+                if (settings.activeComboIndex >= 0 &&
+                    settings.activeComboIndex < settings.comboPresets.length) {
+                  final preset = settings.comboPresets[settings.activeComboIndex];
+                  final counts = preset.counts;
+                  if (counts.length >= 3) {
+                    final total1 = counts[0];
+                    final total2 = total1 + counts[1];
+
+                    int segmentTarget = 0;
+                    int segmentCurrent = 0;
+
+                    if (current < total1) {
+                      segmentTarget = counts[0];
+                      segmentCurrent = current;
+                    } else if (current < total2) {
+                      segmentTarget = counts[1];
+                      segmentCurrent = current - total1;
+                    } else {
+                      segmentTarget = counts[2];
+                      segmentCurrent = current - total2;
+                    }
+
+                    progress = (segmentCurrent / segmentTarget).clamp(0.0, 1.0);
+                  }
+                } else {
+                  progress = (current / target).clamp(0.0, 1.0);
+                }
+              }
+              
+
 
               return LayoutBuilder(
                 builder: (context, constraints) {
@@ -112,11 +147,11 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                                 children: [
                                   CounterProgress(
                                     colorScheme: colorScheme,
-                                    percentage: percentage,
                                     progress: progress,
                                     textTheme: textTheme,
                                     currentCountData: current,
                                     targetCount: target,
+                                    settings: settings,
                                   ),
                                   const SizedBox(height: 16),
                                   DhikrDisplay(currentDhikr: currentDhikr),
@@ -135,11 +170,11 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
                             ] else ...[
                               CounterProgress(
                                 colorScheme: colorScheme,
-                                percentage: percentage,
                                 progress: progress,
                                 textTheme: textTheme,
                                 currentCountData: current,
                                 targetCount: target,
+                                settings: settings,
                               ),
                               SizedBox(
                                 width: settings.buttonSize,
@@ -233,6 +268,13 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         });
       }
     }
+  }
+
+  void _openComboScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ComboSelectionScreen()),
+    );
   }
 
   void _showLayoutDialog() {

@@ -1,22 +1,23 @@
+import 'package:easy_tasbeeh/core/service/settings/settings_state.dart';
 import 'package:flutter/material.dart';
 
 class CounterProgress extends StatelessWidget {
   const CounterProgress({
     super.key,
-    required this.percentage,
     required this.progress,
     required this.textTheme,
     required this.colorScheme,
     required this.currentCountData,
     required this.targetCount,
+    required this.settings,
   });
 
-  final int percentage;
   final double progress;
   final TextTheme textTheme;
   final ColorScheme colorScheme;
   final int currentCountData;
   final int targetCount;
+  final SettingsState settings;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,10 @@ class CounterProgress extends StatelessWidget {
                 ],
               ),
               if (hasTarget)
-                const SizedBox.shrink()
+                if (settings.comboEnabled)
+                  _buildComboCheckmarks(context)
+                else
+                  const SizedBox.shrink()
               else
                 Text(
                   'ENDLESS',
@@ -71,7 +75,11 @@ class CounterProgress extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (hasTarget)
-            _AnimatedProgressBar(progress: progress, colorScheme: colorScheme)
+            _AnimatedProgressBar(
+              progress: progress,
+              colorScheme: colorScheme,
+              settings: settings,
+            )
           else
             Container(
               height: 4,
@@ -85,15 +93,82 @@ class CounterProgress extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildComboCheckmarks(BuildContext context) {
+    if (targetCount <= 0) return const SizedBox.shrink();
+
+    if (settings.activeComboIndex < 0 || settings.activeComboIndex >= settings.comboPresets.length) {
+      return const SizedBox.shrink();
+    }
+    
+    final preset = settings.comboPresets[settings.activeComboIndex];
+    final counts = preset.counts;
+    if (counts.length != 3) return const SizedBox.shrink();
+    
+    final total1 = counts[0];
+    final total2 = total1 + counts[1];
+    final total3 = total2 + counts[2];
+
+    int completedSegments = 0;
+    if (currentCountData >= total3) {
+      completedSegments = 3;
+    } else if (currentCountData >= total2) {
+      completedSegments = 2;
+    } else if (currentCountData >= total1) {
+      completedSegments = 1;
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(3, (index) {
+        final isCompleted = index < completedSegments;
+        final isActive = index == completedSegments;
+
+        return Padding(
+          padding: const EdgeInsets.only(left: 6),
+          child: Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: isCompleted
+                  ? Colors.greenAccent.withValues(alpha: 0.2)
+                  : (isActive
+                        ? colorScheme.primary.withValues(alpha: 0.2)
+                        : Colors.white.withValues(alpha: 0.05)),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isCompleted
+                    ? Colors.greenAccent.withValues(alpha: 0.5)
+                    : (isActive
+                          ? colorScheme.primary.withValues(alpha: 0.5)
+                          : Colors.white.withValues(alpha: 0.1)),
+                width: 1,
+              ),
+            ),
+            child: Icon(
+              isCompleted ? Icons.check_rounded : Icons.circle,
+              size: 12,
+              color: isCompleted
+                  ? Colors.greenAccent
+                  : (isActive
+                        ? colorScheme.primary
+                        : Colors.white.withValues(alpha: 0.2)),
+            ),
+          ),
+        );
+      }),
+    );
+  }
 }
 
 class _AnimatedProgressBar extends StatelessWidget {
   final double progress;
   final ColorScheme colorScheme;
+  final SettingsState settings;
 
   const _AnimatedProgressBar({
     required this.progress,
     required this.colorScheme,
+    required this.settings,
   });
 
   @override

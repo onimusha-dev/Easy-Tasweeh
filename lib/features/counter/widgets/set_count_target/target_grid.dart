@@ -7,12 +7,14 @@ class TargetGrid extends ConsumerWidget {
   final List<int> targets;
   final int currentTarget;
   final AsyncValue<dynamic> countAsync;
+  final Function(int)? onSelected;
 
   const TargetGrid({
     super.key,
     required this.targets,
     required this.currentTarget,
     required this.countAsync,
+    this.onSelected,
   });
 
   @override
@@ -39,6 +41,10 @@ class TargetGrid extends ConsumerWidget {
 
           return InkWell(
             onTap: () {
+              if (onSelected != null) {
+                onSelected!(target);
+                return;
+              }
               final repo = ref.read(countRepositoryProvider);
               final currentCount =
                   (countAsync.value as dynamic)?.currentCount ?? 0;

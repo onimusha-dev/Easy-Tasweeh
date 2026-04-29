@@ -62,6 +62,11 @@ class SettingsService {
         showTranslation: prefs.getBool('showTranslation') ?? true,
         tapFreezeEnabled: prefs.getBool('tapFreezeEnabled') ?? true,
         tapFreezeDuration: prefs.getInt('tapFreezeDuration') ?? 100,
+        comboPresets: (prefs.getStringList('comboPresets') ?? [])
+            .map((e) => ComboPreset.fromJson(jsonDecode(e) as Map<String, dynamic>))
+            .toList(),
+        activeComboIndex: prefs.getInt('activeComboIndex') ?? -1,
+        comboEnabled: prefs.getBool('comboEnabled') ?? false,
       ),
       notificationPermissionGranted: false,
       onboardingCompleted: prefs.getBool('onboardingCompleted') ?? false,
@@ -107,5 +112,6 @@ class SettingsService {
   Future<void> setString(String key, String value) => prefs.setString(key, value);
   Future<void> setDouble(String key, double value) => prefs.setDouble(key, value);
   Future<void> setInt(String key, int value) => prefs.setInt(key, value);
+  Future<void> setStringList(String key, List<String> value) => prefs.setStringList(key, value);
   Future<void> remove(String key) => prefs.remove(key);
 }
