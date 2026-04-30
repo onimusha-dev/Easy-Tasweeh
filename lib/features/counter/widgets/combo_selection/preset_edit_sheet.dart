@@ -31,155 +31,164 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Handle
-          const SizedBox(height: 12),
-          Container(
-            width: 32,
-            height: 4,
-            decoration: BoxDecoration(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 16),
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset > 0 ? 100 : 0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              const SizedBox(height: 12),
+              Container(
+                width: 32,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
 
-          Flexible(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Preset Name',
-                      hintText: 'e.g. Morning Routine',
-                      filled: true,
-                      fillColor: colorScheme.surfaceContainerLow,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: colorScheme.outlineVariant.withValues(
-                            alpha: 0.5,
-                          ),
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: colorScheme.outlineVariant.withValues(
-                            alpha: 0.5,
-                          ),
-                        ),
-                      ),
-                      prefixIcon: const Icon(Icons.edit_note_rounded),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  buildSettingsGroup(
-                    context,
-                    title: 'SEQUENCE SLOTS',
-                    children: List.generate(
-                      _dhikrIds.length,
-                      (index) => _buildSlotEditor(index),
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-                  Row(
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              _dhikrIds.add('subhanallah');
-                              _counts.add(33);
-                            });
-                          },
-                          icon: const Icon(Icons.add_rounded),
-                          label: const Text('Add Slot'),
-                          style: OutlinedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ),
-                      ),
-                      if (_dhikrIds.length > 1) ...[
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _dhikrIds.removeLast();
-                                _counts.removeLast();
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.remove_circle_outline_rounded,
-                            ),
-                            label: const Text('Remove'),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: colorScheme.error,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      const SizedBox(height: 8),
+                      TextField(
+                        controller: _nameController,
+                        onTapOutside: (event) =>
+                            FocusScope.of(context).unfocus(),
+                        decoration: InputDecoration(
+                          labelText: 'Preset Name',
+                          hintText: 'e.g. Morning Routine',
+                          filled: true,
+                          fillColor: colorScheme.surfaceContainerLow,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: colorScheme.outlineVariant.withValues(
+                                alpha: 0.5,
                               ),
                             ),
                           ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: colorScheme.outlineVariant.withValues(
+                                alpha: 0.5,
+                              ),
+                            ),
+                          ),
+                          prefixIcon: const Icon(Icons.edit_note_rounded),
                         ),
-                      ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      buildSettingsGroup(
+                        context,
+                        title: 'SEQUENCE SLOTS',
+                        children: List.generate(
+                          _dhikrIds.length,
+                          (index) => _buildSlotEditor(index),
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  _dhikrIds.add('subhanallah');
+                                  _counts.add(33);
+                                });
+                              },
+                              icon: const Icon(Icons.add_rounded),
+                              label: const Text('Add Slot'),
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (_dhikrIds.length > 1) ...[
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    _dhikrIds.removeLast();
+                                    _counts.removeLast();
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.remove_circle_outline_rounded,
+                                ),
+                                label: const Text('Remove'),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: colorScheme.error,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: FilledButton(
+                          onPressed: () {
+                            final updated = widget.preset.copyWith(
+                              name: _nameController.text.isEmpty
+                                  ? 'Combination'
+                                  : _nameController.text,
+                              dhikrIds: _dhikrIds,
+                              counts: _counts,
+                            );
+                            ref
+                                .read(settingsProvider.notifier)
+                                .saveComboPreset(updated);
+
+                            Navigator.pop(context);
+                          },
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: const Text(
+                            'Save Changes',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: FilledButton(
-                      onPressed: () {
-                        final updated = widget.preset.copyWith(
-                          name: _nameController.text.isEmpty
-                              ? 'Combination'
-                              : _nameController.text,
-                          dhikrIds: _dhikrIds,
-                          counts: _counts,
-                        );
-                        ref
-                            .read(settingsProvider.notifier)
-                            .saveComboPreset(updated);
-
-                        Navigator.pop(context);
-                      },
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      child: const Text(
-                        'Save Changes',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
