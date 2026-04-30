@@ -1,7 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
-import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
@@ -32,15 +31,14 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Handle
           const SizedBox(height: 12),
@@ -52,48 +50,11 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 24),
-
-          // Header
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Edit Combination',
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Customize your sequence',
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colorScheme.outline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close_rounded),
-                  style: IconButton.styleFrom(
-                    backgroundColor: colorScheme.surfaceContainerHighest,
-                    padding: const EdgeInsets.all(8),
-                  ),
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 16),
 
-          Expanded(
+          Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -124,18 +85,64 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                       prefixIcon: const Icon(Icons.edit_note_rounded),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 16),
 
                   buildSettingsGroup(
                     context,
                     title: 'SEQUENCE SLOTS',
                     children: List.generate(
-                      3,
+                      _dhikrIds.length,
                       (index) => _buildSlotEditor(index),
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _dhikrIds.add('subhanallah');
+                              _counts.add(33);
+                            });
+                          },
+                          icon: const Icon(Icons.add_rounded),
+                          label: const Text('Add Slot'),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (_dhikrIds.length > 1) ...[
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                _dhikrIds.removeLast();
+                                _counts.removeLast();
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.remove_circle_outline_rounded,
+                            ),
+                            label: const Text('Remove'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: colorScheme.error,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     height: 56,
@@ -151,18 +158,6 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                         ref
                             .read(settingsProvider.notifier)
                             .saveComboPreset(updated);
-
-                        final settings = ref.read(settingsProvider);
-                        final activeIndex = settings.activeComboIndex;
-                        if (activeIndex >= 0 &&
-                            settings.comboPresets[activeIndex].id ==
-                                updated.id) {
-                          final totalSum = updated.counts.fold(
-                            0,
-                            (sum, item) => sum + item,
-                          );
-                          ref.read(countRepositoryProvider).setTarget(totalSum);
-                        }
 
                         Navigator.pop(context);
                       },

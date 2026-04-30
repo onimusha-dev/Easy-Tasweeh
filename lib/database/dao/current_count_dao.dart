@@ -20,9 +20,10 @@ class CurrentCountDao extends DatabaseAccessor<AppDatabase> with _$CurrentCountD
     return (select(currentCountTable).get());
   }
 
-  // Watch current count progress
-  Stream<CurrentCountTableData?> watchCurrentCount() {
-    return (select(currentCountTable)..limit(1)).watchSingleOrNull();
+  // Watch current count progress by ID
+  Stream<CurrentCountTableData?> watchCountById(int id) {
+    return (select(currentCountTable)..where((t) => t.id.equals(id)))
+        .watchSingleOrNull();
   }
 
   // Insert or initialize count

@@ -485,6 +485,17 @@ class $CountHistoryTableTable extends CountHistoryTable
     requiredDuringInsert: false,
     defaultValue: const Constant('subhanallah'),
   );
+  static const VerificationMeta _comboNameMeta = const VerificationMeta(
+    'comboName',
+  );
+  @override
+  late final GeneratedColumn<String> comboName = GeneratedColumn<String>(
+    'combo_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -493,6 +504,7 @@ class $CountHistoryTableTable extends CountHistoryTable
     createdAt,
     updatedAt,
     dhikrId,
+    comboName,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -545,6 +557,12 @@ class $CountHistoryTableTable extends CountHistoryTable
         dhikrId.isAcceptableOrUnknown(data['dhikr_id']!, _dhikrIdMeta),
       );
     }
+    if (data.containsKey('combo_name')) {
+      context.handle(
+        _comboNameMeta,
+        comboName.isAcceptableOrUnknown(data['combo_name']!, _comboNameMeta),
+      );
+    }
     return context;
   }
 
@@ -578,6 +596,10 @@ class $CountHistoryTableTable extends CountHistoryTable
         DriftSqlType.string,
         data['${effectivePrefix}dhikr_id'],
       )!,
+      comboName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}combo_name'],
+      ),
     );
   }
 
@@ -595,6 +617,7 @@ class CountHistoryTableData extends DataClass
   final DateTime createdAt;
   final DateTime updatedAt;
   final String dhikrId;
+  final String? comboName;
   const CountHistoryTableData({
     required this.id,
     required this.targetCount,
@@ -602,6 +625,7 @@ class CountHistoryTableData extends DataClass
     required this.createdAt,
     required this.updatedAt,
     required this.dhikrId,
+    this.comboName,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -612,6 +636,9 @@ class CountHistoryTableData extends DataClass
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['dhikr_id'] = Variable<String>(dhikrId);
+    if (!nullToAbsent || comboName != null) {
+      map['combo_name'] = Variable<String>(comboName);
+    }
     return map;
   }
 
@@ -623,6 +650,9 @@ class CountHistoryTableData extends DataClass
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       dhikrId: Value(dhikrId),
+      comboName: comboName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comboName),
     );
   }
 
@@ -638,6 +668,7 @@ class CountHistoryTableData extends DataClass
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dhikrId: serializer.fromJson<String>(json['dhikrId']),
+      comboName: serializer.fromJson<String?>(json['comboName']),
     );
   }
   @override
@@ -650,6 +681,7 @@ class CountHistoryTableData extends DataClass
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dhikrId': serializer.toJson<String>(dhikrId),
+      'comboName': serializer.toJson<String?>(comboName),
     };
   }
 
@@ -660,6 +692,7 @@ class CountHistoryTableData extends DataClass
     DateTime? createdAt,
     DateTime? updatedAt,
     String? dhikrId,
+    Value<String?> comboName = const Value.absent(),
   }) => CountHistoryTableData(
     id: id ?? this.id,
     targetCount: targetCount ?? this.targetCount,
@@ -667,6 +700,7 @@ class CountHistoryTableData extends DataClass
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     dhikrId: dhikrId ?? this.dhikrId,
+    comboName: comboName.present ? comboName.value : this.comboName,
   );
   CountHistoryTableData copyWithCompanion(CountHistoryTableCompanion data) {
     return CountHistoryTableData(
@@ -680,6 +714,7 @@ class CountHistoryTableData extends DataClass
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dhikrId: data.dhikrId.present ? data.dhikrId.value : this.dhikrId,
+      comboName: data.comboName.present ? data.comboName.value : this.comboName,
     );
   }
 
@@ -691,14 +726,22 @@ class CountHistoryTableData extends DataClass
           ..write('currentCount: $currentCount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('dhikrId: $dhikrId')
+          ..write('dhikrId: $dhikrId, ')
+          ..write('comboName: $comboName')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, targetCount, currentCount, createdAt, updatedAt, dhikrId);
+  int get hashCode => Object.hash(
+    id,
+    targetCount,
+    currentCount,
+    createdAt,
+    updatedAt,
+    dhikrId,
+    comboName,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -708,7 +751,8 @@ class CountHistoryTableData extends DataClass
           other.currentCount == this.currentCount &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.dhikrId == this.dhikrId);
+          other.dhikrId == this.dhikrId &&
+          other.comboName == this.comboName);
 }
 
 class CountHistoryTableCompanion
@@ -719,6 +763,7 @@ class CountHistoryTableCompanion
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<String> dhikrId;
+  final Value<String?> comboName;
   const CountHistoryTableCompanion({
     this.id = const Value.absent(),
     this.targetCount = const Value.absent(),
@@ -726,6 +771,7 @@ class CountHistoryTableCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
+    this.comboName = const Value.absent(),
   });
   CountHistoryTableCompanion.insert({
     this.id = const Value.absent(),
@@ -734,6 +780,7 @@ class CountHistoryTableCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
+    this.comboName = const Value.absent(),
   });
   static Insertable<CountHistoryTableData> custom({
     Expression<int>? id,
@@ -742,6 +789,7 @@ class CountHistoryTableCompanion
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? dhikrId,
+    Expression<String>? comboName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -750,6 +798,7 @@ class CountHistoryTableCompanion
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dhikrId != null) 'dhikr_id': dhikrId,
+      if (comboName != null) 'combo_name': comboName,
     });
   }
 
@@ -760,6 +809,7 @@ class CountHistoryTableCompanion
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<String>? dhikrId,
+    Value<String?>? comboName,
   }) {
     return CountHistoryTableCompanion(
       id: id ?? this.id,
@@ -768,6 +818,7 @@ class CountHistoryTableCompanion
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       dhikrId: dhikrId ?? this.dhikrId,
+      comboName: comboName ?? this.comboName,
     );
   }
 
@@ -792,6 +843,9 @@ class CountHistoryTableCompanion
     if (dhikrId.present) {
       map['dhikr_id'] = Variable<String>(dhikrId.value);
     }
+    if (comboName.present) {
+      map['combo_name'] = Variable<String>(comboName.value);
+    }
     return map;
   }
 
@@ -803,7 +857,8 @@ class CountHistoryTableCompanion
           ..write('currentCount: $currentCount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('dhikrId: $dhikrId')
+          ..write('dhikrId: $dhikrId, ')
+          ..write('comboName: $comboName')
           ..write(')'))
         .toString();
   }
@@ -1070,6 +1125,7 @@ typedef $$CountHistoryTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
+      Value<String?> comboName,
     });
 typedef $$CountHistoryTableTableUpdateCompanionBuilder =
     CountHistoryTableCompanion Function({
@@ -1079,6 +1135,7 @@ typedef $$CountHistoryTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
+      Value<String?> comboName,
     });
 
 class $$CountHistoryTableTableFilterComposer
@@ -1117,6 +1174,11 @@ class $$CountHistoryTableTableFilterComposer
 
   ColumnFilters<String> get dhikrId => $composableBuilder(
     column: $table.dhikrId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get comboName => $composableBuilder(
+    column: $table.comboName,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1159,6 +1221,11 @@ class $$CountHistoryTableTableOrderingComposer
     column: $table.dhikrId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get comboName => $composableBuilder(
+    column: $table.comboName,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CountHistoryTableTableAnnotationComposer
@@ -1191,6 +1258,9 @@ class $$CountHistoryTableTableAnnotationComposer
 
   GeneratedColumn<String> get dhikrId =>
       $composableBuilder(column: $table.dhikrId, builder: (column) => column);
+
+  GeneratedColumn<String> get comboName =>
+      $composableBuilder(column: $table.comboName, builder: (column) => column);
 }
 
 class $$CountHistoryTableTableTableManager
@@ -1239,6 +1309,7 @@ class $$CountHistoryTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
+                Value<String?> comboName = const Value.absent(),
               }) => CountHistoryTableCompanion(
                 id: id,
                 targetCount: targetCount,
@@ -1246,6 +1317,7 @@ class $$CountHistoryTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
+                comboName: comboName,
               ),
           createCompanionCallback:
               ({
@@ -1255,6 +1327,7 @@ class $$CountHistoryTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
+                Value<String?> comboName = const Value.absent(),
               }) => CountHistoryTableCompanion.insert(
                 id: id,
                 targetCount: targetCount,
@@ -1262,6 +1335,7 @@ class $$CountHistoryTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
+                comboName: comboName,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

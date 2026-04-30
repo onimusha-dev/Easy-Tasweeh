@@ -1,6 +1,5 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
-import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +10,7 @@ class ComboPresetCard extends ConsumerWidget {
   final bool isSelected;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onSelect;
 
   const ComboPresetCard({
     super.key,
@@ -19,27 +19,28 @@ class ComboPresetCard extends ConsumerWidget {
     required this.isSelected,
     required this.onEdit,
     required this.onDelete,
+    required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final accentColor = AppIconColors.amber(context);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutCubic,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: buildSettingsGroup(
-        context,
-        showBorder: true,
-        children: [
-          GestureDetector(
-            onTap: () =>
-                ref.read(settingsProvider.notifier).setActiveComboIndex(index),
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
+      child: GestureDetector(
+        onTap: onSelect,
+        behavior: HitTestBehavior.opaque,
+        child: buildSettingsGroup(
+          context,
+          showBorder: true,
+          borderColor: isSelected ? colorScheme.primary : null,
+          borderWidth: 1.5,
+          children: [
+            Padding(
               padding: const EdgeInsets.symmetric(
                 // horizontal: 20,
                 // vertical: 14,
@@ -49,9 +50,11 @@ class ComboPresetCard extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(9.0),
                     child: Icon(
-                      Icons.auto_awesome_motion_rounded,
+                      Icons.view_carousel_rounded,
                       size: 22,
-                      color: isSelected ? accentColor : colorScheme.outline,
+                      color: isSelected
+                          ? colorScheme.primary
+                          : colorScheme.outline,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -71,18 +74,6 @@ class ComboPresetCard extends ConsumerWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: onEdit,
-                    icon: Icon(
-                      Icons.edit_rounded,
-                      size: 18,
-                      color: colorScheme.outlineVariant,
-                    ),
-                    visualDensity: VisualDensity.compact,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                  ),
-                  IconButton(
                     onPressed: onDelete,
                     icon: Icon(
                       Icons.delete_outline_rounded,
@@ -94,55 +85,65 @@ class ComboPresetCard extends ConsumerWidget {
                     highlightColor: Colors.transparent,
                     hoverColor: Colors.transparent,
                   ),
+                  IconButton(
+                    onPressed: onEdit,
+                    icon: Icon(
+                      Icons.edit_rounded,
+                      size: 18,
+                      color: colorScheme.outlineVariant,
+                    ),
+                    visualDensity: VisualDensity.compact,
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                  ),
                 ],
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(3, (i) {
-                final dhikrId = preset.dhikrIds.length > i
-                    ? preset.dhikrIds[i]
-                    : null;
-                final dhikr = dhikrId != null
-                    ? dhikrList.firstWhere(
-                        (d) => d.id == dhikrId,
-                        orElse: () => dhikrList.first,
-                      )
-                    : null;
-                return Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        dhikr?.transliteration.split(' ').first ?? '...',
-                        style: textTheme.labelSmall?.copyWith(
-                          color: colorScheme.outline,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 0.5,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(3, (i) {
+                  final dhikrId = preset.dhikrIds.length > i
+                      ? preset.dhikrIds[i]
+                      : null;
+                  final dhikr = dhikrId != null
+                      ? dhikrList.firstWhere(
+                          (d) => d.id == dhikrId,
+                          orElse: () => dhikrList.first,
+                        )
+                      : null;
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          dhikr?.transliteration.split(' ').first ?? '...',
+                          style: textTheme.labelSmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 0.5,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${preset.counts[i]}',
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w900,
-                          color: isSelected
-                              ? colorScheme.primary
-                              : colorScheme.onSurface,
+                        const SizedBox(height: 4),
+                        Text(
+                          '${preset.counts[i]}',
+                          style: textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: colorScheme.onSurface,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                      ],
+                    ),
+                  );
+                }),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -37,10 +37,22 @@ class HistoryItemCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Icon/Status Indicator
-              Icon(
-                isCompleted ? Icons.done_all_rounded : Icons.history_rounded,
-                color: statusColor,
-                size: 24,
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: data.comboName != null 
+                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  data.comboName != null 
+                    ? Icons.auto_awesome_motion_rounded
+                    : (isCompleted ? Icons.check_circle_rounded : Icons.history_rounded),
+                  color: data.comboName != null ? theme.colorScheme.primary : statusColor,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 16),
 
@@ -49,23 +61,51 @@ class HistoryItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (data.comboName != null) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          data.comboName!.toUpperCase(),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                            fontSize: 9,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                    ],
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        dhikrList
-                            .firstWhere(
-                              (d) => d.id == data.dhikrId,
-                              orElse: () => dhikrList.first,
-                            )
-                            .arabic,
+                        data.comboName != null 
+                          ? 'Full Sequence Completed'
+                          : dhikrList
+                              .firstWhere(
+                                (d) => d.id == data.dhikrId,
+                                orElse: () => dhikrList.first,
+                              )
+                              .arabic,
                         textAlign: TextAlign.left,
-                        style: theme.textTheme.titleMedium,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: data.comboName != null ? FontWeight.bold : FontWeight.normal,
+                          fontSize: data.comboName != null ? 14 : 16,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
-                      style: theme.textTheme.bodySmall,
+                      data.comboName != null
+                        ? 'Multi-Dhikr Collection • ${DateFormat('hh:mm a').format(data.createdAt)}'
+                        : '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
                     ),
                   ],
                 ),
