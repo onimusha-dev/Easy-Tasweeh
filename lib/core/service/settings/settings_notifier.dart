@@ -155,6 +155,46 @@ class SettingsNotifier extends Notifier<SettingsState> {
     state = state.copyWith(dhikr: state.dhikr.copyWith(tapFreezeDuration: value));
   }
 
+  Future<void> setActiveComboIndex(int index) async {
+    await _service.setInt('activeComboIndex', index);
+    state = state.copyWith(
+        dhikr: state.dhikr.copyWith(
+            activeComboIndex: index,
+            comboEnabled: index >= 0));
+  }
+
+  Future<void> saveComboPreset(ComboPreset preset) async {
+    final presets = List<ComboPreset>.from(state.dhikr.comboPresets);
+    final index = presets.indexWhere((p) => p.id == preset.id);
+    if (index >= 0) {
+      presets[index] = preset;
+    } else {
+      presets.add(preset);
+    }
+    await _service.setStringList(
+        'comboPresets', presets.map((e) => jsonEncode(e.toJson())).toList());
+    state = state.copyWith(dhikr: state.dhikr.copyWith(comboPresets: presets));
+  }
+
+  Future<void> deleteComboPreset(String id) async {
+    final presets = List<ComboPreset>.from(state.dhikr.comboPresets)
+      ..removeWhere((p) => p.id == id);
+    await _service.setStringList(
+        'comboPresets', presets.map((e) => jsonEncode(e.toJson())).toList());
+    
+    int newActiveIndex = state.dhikr.activeComboIndex;
+    if (newActiveIndex >= presets.length) {
+      newActiveIndex = presets.isEmpty ? -1 : presets.length - 1;
+    }
+    
+    await _service.setInt('activeComboIndex', newActiveIndex);
+    state = state.copyWith(
+        dhikr: state.dhikr.copyWith(
+            comboPresets: presets,
+            activeComboIndex: newActiveIndex,
+            comboEnabled: newActiveIndex >= 0));
+  }
+
   // --- Reminders ---
   Future<void> toggleMorningReminder(bool v) async {
     await _service.setBool('morningReminder', v);

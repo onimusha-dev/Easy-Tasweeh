@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +22,7 @@ class DhikrDisplay extends ConsumerWidget {
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(12, 28, 12, 12),
+          padding: const EdgeInsets.fromLTRB(12, 32, 12, 20),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.25),
             borderRadius: BorderRadius.circular(8),
@@ -81,29 +80,29 @@ class DhikrDisplay extends ConsumerWidget {
                       fontStyle: FontStyle.italic,
                     ),
                   ),
-                const SizedBox(height: 24),
-                InkWell(
-                  onTap: () => DhikrSheet.show(context),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.05),
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.more_horiz_rounded,
-                      size: 20,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 24),
+                // InkWell(
+                //   onTap: () => DhikrSheet.show(context),
+                //   borderRadius: BorderRadius.circular(8),
+                //   child: Container(
+                //     padding: const EdgeInsets.symmetric(
+                //       horizontal: 16,
+                //       vertical: 12,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: Colors.white.withValues(alpha: 0.1),
+                //       borderRadius: BorderRadius.circular(8),
+                //       border: Border.all(
+                //         color: Colors.white.withValues(alpha: 0.05),
+                //       ),
+                //     ),
+                //     child: const Icon(
+                //       Icons.more_horiz_rounded,
+                //       size: 20,
+                //       color: Colors.white,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

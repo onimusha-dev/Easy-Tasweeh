@@ -1,18 +1,18 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/notification_service.dart';
-import 'package:easy_tasbeeh/core/service/settings_provider.dart';
-import 'package:easy_tasbeeh/core/service/settings/settings_service.dart';
-import 'package:easy_tasbeeh/core/service/settings/reminder_manager.dart';
-import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
+import 'package:easy_tasbeeh/core/service/settings/reminder_manager.dart';
+import 'package:easy_tasbeeh/core/service/settings/settings_service.dart';
+import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/service/shared_preferences.dart';
 import 'package:easy_tasbeeh/core/theme/theme.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:easy_tasbeeh/features/counter/screens/counter_screen.dart';
 import 'package:easy_tasbeeh/features/onboarding/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -98,7 +98,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Initialize managers
     ref.watch(reminderManagerProvider);
-    
+
     final settings = ref.watch(settingsProvider);
     final themeMode = settings.themeMode;
     final colorScheme = settings.colorScheme;
@@ -114,7 +114,9 @@ class MyApp extends ConsumerWidget {
         AppTheme.resolveColorScheme(colorScheme, Brightness.dark),
       ),
       themeMode: themeMode,
-      home: settings.onboardingCompleted ? const CounterScreen() : const OnboardingScreen(),
+      home: settings.onboardingCompleted
+          ? const CounterScreen()
+          : const OnboardingScreen(),
     );
   }
 }

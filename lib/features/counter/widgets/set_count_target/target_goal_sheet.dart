@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TargetGoalSheet extends ConsumerWidget {
-  const TargetGoalSheet({super.key});
+  final Function(int)? onSelected;
+  const TargetGoalSheet({super.key, this.onSelected});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -83,6 +84,7 @@ class TargetGoalSheet extends ConsumerWidget {
             targets: targets,
             currentTarget: currentTarget,
             countAsync: countAsync,
+            onSelected: onSelected,
           ),
           const SizedBox(height: 24),
 

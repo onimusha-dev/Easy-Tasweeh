@@ -54,9 +54,9 @@ Widget buildSettingTile(
     );
   }
 
-  return InkWell(
+  return GestureDetector(
     onTap: onTap,
-    customBorder: shape,
+    behavior: HitTestBehavior.opaque,
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
@@ -103,9 +103,9 @@ Widget buildTwoPartSettingTile(
 }) {
   final scheme = Theme.of(context).colorScheme;
 
-  return InkWell(
+  return GestureDetector(
     onTap: onTap,
-    customBorder: shape,
+    behavior: HitTestBehavior.opaque,
     child: Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 0, 0),
       child: Column(
