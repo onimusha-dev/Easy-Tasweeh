@@ -165,6 +165,8 @@ Widget buildSettingsGroup(
   required List<Widget> children,
   bool showBorder = true,
   bool isLargeTitle = false,
+  Color? borderColor,
+  double? borderWidth,
 }) {
   const r = Radius.circular(8);
   const none = Radius.zero;
@@ -200,9 +202,12 @@ Widget buildSettingsGroup(
           borderRadius: BorderRadius.circular(8),
           border: showBorder
               ? Border.all(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  color:
+                      borderColor ??
+                      Theme.of(
+                        context,
+                      ).colorScheme.outlineVariant.withValues(alpha: 0.5),
+                  width: borderWidth ?? 1.0,
                 )
               : null,
         ),

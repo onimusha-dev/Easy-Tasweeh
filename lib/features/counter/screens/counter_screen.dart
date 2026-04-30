@@ -2,10 +2,10 @@ import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/features/counter/screens/combo_selection_screen.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_progress.dart';
-import 'package:easy_tasbeeh/features/counter/screens/combo_selection_screen.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_display.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/side_drawer.dart';
@@ -74,19 +74,14 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
             ),
             actions: [
               IconButton(
-                onPressed: _openComboScreen,
-                icon: const Icon(Icons.auto_awesome_motion_rounded),
-                tooltip: 'Dhikr Combo',
-              ),
-              IconButton(
                 onPressed: _showLayoutDialog,
                 icon: const Icon(Icons.swap_vert_rounded),
                 tooltip: 'Swap Layout',
               ),
               IconButton(
-                onPressed: _showSetTargetSheet,
-                icon: const Icon(Icons.track_changes_rounded),
-                tooltip: 'Set Target',
+                onPressed: _openComboScreen,
+                icon: const Icon(Icons.view_carousel),
+                tooltip: 'Dhikr Collection',
               ),
               const SizedBox(width: 8),
             ],
@@ -96,39 +91,44 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
               final current = countData?.currentCount ?? 0;
               final target = countData?.targetCount ?? 33;
               final currentDhikr = ref.watch(currentDhikrProvider);
-              
+
               double progress = 0.0;
               if (target > 0) {
                 if (settings.activeComboIndex >= 0 &&
                     settings.activeComboIndex < settings.comboPresets.length) {
-                  final preset = settings.comboPresets[settings.activeComboIndex];
+                  final preset =
+                      settings.comboPresets[settings.activeComboIndex];
                   final counts = preset.counts;
-                  if (counts.length >= 3) {
-                    final total1 = counts[0];
-                    final total2 = total1 + counts[1];
 
-                    int segmentTarget = 0;
-                    int segmentCurrent = 0;
+                  int cumulativeTarget = 0;
+                  int segmentTarget = 0;
+                  int segmentCurrent = 0;
+                  bool found = false;
 
-                    if (current < total1) {
-                      segmentTarget = counts[0];
-                      segmentCurrent = current;
-                    } else if (current < total2) {
-                      segmentTarget = counts[1];
-                      segmentCurrent = current - total1;
-                    } else {
-                      segmentTarget = counts[2];
-                      segmentCurrent = current - total2;
+                  for (int i = 0; i < counts.length; i++) {
+                    int nextCumulative = cumulativeTarget + counts[i];
+                    if (current < nextCumulative) {
+                      segmentTarget = counts[i];
+                      segmentCurrent = current - cumulativeTarget;
+                      found = true;
+                      break;
                     }
+                    cumulativeTarget = nextCumulative;
+                  }
 
+                  if (!found && counts.isNotEmpty) {
+                    // If we've finished the combo but haven't reset yet
+                    segmentTarget = counts.last;
+                    segmentCurrent = counts.last;
+                  }
+
+                  if (segmentTarget > 0) {
                     progress = (segmentCurrent / segmentTarget).clamp(0.0, 1.0);
                   }
                 } else {
                   progress = (current / target).clamp(0.0, 1.0);
                 }
               }
-              
-
 
               return LayoutBuilder(
                 builder: (context, constraints) {
@@ -309,6 +309,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     );
   }
 
+  // ignore: unused_element
   void _showSetTargetSheet() {
     showModalBottomSheet(
       context: context,

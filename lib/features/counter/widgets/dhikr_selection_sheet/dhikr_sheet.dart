@@ -30,6 +30,7 @@ class DhikrSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Handle
+          SizedBox(height: 12),
           Container(
             width: 32,
             height: 4,
@@ -38,35 +39,7 @@ class DhikrSheet extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 24),
-
-          // Header
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Select Dhikr',
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Choose which dhikr to recite',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colorScheme.outline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
+          SizedBox(height: 12),
 
           // Dhikr List
           Flexible(
@@ -98,7 +71,7 @@ class DhikrSheet extends ConsumerWidget {
                         onSelected!(item);
                         return;
                       }
-                      
+
                       final repo = ref.read(countRepositoryProvider);
 
                       if (currentCount > 0) {
@@ -139,7 +112,10 @@ class DhikrSheet extends ConsumerWidget {
     );
   }
 
-  static Future<void> show(BuildContext context, {Function(DhikrItem)? onSelected}) {
+  static Future<void> show(
+    BuildContext context, {
+    Function(DhikrItem)? onSelected,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,

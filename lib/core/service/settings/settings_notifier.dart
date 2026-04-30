@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
 import 'settings_service.dart';
 import '../settings_provider.dart';
+import '../../../database/repository/count_repository.dart';
 
 class SettingsNotifier extends Notifier<SettingsState> {
   SettingsService get _service => ref.read(settingsServiceProvider);
@@ -161,6 +162,12 @@ class SettingsNotifier extends Notifier<SettingsState> {
         dhikr: state.dhikr.copyWith(
             activeComboIndex: index,
             comboEnabled: index >= 0));
+    
+    // Sync database target with combo total if active
+    if (index >= 0 && index < state.dhikr.comboPresets.length) {
+      final total = state.dhikr.comboPresets[index].counts.reduce((a, b) => a + b);
+      await ref.read(countRepositoryProvider).setTarget(total);
+    }
   }
 
   Future<void> saveComboPreset(ComboPreset preset) async {
@@ -174,6 +181,13 @@ class SettingsNotifier extends Notifier<SettingsState> {
     await _service.setStringList(
         'comboPresets', presets.map((e) => jsonEncode(e.toJson())).toList());
     state = state.copyWith(dhikr: state.dhikr.copyWith(comboPresets: presets));
+
+    // If this was the active combo, update the target count
+    if (state.dhikr.activeComboIndex == index || 
+        (index == -1 && state.dhikr.activeComboIndex == presets.length - 1)) {
+      final total = preset.counts.reduce((a, b) => a + b);
+      await ref.read(countRepositoryProvider).setTarget(total);
+    }
   }
 
   Future<void> deleteComboPreset(String id) async {

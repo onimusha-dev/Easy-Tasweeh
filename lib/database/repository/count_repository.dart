@@ -21,6 +21,21 @@ final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
   return ref.watch(countRepositoryProvider).watchCurrentCount();
 });
 
+final singleCountStreamProvider = StreamProvider<CurrentCountTableData?>((
+  ref,
+) {
+  return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_SINGLE);
+});
+
+final comboCountStreamProvider = StreamProvider<CurrentCountTableData?>((
+  ref,
+) {
+  return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_COMBO);
+});
+
+const int SESSION_ID_SINGLE = 1;
+const int SESSION_ID_COMBO = 2;
+
 class CountRepository {
   final Ref _ref;
   final CurrentCountDao _currentCountDao;
@@ -28,27 +43,47 @@ class CountRepository {
 
   CountRepository(this._ref, this._currentCountDao, this._countHistoryDao);
 
-  // Get or initialize the current count session
+  // Get or initialize the current count session based on the active mode
   Future<CurrentCountTableData> getOrCreateCurrentCount() async {
+    final settings = _ref.read(settingsProvider);
+    final isCombo = settings.activeComboIndex >= 0;
+    final sessionId = isCombo ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+
     final counts = await _currentCountDao.getAllCounts();
-    if (counts.isEmpty) {
+    final session = counts.firstWhere(
+      (c) => c.id == sessionId,
+      orElse: () => CurrentCountTableData(
+        id: sessionId,
+        targetCount: isCombo ? 99 : 33, // Default targets for combo/single
+        currentCount: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        dhikrId: 'subhanallah',
+      ),
+    );
+
+    // If session doesn't exist in DB, insert it
+    if (!counts.any((c) => c.id == sessionId)) {
       await _currentCountDao.insertCount(
-        const CurrentCountTableCompanion(
-          targetCount: Value(33),
+        CurrentCountTableCompanion(
+          id: Value(sessionId),
+          targetCount: Value(session.targetCount),
           currentCount: Value(0),
+          dhikrId: Value(session.dhikrId),
         ),
       );
-      final newCounts = await _currentCountDao.getAllCounts();
-      return newCounts.isNotEmpty
-          ? newCounts.first
-          : throw Exception('Failed to initialize count');
     }
-    return counts.first;
+
+    return session;
   }
 
-  // Watch the current count for reactive UI
+  // Watch the current count for reactive UI, respecting the active mode
   Stream<CurrentCountTableData?> watchCurrentCount() {
-    return _currentCountDao.watchCurrentCount();
+    final settings = _ref.watch(settingsProvider);
+    final sessionId =
+        settings.activeComboIndex >= 0 ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+
+    return _currentCountDao.watchCountById(sessionId);
   }
 
   // Increment the counter and update the database
@@ -79,12 +114,20 @@ class CountRepository {
   Future<void> saveAndReset() async {
     final current = await getOrCreateCurrentCount();
     if (current.currentCount > 0) {
+      final settings = _ref.read(settingsProvider);
+      String? activeComboName;
+      if (settings.activeComboIndex >= 0 &&
+          settings.activeComboIndex < settings.comboPresets.length) {
+        activeComboName = settings.comboPresets[settings.activeComboIndex].name;
+      }
+
       // Save to history
       await _countHistoryDao.insertHistory(
         CountHistoryTableCompanion(
           targetCount: Value(current.targetCount),
           currentCount: Value(current.currentCount),
           dhikrId: Value(current.dhikrId),
+          comboName: Value(activeComboName),
           createdAt: Value(DateTime.now()),
         ),
       );
@@ -120,6 +163,11 @@ class CountRepository {
   // Watch all history records
   Stream<List<CountHistoryTableData>> watchAllHistory() {
     return _countHistoryDao.watchAllHistory();
+  }
+
+  // Watch current count progress by ID
+  Stream<CurrentCountTableData?> watchCountById(int id) {
+    return _currentCountDao.watchCountById(id);
   }
 
   // Restore the last incomplete session from history (only if it was from today)

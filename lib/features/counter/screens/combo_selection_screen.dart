@@ -33,12 +33,15 @@ class ComboSelectionScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               buildSettingSectionTitle(context, 'Single Mode'),
-              SingleModeCard(isSelected: activeIndex == -1),
+              SingleModeCard(
+                isSelected: activeIndex == -1,
+                onSelect: () => _handleModeChange(context, ref, -1),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Row(
@@ -71,9 +74,9 @@ class ComboSelectionScreen extends ConsumerWidget {
                     isSelected: activeIndex == entry.key,
                     onEdit: () => _editPreset(context, entry.value),
                     onDelete: () => _confirmDelete(context, ref, entry.value),
+                    onSelect: () => _handleModeChange(context, ref, entry.key),
                   );
                 }),
-              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -99,8 +102,22 @@ class ComboSelectionScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      enableDrag: false,
       builder: (context) => PresetEditSheet(preset: preset),
     );
+  }
+
+  Future<void> _handleModeChange(
+    BuildContext context,
+    WidgetRef ref,
+    int newIndex,
+  ) async {
+    final settings = ref.read(settingsProvider);
+    final currentIndex = settings.activeComboIndex;
+
+    if (currentIndex == newIndex) return;
+
+    await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, ComboPreset preset) {
