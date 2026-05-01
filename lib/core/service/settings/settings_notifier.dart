@@ -281,15 +281,15 @@ class SettingsNotifier extends Notifier<SettingsState> {
 
   Future<void> moveComboPresetUp(int index) async {
     if (index <= 0) return;
-    await _reorderPresets(index, index - 1);
+    await reorderPresets(index, index - 1);
   }
 
   Future<void> moveComboPresetDown(int index) async {
     if (index >= state.dhikr.comboPresets.length - 1) return;
-    await _reorderPresets(index, index + 1);
+    await reorderPresets(index, index + 1);
   }
 
-  Future<void> _reorderPresets(int oldIndex, int newIndex) async {
+  Future<void> reorderPresets(int oldIndex, int newIndex) async {
     final presets = List<ComboPreset>.from(state.dhikr.comboPresets);
     final item = presets.removeAt(oldIndex);
     presets.insert(newIndex, item);

@@ -61,26 +61,31 @@ class ComboSelectionScreen extends ConsumerWidget {
               if (settings.comboPresets.isEmpty)
                 EmptyPresetsState(onAdd: () => _addNewPreset(ref))
               else
-                ...settings.comboPresets.asMap().entries.map((entry) {
-                  return ComboPresetCard(
-                    preset: entry.value,
-                    index: entry.key,
-                    isSelected: activeIndex == entry.key,
-                    onEdit: () => _editPreset(context, entry.value),
-                    onDelete: () => _confirmDelete(context, ref, entry.value),
-                    onSelect: () => _handleModeChange(context, ref, entry.key),
-                    onMoveUp: entry.key > 0
-                        ? () => ref
-                            .read(settingsProvider.notifier)
-                            .moveComboPresetUp(entry.key)
-                        : null,
-                    onMoveDown: entry.key < settings.comboPresets.length - 1
-                        ? () => ref
-                            .read(settingsProvider.notifier)
-                            .moveComboPresetDown(entry.key)
-                        : null,
-                  );
-                }),
+                Column(
+                  children: settings.comboPresets.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final preset = entry.value;
+                    return ComboPresetCard(
+                      key: ValueKey(preset.id),
+                      preset: preset,
+                      index: index,
+                      isSelected: activeIndex == index,
+                      onEdit: () => _editPreset(context, preset),
+                      onDelete: () => _confirmDelete(context, ref, preset),
+                      onSelect: () => _handleModeChange(context, ref, index),
+                      onMoveUp: index > 0
+                          ? () => ref
+                                .read(settingsProvider.notifier)
+                                .moveComboPresetUp(index)
+                          : null,
+                      onMoveDown: index < settings.comboPresets.length - 1
+                          ? () => ref
+                                .read(settingsProvider.notifier)
+                                .moveComboPresetDown(index)
+                          : null,
+                    );
+                  }).toList(),
+                ),
             ],
           ),
         ),
