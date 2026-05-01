@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 /// Returns a Color based on the provided string name.
@@ -31,14 +32,15 @@ Color setIconsColor(String? color) {
   }
 }
 
-Color setPercentageCompletionColor(double percentage) {
+Color setPercentageCompletionColor(BuildContext context, double percentage) {
   if (percentage < 25) {
-    return Colors.redAccent;
+    // Explicit vibrant red to ensure it doesn't look like yellow/amber
+    return const Color(0xFFE53935);
   } else if (percentage < 50) {
-    return Colors.orangeAccent;
+    return AppIconColors.orange(context);
   } else if (percentage < 75) {
-    return Colors.amberAccent;
+    return AppIconColors.amber(context);
   } else {
-    return Colors.greenAccent;
+    return AppIconColors.green(context);
   }
 }

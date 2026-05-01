@@ -50,7 +50,7 @@ class ComboPresetCard extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.all(9.0),
                     child: Icon(
-                      Icons.view_carousel_rounded,
+                      Icons.notes_rounded,
                       size: 22,
                       color: isSelected
                           ? colorScheme.primary

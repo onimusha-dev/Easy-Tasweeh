@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/utils/color_utils.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -118,102 +119,107 @@ class ComboDetailsSheet extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Column(
                   children: segments.asMap().entries.map((entry) {
-                    final index = entry.key;
                     final segment = entry.value;
                     final dhikr = segment['dhikr'] as DhikrItem;
                     final current = segment['current'] as int;
                     final target = segment['target'] as int;
 
+                    final double segmentPercentage = (current / target) * 100;
+                    final Color stateColor = setPercentageCompletionColor(
+                      context,
+                      segmentPercentage,
+                    );
                     final isCompleted = current >= target;
-                    final isPartial = current > 0 && current < target;
-
-                    final Color stateColor = isCompleted
-                        ? Colors.greenAccent
-                        : (isPartial
-                              ? Colors.amberAccent
-                              : Colors.redAccent.withValues(alpha: 0.7));
-
                     final progress = (current / target).clamp(0.0, 1.0);
 
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: colorScheme.surfaceContainerLow,
+                          color: colorScheme.primary.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: stateColor.withValues(alpha: 0.25),
-                            width: 1,
-                          ),
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              width: 28,
-                              height: 28,
+                              width: 44,
+                              height: 44,
                               decoration: BoxDecoration(
                                 color: stateColor.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
-                                child: isCompleted
-                                    ? Icon(
-                                        Icons.check_rounded,
-                                        color: stateColor,
-                                        size: 16,
-                                      )
-                                    : Text(
-                                        '${index + 1}',
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: stateColor,
-                                              fontSize: 10,
-                                            ),
-                                      ),
+                                child: Icon(
+                                  isCompleted
+                                      ? Icons.check_circle_rounded
+                                      : Icons.history_rounded,
+                                  color: stateColor,
+                                  size: 22,
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 16),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        dhikr.arabic,
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              dhikr.arabic,
+                                              style: theme.textTheme.titleMedium
+                                                  ?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              dhikr.transliteration,
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: colorScheme.onSurface
+                                                        .withValues(alpha: 0.5),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        '$current/$target',
-                                        style: theme.textTheme.labelSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: stateColor,
+                                      const SizedBox(width: 16),
+                                      RichText(
+                                        textAlign: TextAlign.end,
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: '$current',
+                                              style: theme.textTheme.titleLarge
+                                                  ?.copyWith(
+                                                    color: stateColor,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
+                                            TextSpan(
+                                              text: ' / $target',
+                                              style: theme.textTheme.bodySmall
+                                                  ?.copyWith(
+                                                    color: colorScheme.onSurface
+                                                        .withValues(alpha: 0.4),
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    dhikr.transliteration,
-                                    style: theme.textTheme.labelSmall?.copyWith(
-                                      color: colorScheme.onSurface.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 12),
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(2),
                                     child: LinearProgressIndicator(
@@ -222,7 +228,7 @@ class ComboDetailsSheet extends ConsumerWidget {
                                       valueColor: AlwaysStoppedAnimation<Color>(
                                         stateColor,
                                       ),
-                                      minHeight: 3,
+                                      minHeight: 4,
                                     ),
                                   ),
                                 ],

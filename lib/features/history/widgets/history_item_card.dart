@@ -29,7 +29,7 @@ class HistoryItemCard extends ConsumerWidget {
         ? (data.currentCount / data.targetCount) * 100
         : 0;
 
-    final Color statusColor = setPercentageCompletionColor(percentage);
+    final Color statusColor = setPercentageCompletionColor(context, percentage);
 
     return Column(
       children: [
@@ -54,7 +54,7 @@ class HistoryItemCard extends ConsumerWidget {
                   ),
                   child: Icon(
                     data.sessionMode == 'combo'
-                        ? Icons.auto_awesome_motion_rounded
+                        ? Icons.notes_rounded
                         : (isCompleted
                               ? Icons.check_circle_rounded
                               : Icons.history_rounded),
