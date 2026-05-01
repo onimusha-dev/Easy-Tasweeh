@@ -166,7 +166,6 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   }
 }
 
-// ignore: unused_element
 void _clearHistory(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,

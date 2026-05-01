@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:flutter/material.dart';
 
 class FeaturedTip extends StatelessWidget {
@@ -6,42 +7,47 @@ class FeaturedTip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final accentColor = AppIconColors.blue(context);
 
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppIconColors.blue(context).withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppIconColors.blue(context).withValues(alpha: 0.1),
-        ),
-      ),
+    return AppCard(
+      backgroundColor: accentColor.withValues(alpha: 0.05),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                Icons.lightbulb_outline_rounded,
-                color: AppIconColors.blue(context),
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: accentColor.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.lightbulb_outline_rounded,
+                  color: accentColor,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 'DAILY TIP',
-                style: textTheme.labelSmall?.copyWith(
-                  color: AppIconColors.blue(context),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: accentColor,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.0,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             'The best way to remember Allah is through constant, small acts of devotion throughout your day. Consistency is the key to a tranquil heart.',
-            style: textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurface,
+              height: 1.5,
             ),
           ),
         ],

@@ -93,15 +93,19 @@ class HistoryItemCard extends ConsumerWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 8),
                             GestureDetector(
                               onTap: () =>
                                   ComboDetailsSheet.show(context, data),
-                              child: Icon(
-                                Icons.info_outline_rounded,
-                                size: 16,
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.8,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Icon(
+                                  Icons.info_outline_rounded,
+                                  size: 20,
+                                  color: theme.colorScheme.primary.withValues(
+                                    alpha: 0.8,
+                                  ),
                                 ),
                               ),
                             ),
