@@ -1,6 +1,5 @@
-import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/core/widgets/save_progress_dialog.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
-import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,28 +51,22 @@ class TargetGrid extends ConsumerWidget {
               final currentCount =
                   (countAsync.value as dynamic)?.currentCount ?? 0;
 
-              showDialog(
-                context: context,
-                builder: (_) => PremiumDialog(
-                  icon: Icons.track_changes_rounded,
-                  title: currentCount > 0 ? 'Save session?' : 'Set Target?',
-                  description: currentCount > 0
-                      ? 'This will save your current progress to history.'
-                      : 'Are you sure you want to change your target goal?',
-                  confirmLabel: currentCount > 0 ? 'Archive' : 'Confirm',
-                  color: currentCount > 0
-                      ? Theme.of(context)
-                          .extension<AppColors>()
-                          ?.destructiveColor
-                      : null,
+              if (currentCount > 0) {
+                SaveProgressDialog.show(
+                  context,
+                  title: 'Save session?',
+                  description:
+                      'This will save your current progress to history.',
+                  confirmLabel: 'Archive',
                   onConfirm: () {
-                    repo.saveAndReset();
                     repo.setTarget(target);
-                    Navigator.pop(context); // Close dialog
                     Navigator.pop(context); // Close bottom sheet
                   },
-                ),
-              );
+                );
+              } else {
+                repo.setTarget(target);
+                Navigator.pop(context); // Close bottom sheet
+              }
             },
             borderRadius: BorderRadius.circular(8),
             child: AnimatedContainer(
