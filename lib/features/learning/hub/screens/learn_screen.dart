@@ -12,16 +12,15 @@ class LearnScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Learning Hub', style: Theme.of(context).textTheme.titleMedium),
+        title: Text(
+          'Learning Hub',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         centerTitle: true,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: const [
-          _LearningCategories(),
-          SizedBox(height: 16),
-          FeaturedTip(),
-        ],
+        children: const [_LearningCategories(), FeaturedTip()],
       ),
     );
   }

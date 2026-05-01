@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_card.dart';
 
 class AppListTile extends StatelessWidget {
@@ -74,10 +75,7 @@ class AppListTile extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null) ...[
-            const SizedBox(width: 8),
-            trailing!,
-          ],
+          if (trailing != null) ...[const SizedBox(width: 8), trailing!],
         ],
       ),
     );

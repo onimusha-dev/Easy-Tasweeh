@@ -41,21 +41,39 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            pinned: true,
-            elevation: 0,
-            backgroundColor: colorScheme.surface,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Prophet\'s Sayings', style: textTheme.titleLarge),
-              centerTitle: true,
-            ),
-          ),
-          SliverToBoxAdapter(
+      appBar: AppBar(
+        title: Text('Prophet\'s Sayings', style: textTheme.titleMedium),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          // The List (scrolls behind the search bar)
+          _filteredHadiths.isEmpty
+              ? const Center(
+                  child: EmptyState(
+                    icon: Icons.search_off_rounded,
+                    message: 'No sayings found',
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 80, 16, 40),
+                  itemCount: _filteredHadiths.length,
+                  itemBuilder: (context, index) {
+                    return SayingTile(
+                      item: _filteredHadiths[index],
+                      index: index + 1,
+                      isLast: index == _filteredHadiths.length - 1,
+                    );
+                  },
+                ),
+
+          // Floating Glass Search Bar Area
+          Positioned(
+            top: 10,
+            left: 0,
+            right: 0,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SearchField(
                 controller: _searchController,
                 hintText: 'Search sayings...',
@@ -67,43 +85,6 @@ class _ProphetSayingScreenState extends State<ProphetSayingScreen> {
               ),
             ),
           ),
-          _filteredHadiths.isEmpty
-              ? const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: EmptyState(
-                    icon: Icons.search_off_rounded,
-                    message: 'No sayings found',
-                  ),
-                )
-              : SliverToBoxAdapter(
-                  child: Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: _filteredHadiths.length,
-                      separatorBuilder: (context, index) => Divider(
-                        height: 1,
-                        indent: 56,
-                        color: colorScheme.outlineVariant.withValues(
-                          alpha: 0.3,
-                        ),
-                      ),
-                      itemBuilder: (context, index) {
-                        return SayingTile(
-                          item: _filteredHadiths[index],
-                          index: index + 1,
-                          isLast: index == _filteredHadiths.length - 1,
-                        );
-                      },
-                    ),
-                  ),
-                ),
         ],
       ),
     );

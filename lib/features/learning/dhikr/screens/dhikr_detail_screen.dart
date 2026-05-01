@@ -1,6 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:flutter/material.dart';
 
 class DhikrDetailScreen extends StatelessWidget {
@@ -21,36 +22,24 @@ class DhikrDetailScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Hero section (The "Word")
             _buildHeroSection(context, item, accentColor),
-
-            const SizedBox(height: 20),
-
-            // 2. Dictionary Entry (Transliteration & Translation)
+            const SizedBox(height: 16),
             _buildDictionaryEntry(context, item),
-
-            const SizedBox(height: 20),
-
-            // 3. Explanation section
+            const SizedBox(height: 16),
             if (item.explanation != null) ...[
-              _buildExplanationSection(context, item.explanation!, accentColor),
-              const SizedBox(height: 20),
+              _buildSection(context, 'EXPLANATION', item.explanation!, accentColor),
+              const SizedBox(height: 16),
             ],
-
-            // 4. Reference section
             if (item.references != null && item.references!.isNotEmpty) ...[
               _buildReferenceSection(context, item.references!, accentColor),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
             ],
-
-            // 5. Dictionary Commentary (Virtues & Benefits)
             if (item.benefit != null)
-              _buildDictionaryBenefit(context, item.benefit!, accentColor),
-
+              _buildSection(context, 'VIRTUES & BENEFITS', item.benefit!, accentColor),
             const SizedBox(height: 40),
           ],
         ),
@@ -58,35 +47,31 @@ class DhikrDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExplanationSection(
+  Widget _buildSection(
     BuildContext context,
-    String explanation,
+    String title,
+    String content,
     Color accentColor,
   ) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'EXPLANATION',
+            title,
             style: textTheme.labelSmall?.copyWith(
-              color: accentColor.withValues(alpha: 0.7),
+              color: accentColor,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.0,
             ),
           ),
           const SizedBox(height: 16),
-          SelectableText(explanation, style: textTheme.bodyLarge),
+          SelectableText(
+            content,
+            style: textTheme.bodyLarge?.copyWith(height: 1.6),
+          ),
         ],
       ),
     );
@@ -100,23 +85,16 @@ class DhikrDetailScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-        ),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'REFERENCE',
             style: textTheme.labelSmall?.copyWith(
-              color: accentColor.withValues(alpha: 0.7),
+              color: accentColor,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.0,
             ),
           ),
           const SizedBox(height: 16),
@@ -126,14 +104,46 @@ class DhikrDetailScreen extends StatelessWidget {
             return Column(
               children: [
                 if (index > 0) ...[
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Divider(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.1),
                     height: 1,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                 ],
-                _buildReferenceItem(context, ref, accentColor),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.format_quote_rounded,
+                          color: accentColor.withValues(alpha: 0.2),
+                          size: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: SelectableText(
+                            ref.text,
+                            style: textTheme.bodyLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      ref.source,
+                      style: textTheme.labelLarge?.copyWith(
+                        color: accentColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             );
           }),
@@ -142,61 +152,20 @@ class DhikrDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReferenceItem(
-    BuildContext context,
-    DhikrReference ref,
-    Color accentColor,
-  ) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              Icons.format_quote_rounded,
-              color: accentColor.withValues(alpha: 0.3),
-              size: 24,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: SelectableText(
-                ref.text,
-                style: textTheme.bodyLarge?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Text(
-          ref.source,
-          style: textTheme.labelLarge?.copyWith(color: accentColor),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHeroSection(
     BuildContext context,
     DhikrItem item,
     Color accentColor,
   ) {
-    return Container(
-      width: double.infinity,
+    return AppCard(
+      backgroundColor: accentColor.withValues(alpha: 0.05),
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-      decoration: BoxDecoration(
-        color: accentColor.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: accentColor.withValues(alpha: 0.1)),
-      ),
-      child: SelectableText(
-        item.arabic,
-        textAlign: TextAlign.center,
-        style: AppTypography.arabicDisplay(accentColor),
+      child: Center(
+        child: SelectableText(
+          item.arabic,
+          textAlign: TextAlign.center,
+          style: AppTypography.arabicDisplay(accentColor),
+        ),
       ),
     );
   }
@@ -205,16 +174,7 @@ class DhikrDetailScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -225,87 +185,38 @@ class DhikrDetailScreen extends StatelessWidget {
             children: [
               SelectableText(
                 item.transliteration,
-                style: textTheme.headlineSmall,
+                style: textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                ),
               ),
               if (item.category != null)
-                Text(
-                  '(${item.category!.toLowerCase()})',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.primary,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.w400,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    item.category!.toUpperCase(),
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 9,
+                    ),
                   ),
                 ),
             ],
           ),
           const SizedBox(height: 16),
-          Container(
-            height: 1.5,
-            width: 32,
-            decoration: BoxDecoration(
-              color: colorScheme.primary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 16),
           SelectableText(
             item.translation,
             style: textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
+              height: 1.5,
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDictionaryBenefit(
-    BuildContext context,
-    String benefit,
-    Color accentColor,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'VIRTUES',
-              style: textTheme.labelSmall?.copyWith(
-                color: accentColor.withValues(alpha: 0.7),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Divider(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.4),
-                thickness: 1,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.only(left: 16),
-          decoration: BoxDecoration(
-            border: Border(
-              left: BorderSide(
-                color: accentColor.withValues(alpha: 0.3),
-                width: 3,
-              ),
-            ),
-          ),
-          child: SelectableText(
-            benefit,
-            style: textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

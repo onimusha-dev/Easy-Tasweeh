@@ -55,7 +55,7 @@ class DhikrTile extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    DhikrUtils.toArabicDigits(index),
+                    DhikrUtils.toLocalizedDigits(index),
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: isSelected
                           ? colorScheme.primary

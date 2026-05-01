@@ -28,7 +28,11 @@ class DhikrUtils {
     }
   }
 
-  static String toArabicDigits(int number) {
-    return NumberFormat("0", "ar").format(number);
+  static String toLocalizedDigits(int number) {
+    final locale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    if (locale == 'ar') {
+      return NumberFormat("0", "ar").format(number);
+    }
+    return number.toString();
   }
 }

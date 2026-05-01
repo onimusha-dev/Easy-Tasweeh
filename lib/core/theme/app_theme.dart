@@ -21,8 +21,8 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         centerTitle: false,
         elevation: 0,
-        scrolledUnderElevation: 0.5,
-        backgroundColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        backgroundColor: scheme.surface,
         foregroundColor: scheme.textPrimary,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
