@@ -21,7 +21,7 @@ class AppearanceScreen extends ConsumerWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppLayout.screenPadding,
         children: [
           buildSettingsGroup(
             context,
@@ -126,7 +126,7 @@ class AppearanceScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: AppLayout.shapeDialog,
         title: const Text('Select Theme'),
         content: RadioGroup<ThemeMode>(
           groupValue: ref.watch(settingsProvider).themeMode,

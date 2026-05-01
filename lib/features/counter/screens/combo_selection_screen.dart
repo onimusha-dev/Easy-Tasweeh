@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/core/widgets/save_progress_dialog.dart';
@@ -7,7 +8,7 @@ import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_sele
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/empty_presets_state.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/preset_edit_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/single_mode_card.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -26,7 +27,12 @@ class ComboSelectionScreen extends ConsumerWidget {
       appBar: const ComboSelectionAppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.fromLTRB(
+            AppLayout.spaceLarge,
+            AppLayout.spaceMedium,
+            AppLayout.spaceLarge,
+            AppLayout.spaceXXL,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -137,7 +143,7 @@ class _SingleModeSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        buildSettingSectionTitle(context, 'Single Mode'),
+        const AppSectionTitle(title: 'Single Mode'),
         const SizedBox(height: 8),
         SingleModeCard(isSelected: isSelected, onSelect: onSelect),
       ],
@@ -176,10 +182,10 @@ class _ComboPresetsSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            buildSettingSectionTitle(context, 'Combo Presets'),
+            const AppSectionTitle(title: 'Combo Presets'),
             if (settings.comboPresets.isNotEmpty)
               TextButton.icon(
-                onPressed: onAdd,
+                onPressed: settings.comboPresets.length >= 10 ? null : onAdd,
                 icon: const Icon(Icons.add_rounded, size: 18),
                 label: const Text('New'),
                 style: TextButton.styleFrom(

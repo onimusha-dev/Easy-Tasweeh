@@ -29,12 +29,12 @@ class CounterAppBar extends ConsumerWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: onShowLayoutDialog,
-          icon: const Icon(Icons.swap_vert_rounded),
+          icon: const Icon(Icons.dashboard_customize_rounded),
           tooltip: 'Swap Layout',
         ),
         IconButton(
           onPressed: () => _openComboScreen(context),
-          icon: const Icon(Icons.view_carousel),
+          icon: const Icon(Icons.style_rounded),
           tooltip: 'Dhikr Collection',
         ),
         const SizedBox(width: 8),

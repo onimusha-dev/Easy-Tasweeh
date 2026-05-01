@@ -1,9 +1,11 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
+import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +32,8 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Padding(
@@ -38,7 +41,7 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
       child: Container(
         decoration: BoxDecoration(
           color: colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          borderRadius: AppLayout.brSheet,
         ),
         child: SafeArea(
           top: false,
@@ -48,77 +51,103 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
               // Handle
               const SizedBox(height: 12),
               Container(
-                width: 32,
+                width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
               Flexible(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                  padding: AppLayout.sheetPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _nameController,
-                        onTapOutside: (event) =>
-                            FocusScope.of(context).unfocus(),
-                        decoration: InputDecoration(
-                          labelText: 'Preset Name',
-                          hintText: 'e.g. Morning Routine',
-                          filled: true,
-                          fillColor: colorScheme.surfaceContainerLow,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: colorScheme.outlineVariant.withValues(
-                                alpha: 0.5,
+                      AppSection(
+                        title: 'Sequence Name',
+                        padding: const EdgeInsets.only(bottom: 4),
+                        children: [
+                          TextField(
+                            controller: _nameController,
+                            onTapOutside: (event) =>
+                                FocusScope.of(context).unfocus(),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: 'Sequence Name',
+                              hintText: 'e.g. Morning Routine',
+                              filled: true,
+                              fillColor: colorScheme.surfaceContainerLow,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppLayout.radiusMedium,
+                                ),
+                                borderSide: BorderSide(
+                                  color: colorScheme.outlineVariant.withValues(
+                                    alpha: 0.5,
+                                  ),
+                                ),
                               ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppLayout.radiusMedium,
+                                ),
+                                borderSide: BorderSide(
+                                  color: colorScheme.outlineVariant.withValues(
+                                    alpha: 0.3,
+                                  ),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppLayout.radiusMedium,
+                                ),
+                                borderSide: BorderSide(
+                                  color: colorScheme.primary,
+                                  width: 1.5,
+                                ),
+                              ),
+                              prefixIcon: const Icon(Icons.edit_note_rounded),
                             ),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: colorScheme.outlineVariant.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                          ),
-                          prefixIcon: const Icon(Icons.edit_note_rounded),
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
 
-                      buildSettingsGroup(
-                        context,
-                        title: 'SEQUENCE SLOTS',
+                      AppSection(
+                        title: 'Sequence Slots',
+                        padding: const EdgeInsets.only(bottom: 2),
                         children: List.generate(
                           _dhikrIds.length,
                           (index) => _buildSlotEditor(index),
                         ),
                       ),
 
-                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _dhikrIds.add('subhanallah');
-                                  _counts.add(33);
-                                });
-                              },
-                              icon: const Icon(Icons.add_rounded),
+                            child: FilledButton.tonalIcon(
+                              onPressed: _dhikrIds.length >= 10
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _dhikrIds.add('subhanallah');
+                                        _counts.add(33);
+                                      });
+                                    },
+                              icon: const Icon(Icons.add_rounded, size: 20),
                               label: const Text('Add Slot'),
-                              style: OutlinedButton.styleFrom(
+                              style: FilledButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(
+                                    AppLayout.radiusMedium,
+                                  ),
                                 ),
                               ),
                             ),
@@ -126,7 +155,7 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                           if (_dhikrIds.length > 1) ...[
                             const SizedBox(width: 12),
                             Expanded(
-                              child: OutlinedButton.icon(
+                              child: FilledButton.tonalIcon(
                                 onPressed: () {
                                   setState(() {
                                     _dhikrIds.removeLast();
@@ -135,12 +164,20 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                                 },
                                 icon: const Icon(
                                   Icons.remove_circle_outline_rounded,
+                                  size: 20,
                                 ),
                                 label: const Text('Remove'),
-                                style: OutlinedButton.styleFrom(
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
                                   foregroundColor: colorScheme.error,
+                                  backgroundColor: colorScheme.errorContainer
+                                      .withValues(alpha: 0.3),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: BorderRadius.circular(
+                                      AppLayout.radiusMedium,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -149,10 +186,10 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                         ],
                       ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 4),
                       SizedBox(
                         width: double.infinity,
-                        height: 56,
+                        height: 50,
                         child: FilledButton(
                           onPressed: () {
                             final updated = widget.preset.copyWith(
@@ -168,13 +205,8 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
 
                             Navigator.pop(context);
                           },
-                          style: FilledButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
                           child: const Text(
-                            'Save Changes',
+                            'Save Sequence',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -202,7 +234,9 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
       orElse: () => dhikrList.first,
     );
 
-    return GestureDetector(
+    return AppCard(
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       onTap: () {
         DhikrSheet.show(
           context,
@@ -212,110 +246,99 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
           },
         );
       },
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 2),
-              child: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    '${index + 1}',
-                    style: TextStyle(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                '${index + 1}',
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  dhikr.transliteration,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  dhikr.arabic,
+                  style: AppTypography.arabicLabel(
+                    colorScheme.onSurface.withValues(alpha: 0.6),
+                  ).copyWith(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => TargetGoalSheet(
+                  showInfinite: false,
+                  onSelected: (newTarget) {
+                    setState(() => _counts[index] = newTarget);
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: colorScheme.primary.withOpacity(0.1)),
+              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    dhikr.transliteration,
-                    style: textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    '${_counts[index]}',
+                    style: textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: colorScheme.primary,
+                      fontSize: 14,
+                      letterSpacing: -0.5,
                     ),
                   ),
-                  const SizedBox(height: 2),
                   Text(
-                    dhikr.arabic,
-                    style: AppTypography.arabicLabel(
-                      colorScheme.onSurface.withValues(alpha: 0.6),
-                    ).copyWith(fontSize: 14),
+                    'GOAL',
+                    style: TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.w900,
+                      color: colorScheme.primary.withOpacity(0.6),
+                      letterSpacing: 1.0,
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            GestureDetector(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => TargetGoalSheet(
-                    showInfinite: false,
-                    onSelected: (newTarget) {
-                      setState(() => _counts[index] = newTarget);
-                      Navigator.pop(context);
-                    },
-                  ),
-                );
-              },
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(
-                    alpha: 0.5,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      '${_counts[index]}',
-                      style: textTheme.labelLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Text(
-                      'GOAL',
-                      style: TextStyle(
-                        fontSize: 7,
-                        fontWeight: FontWeight.w900,
-                        color: colorScheme.outline,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_app_bar.dart';
@@ -147,28 +148,18 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Change Layout'),
-        content: Text(
-          isCentered
-              ? 'Do you want to move the counter button to the bottom?'
-              : 'Do you want to move the counter button to the middle?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('CANCEL'),
-          ),
-          FilledButton(
-            onPressed: () {
-              ref
-                  .read(settingsProvider.notifier)
-                  .updateCenterButtonTemporary(!isCentered);
-              Navigator.pop(context);
-            },
-            child: const Text('SWITCH'),
-          ),
-        ],
+      builder: (context) => PremiumDialog(
+        icon: Icons.dashboard_customize_rounded,
+        title: 'Change Layout',
+        description: isCentered
+            ? 'Do you want to move the counter button to the bottom?'
+            : 'Do you want to move the counter button to the middle?',
+        confirmLabel: 'Switch',
+        onConfirm: () {
+          ref
+              .read(settingsProvider.notifier)
+              .updateCenterButtonTemporary(!isCentered);
+        },
       ),
     );
   }

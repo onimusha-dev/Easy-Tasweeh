@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
@@ -24,7 +25,7 @@ class DhikrSheet extends ConsumerWidget {
       height: screenHeight * 0.7,
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: AppLayout.brSheet,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,7 +43,7 @@ class DhikrSheet extends ConsumerWidget {
           const SizedBox(height: 12),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
             child: Row(
               children: [
                 Column(
@@ -69,7 +70,12 @@ class DhikrSheet extends ConsumerWidget {
           // Dhikr List
           Flexible(
             child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              padding: const EdgeInsets.fromLTRB(
+                AppLayout.spaceLarge,
+                AppLayout.spaceSmall,
+                AppLayout.spaceLarge,
+                AppLayout.spaceLarge,
+              ),
               itemCount: dhikrList.length,
               itemBuilder: (context, index) {
                 final item = dhikrList[index];

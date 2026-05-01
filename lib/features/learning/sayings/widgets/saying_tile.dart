@@ -61,7 +61,7 @@ class SayingTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Saying #${index}',
+                        'Saying #$index',
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSurface.withValues(alpha: 0.4),
                         ),

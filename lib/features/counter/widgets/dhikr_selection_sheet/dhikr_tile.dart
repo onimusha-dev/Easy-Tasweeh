@@ -22,7 +22,7 @@ class DhikrTile extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: isSelected
             ? colorScheme.primary.withValues(alpha: 0.12)

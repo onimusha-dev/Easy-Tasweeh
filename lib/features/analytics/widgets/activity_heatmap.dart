@@ -1,4 +1,4 @@
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -58,9 +58,8 @@ class ActivityHeatmap extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                buildSettingSectionTitle(
-                  context,
-                  'Commit History',
+                const AppSectionTitle(
+                  title: 'Commit History',
                   isLarge: true,
                 ),
                 Text(

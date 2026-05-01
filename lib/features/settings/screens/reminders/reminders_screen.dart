@@ -49,7 +49,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppLayout.screenPadding,
         children: [
           // ── Permission banner ────────────────────────────────────────────
           const NotificationPermissionBanner(),
@@ -176,10 +176,10 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
 
   void _showPermissionSnack() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Text(
           'Enable notification permission first.',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: AppTypography.weightSemiBold),
         ),
         behavior: SnackBarBehavior.floating,
       ),
