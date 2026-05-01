@@ -16,7 +16,8 @@ class DhikrSheet extends ConsumerWidget {
     final currentDhikr = ref.watch(currentDhikrProvider);
     final countAsync = ref.watch(currentCountStreamProvider);
     final currentCount = countAsync.asData?.value?.currentCount ?? 0;
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
@@ -25,12 +26,11 @@ class DhikrSheet extends ConsumerWidget {
         color: colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: EdgeInsets.zero,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Handle
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Container(
             width: 32,
             height: 4,
@@ -39,67 +39,79 @@ class DhikrSheet extends ConsumerWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            child: Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Select Dhikr',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Choose your primary dhikr',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
 
           // Dhikr List
           Flexible(
-            child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerLow,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListView.separated(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: dhikrList.length,
-                separatorBuilder: (context, index) => Divider(
-                  height: 1,
-                  indent: 56,
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-                ),
-                itemBuilder: (context, index) {
-                  final item = dhikrList[index];
-                  final isSelected = item.id == currentDhikr.id;
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              itemCount: dhikrList.length,
+              itemBuilder: (context, index) {
+                final item = dhikrList[index];
+                final isSelected = item.id == currentDhikr.id;
 
-                  return DhikrTile(
-                    item: item,
-                    index: index + 1,
-                    isSelected: isSelected,
-                    isLast: index == dhikrList.length - 1,
-                    onTap: () {
-                      if (onSelected != null) {
-                        onSelected!(item);
-                        return;
-                      }
+                return DhikrTile(
+                  item: item,
+                  index: index + 1,
+                  isSelected: isSelected,
+                  onTap: () {
+                    if (onSelected != null) {
+                      onSelected!(item);
+                      return;
+                    }
 
-                      final repo = ref.read(countRepositoryProvider);
+                    final repo = ref.read(countRepositoryProvider);
 
-                      if (currentCount > 0) {
-                        SaveProgressDialog.show(
-                          context,
-                          title: 'Save session?',
-                          description:
-                              'This will save your current progress to history.',
-                          confirmLabel: 'Archive',
-                          onConfirm: () {
-                            ref
-                                .read(settingsProvider.notifier)
-                                .setLastDhikrId(item.id);
-                            repo.setDhikrId(item.id);
-                            Navigator.pop(context); // Close bottom sheet
-                          },
-                        );
-                      } else {
-                        ref
-                            .read(settingsProvider.notifier)
-                            .setLastDhikrId(item.id);
-                        repo.setDhikrId(item.id);
-                        Navigator.pop(context); // Close bottom sheet
-                      }
-                    },
-                  );
-                },
-              ),
+                    if (currentCount > 0) {
+                      SaveProgressDialog.show(
+                        context,
+                        title: 'Save session?',
+                        description:
+                            'This will save your current progress to history.',
+                        confirmLabel: 'Archive',
+                        onConfirm: () {
+                          ref
+                              .read(settingsProvider.notifier)
+                              .setLastDhikrId(item.id);
+                          repo.setDhikrId(item.id);
+                          Navigator.pop(context); // Close bottom sheet
+                        },
+                      );
+                    } else {
+                      ref
+                          .read(settingsProvider.notifier)
+                          .setLastDhikrId(item.id);
+                      repo.setDhikrId(item.id);
+                      Navigator.pop(context); // Close bottom sheet
+                    }
+                  },
+                );
+              },
             ),
           ),
         ],

@@ -30,32 +30,34 @@ class ComboSelectionScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 8),
               buildSettingSectionTitle(context, 'Single Mode'),
+              const SizedBox(height: 8),
               SingleModeCard(
                 isSelected: activeIndex == -1,
                 onSelect: () => _handleModeChange(context, ref, -1),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    buildSettingSectionTitle(context, 'Combo Presets'),
-                    if (settings.comboPresets.isNotEmpty)
-                      TextButton.icon(
-                        onPressed: () => _addNewPreset(ref),
-                        icon: const Icon(Icons.add_rounded, size: 18),
-                        label: const Text('New'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: colorScheme.primary,
-                          padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  buildSettingSectionTitle(context, 'Combo Presets'),
+                  if (settings.comboPresets.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: () => _addNewPreset(ref),
+                      icon: const Icon(Icons.add_rounded, size: 18),
+                      label: const Text('New'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: colorScheme.primary,
+                        padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
+              const SizedBox(height: 8),
               if (settings.comboPresets.isEmpty)
                 EmptyPresetsState(onAdd: () => _addNewPreset(ref))
               else

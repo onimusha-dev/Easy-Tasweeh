@@ -1,6 +1,5 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,31 +23,40 @@ class ComboPresetCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutCubic,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-      child: GestureDetector(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? colorScheme.primary.withValues(alpha: 0.08)
+            : colorScheme.primary.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(16),
+        // Persistent border to prevent layout shift
+        border: Border.all(
+          color: isSelected ? colorScheme.primary : Colors.transparent,
+          width: 1, // Smaller border width
+        ),
+      ),
+      child: InkWell(
         onTap: onSelect,
-        behavior: HitTestBehavior.opaque,
-        child: buildSettingsGroup(
-          context,
-          showBorder: true,
-          borderColor: isSelected ? colorScheme.primary : null,
-          borderWidth: 1.5,
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                // horizontal: 20,
-                // vertical: 14,
-              ),
+              padding: const EdgeInsets.fromLTRB(12, 12, 0, 12),
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(9.0),
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? colorScheme.primary.withValues(alpha: 0.15)
+                          : colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Icon(
                       Icons.notes_rounded,
                       size: 22,
@@ -64,45 +72,108 @@ class ComboPresetCard extends ConsumerWidget {
                       children: [
                         Text(
                           preset.name,
-                          style: textTheme.titleMedium?.copyWith(
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '${preset.dhikrIds.length} Dhikrs in sequence',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  IconButton(
-                    onPressed: onDelete,
-                    icon: Icon(
-                      Icons.delete_outline_rounded,
-                      size: 22,
-                      color: colorScheme.error.withValues(alpha: 0.6),
+                  Transform.translate(
+                    offset: const Offset(8, 0),
+                    child: Builder(
+                      builder: (context) {
+                        return IconButton(
+                          onPressed: () async {
+                            final RenderBox button =
+                                context.findRenderObject() as RenderBox;
+                            final RenderBox overlay =
+                                Overlay.of(context).context.findRenderObject()
+                                    as RenderBox;
+                            final RelativeRect position = RelativeRect.fromRect(
+                              Rect.fromPoints(
+                                button.localToGlobal(
+                                  Offset.zero,
+                                  ancestor: overlay,
+                                ),
+                                button.localToGlobal(
+                                  button.size.bottomRight(Offset.zero),
+                                  ancestor: overlay,
+                                ),
+                              ),
+                              Offset.zero & overlay.size,
+                            );
+
+                            final String? result = await showMenu<String>(
+                              context: context,
+                              position: position,
+                              items: [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.edit_rounded, size: 18),
+                                      SizedBox(width: 12),
+                                      Text('Edit'),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.delete_outline_rounded,
+                                        size: 18,
+                                        color: colorScheme.error,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: colorScheme.error,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            if (result == 'edit') {
+                              onEdit();
+                            } else if (result == 'delete') {
+                              onDelete();
+                            }
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          splashRadius: 20,
+                          icon: Icon(
+                            Icons.more_vert_rounded,
+                            size: 22,
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          ),
+                        );
+                      },
                     ),
-                    visualDensity: VisualDensity.compact,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                  ),
-                  IconButton(
-                    onPressed: onEdit,
-                    icon: Icon(
-                      Icons.edit_rounded,
-                      size: 18,
-                      color: colorScheme.outlineVariant,
-                    ),
-                    visualDensity: VisualDensity.compact,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
                   ),
                 ],
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: colorScheme.surface.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(3, (i) {
@@ -115,23 +186,26 @@ class ComboPresetCard extends ConsumerWidget {
                           orElse: () => dhikrList.first,
                         )
                       : null;
+
+                  if (dhikr == null) return const Spacer();
+
                   return Expanded(
                     child: Column(
                       children: [
                         Text(
-                          dhikr?.transliteration.split(' ').first ?? '...',
-                          style: textTheme.labelSmall?.copyWith(
+                          dhikr.transliteration.split(' ').first.toUpperCase(),
+                          style: theme.textTheme.labelSmall?.copyWith(
                             color: colorScheme.outline,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.5,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '${preset.counts[i]}',
-                          style: textTheme.titleMedium?.copyWith(
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: colorScheme.onSurface,
                           ),
