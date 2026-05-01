@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/theme/theme.dart';
+import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/archive_dialog.dart';
 import 'package:flutter/material.dart';
@@ -45,24 +46,36 @@ class SessionActionButton extends ConsumerWidget {
       return SizedBox(
         width: double.infinity,
         child: FilledButton.icon(
-          onPressed: () async {
-            final success = await ref
-                .read(countRepositoryProvider)
-                .restoreLastSession();
-            if (context.mounted) {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    success
-                        ? 'Last incomplete session restored'
-                        : 'No eligible session found to restore',
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            }
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => PremiumDialog(
+                icon: Icons.restore_rounded,
+                title: 'Restore Session?',
+                description:
+                    'Are you sure you want to restore your last incomplete session?',
+                confirmLabel: 'Restore',
+                onConfirm: () async {
+                  final success = await ref
+                      .read(countRepositoryProvider)
+                      .restoreLastSession();
+                  if (context.mounted) {
+                    Navigator.pop(context); // Close bottom sheet
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          success
+                              ? 'Last incomplete session restored'
+                              : 'No eligible session found to restore',
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  }
+                },
+              ),
+            );
           },
           icon: const Icon(Icons.restore_rounded, size: 18),
           label: const Text(

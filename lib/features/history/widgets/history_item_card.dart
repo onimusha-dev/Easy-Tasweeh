@@ -41,16 +41,21 @@ class HistoryItemCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: data.comboName != null 
-                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                    : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: data.sessionMode == 'combo'
+                      ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                      : theme.colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  data.comboName != null 
-                    ? Icons.auto_awesome_motion_rounded
-                    : (isCompleted ? Icons.check_circle_rounded : Icons.history_rounded),
-                  color: data.comboName != null ? theme.colorScheme.primary : statusColor,
+                  data.sessionMode == 'combo'
+                      ? Icons.auto_awesome_motion_rounded
+                      : (isCompleted
+                          ? Icons.check_circle_rounded
+                          : Icons.history_rounded),
+                  color: data.sessionMode == 'combo'
+                      ? theme.colorScheme.primary
+                      : statusColor,
                   size: 22,
                 ),
               ),
@@ -61,15 +66,17 @@ class HistoryItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (data.comboName != null) ...[
+                    if (data.sessionMode == 'combo') ...[
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.15),
+                          color:
+                              theme.colorScheme.primary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          data.comboName!.toUpperCase(),
+                          (data.comboName ?? 'COMBO').toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.bold,
@@ -83,26 +90,28 @@ class HistoryItemCard extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        data.comboName != null 
-                          ? 'Full Sequence Completed'
-                          : dhikrList
-                              .firstWhere(
-                                (d) => d.id == data.dhikrId,
-                                orElse: () => dhikrList.first,
-                              )
-                              .arabic,
+                        data.sessionMode == 'combo'
+                            ? 'Full Sequence Completed'
+                            : dhikrList
+                                .firstWhere(
+                                  (d) => d.id == data.dhikrId,
+                                  orElse: () => dhikrList.first,
+                                )
+                                .arabic,
                         textAlign: TextAlign.left,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: data.comboName != null ? FontWeight.bold : FontWeight.normal,
-                          fontSize: data.comboName != null ? 14 : 16,
+                          fontWeight: data.sessionMode == 'combo'
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontSize: data.sessionMode == 'combo' ? 14 : 16,
                         ),
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      data.comboName != null
-                        ? 'Multi-Dhikr Collection • ${DateFormat('hh:mm a').format(data.createdAt)}'
-                        : '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
+                      data.sessionMode == 'combo'
+                          ? 'Multi-Dhikr Collection • ${DateFormat('hh:mm a').format(data.createdAt)}'
+                          : '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),

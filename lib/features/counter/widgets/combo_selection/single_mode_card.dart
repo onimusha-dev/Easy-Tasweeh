@@ -77,8 +77,10 @@ class SingleModeCard extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: InkWell(
-                      onTap: () => DhikrSheet.show(context),
+                    child: GestureDetector(
+                      onTap: onSelect,
+                      onLongPress: () => DhikrSheet.show(context),
+                      behavior: HitTestBehavior.opaque,
                       child: Column(
                         children: [
                           Text(
@@ -108,13 +110,15 @@ class SingleModeCard extends ConsumerWidget {
                     color: colorScheme.outlineVariant.withValues(alpha: 0.3),
                   ),
                   Expanded(
-                    child: InkWell(
-                      onTap: () => showModalBottomSheet(
+                    child: GestureDetector(
+                      onTap: onSelect,
+                      onLongPress: () => showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         builder: (context) => const TargetGoalSheet(),
                       ),
+                      behavior: HitTestBehavior.opaque,
                       child: Column(
                         children: [
                           Text(

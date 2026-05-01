@@ -1,5 +1,8 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_preset_card.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/empty_presets_state.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/preset_edit_sheet.dart';
@@ -30,6 +33,36 @@ class ComboSelectionScreen extends ConsumerWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            opacity:
+                (ref
+                            .watch(currentCountStreamProvider)
+                            .asData
+                            ?.value
+                            ?.currentCount ??
+                        0) >
+                    0
+                ? 0.3
+                : 1.0,
+            child: IconButton(
+              onPressed:
+                  (ref
+                              .read(currentCountStreamProvider)
+                              .asData
+                              ?.value
+                              ?.currentCount ??
+                          0) >
+                      0
+                  ? null
+                  : () => _handleRestore(context, ref),
+              icon: const Icon(Icons.restore_rounded),
+              tooltip: 'Restore Last Session',
+            ),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -117,7 +150,31 @@ class ComboSelectionScreen extends ConsumerWidget {
 
     if (currentIndex == newIndex) return;
 
-    await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
+    final countData = ref.read(currentCountStreamProvider).asData?.value;
+    final currentCount = countData?.currentCount ?? 0;
+
+    if (currentCount > 0) {
+      showDialog(
+        context: context,
+        builder: (context) => PremiumDialog(
+          icon: Icons.swap_horiz_rounded,
+          title: 'Switch Mode?',
+          description:
+              'You have active progress. Switching modes will save your current session to history.',
+          confirmLabel: 'Switch',
+          color: Theme.of(context).extension<AppColors>()?.destructiveColor,
+          onConfirm: () async {
+            await ref.read(countRepositoryProvider).saveAndReset();
+            await ref
+                .read(settingsProvider.notifier)
+                .setActiveComboIndex(newIndex);
+            if (context.mounted) Navigator.pop(context);
+          },
+        ),
+      );
+    } else {
+      await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
+    }
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, ComboPreset preset) {
@@ -132,6 +189,40 @@ class ComboSelectionScreen extends ConsumerWidget {
         color: Theme.of(context).colorScheme.error,
         onConfirm: () =>
             ref.read(settingsProvider.notifier).deleteComboPreset(preset.id),
+      ),
+    );
+  }
+
+  Future<void> _handleRestore(BuildContext context, WidgetRef ref) async {
+    showDialog(
+      context: context,
+      builder: (context) => PremiumDialog(
+        icon: Icons.restore_rounded,
+        title: 'Restore Session?',
+        description:
+            'Are you sure you want to restore your last incomplete session?',
+        confirmLabel: 'Restore',
+        onConfirm: () async {
+          final success = await ref
+              .read(countRepositoryProvider)
+              .restoreLastSession();
+          if (context.mounted) {
+            _showRestoreResult(context, success);
+          }
+        },
+      ),
+    );
+  }
+
+  void _showRestoreResult(BuildContext context, bool success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          success
+              ? 'Last incomplete session restored'
+              : 'No eligible session found to restore',
+        ),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

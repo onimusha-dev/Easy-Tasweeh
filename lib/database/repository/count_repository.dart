@@ -21,15 +21,11 @@ final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
   return ref.watch(countRepositoryProvider).watchCurrentCount();
 });
 
-final singleCountStreamProvider = StreamProvider<CurrentCountTableData?>((
-  ref,
-) {
+final singleCountStreamProvider = StreamProvider<CurrentCountTableData?>((ref) {
   return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_SINGLE);
 });
 
-final comboCountStreamProvider = StreamProvider<CurrentCountTableData?>((
-  ref,
-) {
+final comboCountStreamProvider = StreamProvider<CurrentCountTableData?>((ref) {
   return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_COMBO);
 });
 
@@ -59,6 +55,10 @@ class CountRepository {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         dhikrId: 'subhanallah',
+        comboName: isCombo
+            ? settings.comboPresets[settings.activeComboIndex].name
+            : null,
+        sessionMode: isCombo ? 'combo' : 'single',
       ),
     );
 
@@ -70,6 +70,8 @@ class CountRepository {
           targetCount: Value(session.targetCount),
           currentCount: Value(0),
           dhikrId: Value(session.dhikrId),
+          comboName: Value(session.comboName),
+          sessionMode: Value(session.sessionMode),
         ),
       );
     }
@@ -80,8 +82,9 @@ class CountRepository {
   // Watch the current count for reactive UI, respecting the active mode
   Stream<CurrentCountTableData?> watchCurrentCount() {
     final settings = _ref.watch(settingsProvider);
-    final sessionId =
-        settings.activeComboIndex >= 0 ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+    final sessionId = settings.activeComboIndex >= 0
+        ? SESSION_ID_COMBO
+        : SESSION_ID_SINGLE;
 
     return _currentCountDao.watchCountById(sessionId);
   }
@@ -121,18 +124,24 @@ class CountRepository {
         activeComboName = settings.comboPresets[settings.activeComboIndex].name;
       }
 
+      final isCombo = settings.activeComboIndex >= 0;
+
       // Save to history
       await _countHistoryDao.insertHistory(
         CountHistoryTableCompanion(
           targetCount: Value(current.targetCount),
           currentCount: Value(current.currentCount),
           dhikrId: Value(current.dhikrId),
-          comboName: Value(activeComboName),
+          comboName: Value(isCombo ? activeComboName : null),
+          sessionMode: Value(isCombo ? 'combo' : 'single'),
           createdAt: Value(DateTime.now()),
         ),
       );
       // Reset current
       await reset();
+      
+      // Reset restore lock
+      _hasRestoredThisSession = false;
     }
   }
 
@@ -170,8 +179,17 @@ class CountRepository {
     return _currentCountDao.watchCountById(id);
   }
 
+  bool _hasRestoredThisSession = false;
+
   // Restore the last incomplete session from history (only if it was from today)
   Future<bool> restoreLastSession() async {
+    // Prevent multiple restores in a row to protect history
+    if (_hasRestoredThisSession) return false;
+
+    // Only allow restore if current session has no progress
+    final current = await getOrCreateCurrentCount();
+    if (current.currentCount > 0) return false;
+
     final history = await _countHistoryDao.watchAllHistory().first;
     if (history.isEmpty) return false;
 
@@ -182,23 +200,116 @@ class CountRepository {
         last.createdAt.month == now.month &&
         last.createdAt.day == now.day;
 
-    // Check if the session is from today
-    if (isToday) {
-      final current = await getOrCreateCurrentCount();
+    // Check if the last session is from today, has progress, and was NOT completed
+    // A session is completed if targetCount > 0 and currentCount >= targetCount
+    final isCompleted = last.targetCount > 0 && last.currentCount >= last.targetCount;
+    final isRestorable = last.currentCount > 0 && !isCompleted;
+
+    if (isToday && isRestorable) {
+      // Determine which session record to restore into
+      final restoredSessionId =
+          last.sessionMode == 'combo' ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+
+      // Reset both current progress records to ensure "delete current progress"
+      // (Though we already checked current.currentCount == 0, this is for safety)
+      await _currentCountDao.updateCount(
+        const CurrentCountTableCompanion(
+          id: Value(SESSION_ID_SINGLE),
+          currentCount: Value(0),
+          comboName: Value(null),
+          sessionMode: Value('single'),
+        ),
+      );
+      await _currentCountDao.updateCount(
+        const CurrentCountTableCompanion(
+          id: Value(SESSION_ID_COMBO),
+          currentCount: Value(0),
+          comboName: Value(null),
+          sessionMode: Value('combo'),
+        ),
+      );
+
+      // Restore the last session data into the correct record
       await _currentCountDao.updateCount(
         CurrentCountTableCompanion(
-          id: Value(current.id),
+          id: Value(restoredSessionId),
           targetCount: Value(last.targetCount),
           currentCount: Value(last.currentCount),
           dhikrId: Value(last.dhikrId),
+          comboName: Value(last.comboName),
+          sessionMode: Value(last.sessionMode),
           updatedAt: Value(DateTime.now()),
         ),
       );
-      // Sync the restored dhikr with settings
+
+      // Sync settings with the restored session
       await _ref.read(settingsProvider.notifier).setLastDhikrId(last.dhikrId);
+
+      if (last.sessionMode == 'combo' && last.comboName != null) {
+        final settings = _ref.read(settingsProvider);
+        final comboIndex = settings.comboPresets.indexWhere(
+          (p) => p.name == last.comboName,
+        );
+        // If combo still exists, switch to it, otherwise default to Single mode
+        await _ref
+            .read(settingsProvider.notifier)
+            .setActiveComboIndex(comboIndex);
+      } else {
+        await _ref.read(settingsProvider.notifier).setActiveComboIndex(-1);
+      }
+
+      // Remove from history
       await _countHistoryDao.deleteById(last.id);
+      
+      // Lock restoration until next save
+      _hasRestoredThisSession = true;
       return true;
     }
     return false;
+  }
+}
+
+extension CountProgressExtension on CurrentCountTableData {
+  double calculateProgress(DhikrSettings settings) {
+    if (targetCount <= 0) return 0.0;
+
+    if (id == SESSION_ID_COMBO && comboName != null) {
+      final preset = settings.comboPresets.firstWhere(
+        (p) => p.name == comboName,
+        orElse: () => settings.comboPresets.isNotEmpty
+            ? settings.comboPresets.first
+            : const ComboPreset(id: '', name: '', dhikrIds: [], counts: []),
+      );
+
+      if (preset.counts.isEmpty) return 0.0;
+
+      final counts = preset.counts;
+      int cumulativeTarget = 0;
+      int segmentTarget = 0;
+      int segmentCurrent = 0;
+      bool found = false;
+
+      for (int i = 0; i < counts.length; i++) {
+        int nextCumulative = cumulativeTarget + counts[i];
+        if (currentCount < nextCumulative) {
+          segmentTarget = counts[i];
+          segmentCurrent = currentCount - cumulativeTarget;
+          found = true;
+          break;
+        }
+        cumulativeTarget = nextCumulative;
+      }
+
+      if (!found && counts.isNotEmpty) {
+        segmentTarget = counts.last;
+        segmentCurrent = counts.last;
+      }
+
+      return segmentTarget > 0
+          ? (segmentCurrent / segmentTarget).clamp(0.0, 1.0)
+          : 0.0;
+    } else {
+      return (currentCount / targetCount).clamp(0.0, 1.0);
+    }
   }
 }

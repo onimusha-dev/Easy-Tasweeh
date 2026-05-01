@@ -268,6 +268,7 @@ class _PresetEditSheetState extends ConsumerState<PresetEditSheet> {
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (context) => TargetGoalSheet(
+                    showInfinite: false,
                     onSelected: (newTarget) {
                       setState(() => _counts[index] = newTarget);
                       Navigator.pop(context);

@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +9,7 @@ class TargetGrid extends ConsumerWidget {
   final int currentTarget;
   final AsyncValue<dynamic> countAsync;
   final Function(int)? onSelected;
+  final bool showInfinite;
 
   const TargetGrid({
     super.key,
@@ -15,6 +17,7 @@ class TargetGrid extends ConsumerWidget {
     required this.currentTarget,
     required this.countAsync,
     this.onSelected,
+    this.showInfinite = true,
   });
 
   @override
@@ -33,9 +36,9 @@ class TargetGrid extends ConsumerWidget {
           mainAxisSpacing: 12,
           childAspectRatio: 1.8,
         ),
-        itemCount: targets.length + 1,
+        itemCount: targets.length + (showInfinite ? 1 : 0),
         itemBuilder: (context, index) {
-          final isInfinite = index == targets.length;
+          final isInfinite = showInfinite && index == targets.length;
           final target = isInfinite ? 0 : targets[index];
           final isSelected = currentTarget == target;
 
@@ -49,27 +52,28 @@ class TargetGrid extends ConsumerWidget {
               final currentCount =
                   (countAsync.value as dynamic)?.currentCount ?? 0;
 
-              if (currentCount > 0) {
-                showDialog(
-                  context: context,
-                  builder: (_) => PremiumDialog(
-                    icon: Icons.track_changes_rounded,
-                    title: 'Save session?',
-                    description:
-                        'This will save your current progress to history.',
-                    confirmLabel: 'Archive',
-                    onConfirm: () {
-                      repo.saveAndReset();
-                      repo.setTarget(target);
-                      Navigator.pop(context); // Close bottom sheet
-                    },
-                  ),
-                );
-              } else {
-                repo.saveAndReset();
-                repo.setTarget(target);
-                Navigator.pop(context);
-              }
+              showDialog(
+                context: context,
+                builder: (_) => PremiumDialog(
+                  icon: Icons.track_changes_rounded,
+                  title: currentCount > 0 ? 'Save session?' : 'Set Target?',
+                  description: currentCount > 0
+                      ? 'This will save your current progress to history.'
+                      : 'Are you sure you want to change your target goal?',
+                  confirmLabel: currentCount > 0 ? 'Archive' : 'Confirm',
+                  color: currentCount > 0
+                      ? Theme.of(context)
+                          .extension<AppColors>()
+                          ?.destructiveColor
+                      : null,
+                  onConfirm: () {
+                    repo.saveAndReset();
+                    repo.setTarget(target);
+                    Navigator.pop(context); // Close dialog
+                    Navigator.pop(context); // Close bottom sheet
+                  },
+                ),
+              );
             },
             borderRadius: BorderRadius.circular(8),
             child: AnimatedContainer(

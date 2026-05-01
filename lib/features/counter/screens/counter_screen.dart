@@ -92,43 +92,8 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
               final target = countData?.targetCount ?? 33;
               final currentDhikr = ref.watch(currentDhikrProvider);
 
-              double progress = 0.0;
-              if (target > 0) {
-                if (settings.activeComboIndex >= 0 &&
-                    settings.activeComboIndex < settings.comboPresets.length) {
-                  final preset =
-                      settings.comboPresets[settings.activeComboIndex];
-                  final counts = preset.counts;
-
-                  int cumulativeTarget = 0;
-                  int segmentTarget = 0;
-                  int segmentCurrent = 0;
-                  bool found = false;
-
-                  for (int i = 0; i < counts.length; i++) {
-                    int nextCumulative = cumulativeTarget + counts[i];
-                    if (current < nextCumulative) {
-                      segmentTarget = counts[i];
-                      segmentCurrent = current - cumulativeTarget;
-                      found = true;
-                      break;
-                    }
-                    cumulativeTarget = nextCumulative;
-                  }
-
-                  if (!found && counts.isNotEmpty) {
-                    // If we've finished the combo but haven't reset yet
-                    segmentTarget = counts.last;
-                    segmentCurrent = counts.last;
-                  }
-
-                  if (segmentTarget > 0) {
-                    progress = (segmentCurrent / segmentTarget).clamp(0.0, 1.0);
-                  }
-                } else {
-                  progress = (current / target).clamp(0.0, 1.0);
-                }
-              }
+              final progress =
+                  countData?.calculateProgress(settings.dhikr) ?? 0.0;
 
               return LayoutBuilder(
                 builder: (context, constraints) {

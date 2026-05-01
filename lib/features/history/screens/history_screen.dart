@@ -10,17 +10,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class HistoryScreen extends ConsumerWidget {
+class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends ConsumerState<HistoryScreen> {
+  String _selectedFilter = 'all'; // 'all', 'single', 'combo'
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'History Log',
           style: Theme.of(context).textTheme.titleMedium,
         ),
+        actions: [
+          IconButton(
+            onPressed: () => _clearHistory(context, ref),
+            icon: const Icon(Icons.delete_sweep_rounded),
+            tooltip: 'Clear History',
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: StreamBuilder<List<CountHistoryTableData>>(
         stream: ref.watch(countHistoryDaoProvider).watchAllHistory(),
@@ -29,11 +44,17 @@ class HistoryScreen extends ConsumerWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final historyList = snapshot.data ?? [];
+          final rawHistoryList = snapshot.data ?? [];
 
-          if (historyList.isEmpty) {
+          if (rawHistoryList.isEmpty) {
             return const EmptyHistoryView();
           }
+
+          // Apply filter
+          final historyList = rawHistoryList.where((item) {
+            if (_selectedFilter == 'all') return true;
+            return item.sessionMode == _selectedFilter;
+          }).toList();
 
           // Group by date
           final grouped = groupBy(historyList, (CountHistoryTableData data) {
@@ -44,8 +65,58 @@ class HistoryScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             children: [
               const SizedBox(height: 8),
-              HistoryTotalsCard(history: historyList),
+              HistoryTotalsCard(history: rawHistoryList),
+              const SizedBox(height: 20),
+              
+              // Filter Toggle
+              Center(
+                child: SegmentedButton<String>(
+                  segments: const [
+                    ButtonSegment(
+                      value: 'all',
+                      label: Text('All'),
+                      icon: Icon(Icons.list_rounded, size: 18),
+                    ),
+                    ButtonSegment(
+                      value: 'single',
+                      label: Text('Single'),
+                      icon: Icon(Icons.person_rounded, size: 18),
+                    ),
+                    ButtonSegment(
+                      value: 'combo',
+                      label: Text('Combo'),
+                      icon: Icon(Icons.layers_rounded, size: 18),
+                    ),
+                  ],
+                  selected: {_selectedFilter},
+                  onSelectionChanged: (Set<String> newSelection) {
+                    setState(() {
+                      _selectedFilter = newSelection.first;
+                    });
+                  },
+                  showSelectedIcon: false,
+                  style: SegmentedButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    selectedBackgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    selectedForegroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ),
               const SizedBox(height: 24),
+
+              if (historyList.isEmpty)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Text(
+                      'No ${_selectedFilter} sessions found',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                    ),
+                  ),
+                ),
+
               ...grouped.entries.map((entry) {
                 final dateStr = entry.key;
                 final items = entry.value;
