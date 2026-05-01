@@ -1,8 +1,9 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/features/learning/dhikr/screens/learn_dhikr_screen.dart';
 import 'package:easy_tasbeeh/features/learning/hub/widgets/featured_tip.dart';
 import 'package:easy_tasbeeh/features/learning/sayings/screens/prophet_saying_screen.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/learning/hub/widgets/learning_widgets.dart';
 import 'package:flutter/material.dart';
 
 class LearnScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class LearnScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppLayout.screenPadding,
         children: const [_LearningCategories(), FeaturedTip()],
       ),
     );
@@ -31,20 +32,17 @@ class _LearningCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildSettingsGroup(
-      context,
+    return LearningSection(
       title: 'EXPLORE & LEARN',
       children: [
-        buildSettingTile(
-          context,
+        LearningTile(
           icon: Icons.menu_book_rounded,
           iconColor: AppIconColors.green(context),
           title: 'Learn Dhikr',
           subtitle: 'Master the common dhikrs, their meanings and virtues',
           onTap: () => _push(context, const LearnDhikrScreen()),
         ),
-        buildSettingTile(
-          context,
+        LearningTile(
           icon: Icons.auto_awesome_rounded,
           iconColor: AppIconColors.amber(context),
           title: 'Prophet\'s Sayings',

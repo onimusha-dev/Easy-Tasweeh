@@ -1,6 +1,5 @@
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class DhikrUtils {
   static Color getCategoryColor(BuildContext context, String? category) {
@@ -29,10 +28,6 @@ class DhikrUtils {
   }
 
   static String toLocalizedDigits(int number) {
-    final locale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
-    if (locale == 'ar') {
-      return NumberFormat("0", "ar").format(number);
-    }
     return number.toString();
   }
 }

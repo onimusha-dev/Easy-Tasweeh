@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,10 @@ class HistoryTotalsCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      padding: const EdgeInsets.symmetric(
+        vertical: AppLayout.spaceLarge,
+        horizontal: AppLayout.spaceSmall,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

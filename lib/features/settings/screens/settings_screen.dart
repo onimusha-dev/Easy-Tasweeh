@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/constants/app_constants.dart';
 import 'package:easy_tasbeeh/core/service/package_info_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/theme/schemes/app_colors.dart';
 import 'package:easy_tasbeeh/features/settings/screens/barrel.dart';
 import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
@@ -17,7 +18,7 @@ class SettingsScreen extends ConsumerWidget {
         title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppLayout.screenPadding,
         children: [
           buildSettingsGroup(
             context,

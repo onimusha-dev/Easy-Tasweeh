@@ -40,6 +40,7 @@ class DhikrTile extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: 44,
@@ -51,7 +52,9 @@ class DhikrTile extends StatelessWidget {
                   child: Center(
                     child: Text(
                       item.arabic.characters.first,
-                      style: AppTypography.arabicTitle(accentColor).copyWith(fontSize: 20),
+                      style: AppTypography.arabicTitle(
+                        accentColor,
+                      ).copyWith(fontSize: 20),
                     ),
                   ),
                 ),

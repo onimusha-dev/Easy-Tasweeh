@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:flutter/material.dart';
 
 class AppCard extends StatelessWidget {
@@ -18,7 +19,7 @@ class AppCard extends StatelessWidget {
     this.onTap,
     this.margin,
     this.padding,
-    this.borderRadius = 16,
+    this.borderRadius = AppLayout.radiusLarge,
     this.backgroundColor,
     this.borderColor,
     this.showBorder = true,
@@ -33,15 +34,18 @@ class AppCard extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      margin: margin ?? const EdgeInsets.only(bottom: 10),
+      margin: margin,
       decoration: BoxDecoration(
         color: backgroundColor ?? colorScheme.primary.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(borderRadius),
         border: showBorder
             ? Border.all(
-                color: borderColor ??
-                    colorScheme.outlineVariant.withValues(alpha: 0.1),
-                width: 1,
+                color:
+                    borderColor ??
+                    colorScheme.outlineVariant.withValues(
+                      alpha: AppLayout.borderOpacity,
+                    ),
+                width: AppLayout.borderWidth,
               )
             : null,
       ),
@@ -51,7 +55,7 @@ class AppCard extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Padding(
-            padding: padding ?? const EdgeInsets.all(12),
+            padding: padding ?? AppLayout.cardPadding,
             child: child,
           ),
         ),

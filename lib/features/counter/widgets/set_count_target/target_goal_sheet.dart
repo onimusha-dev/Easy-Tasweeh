@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_grid.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +25,14 @@ class TargetGoalSheet extends ConsumerWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: AppLayout.brSheet,
       ),
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+      padding: const EdgeInsets.fromLTRB(
+        AppLayout.spaceLarge,
+        AppLayout.spaceMedium,
+        AppLayout.spaceLarge,
+        0,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -42,40 +48,44 @@ class TargetGoalSheet extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Header
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.track_changes_rounded,
+                    color: colorScheme.primary,
+                    size: 20,
+                  ),
                 ),
-                child: Icon(
-                  Icons.track_changes_rounded,
-                  color: colorScheme.primary,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Set Target Goal',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Set Target Goal',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Choose how many counts for this session',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.outline,
+                      Text(
+                        'Choose how many counts for this session',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: colorScheme.outline,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(height: 24),
 
@@ -87,8 +97,6 @@ class TargetGoalSheet extends ConsumerWidget {
             onSelected: onSelected,
             showInfinite: showInfinite,
           ),
-          const SizedBox(height: 24),
-
           const SizedBox(height: 24),
         ],
       ),

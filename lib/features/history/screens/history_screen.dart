@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
 import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
@@ -5,7 +6,7 @@ import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/features/history/widgets/empty_history_view.dart';
 import 'package:easy_tasbeeh/features/history/widgets/history_item_card.dart';
 import 'package:easy_tasbeeh/features/history/widgets/history_totals_card.dart';
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/history/widgets/history_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -62,11 +63,15 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           });
 
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.fromLTRB(
+              AppLayout.spaceLarge,
+              AppLayout.spaceSmall,
+              AppLayout.spaceLarge,
+              AppLayout.spaceXXL,
+            ),
             children: [
-              const SizedBox(height: 8),
               HistoryTotalsCard(history: rawHistoryList),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               // Filter Toggle
               Center(
@@ -85,7 +90,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                     ButtonSegment(
                       value: 'combo',
                       label: Text('Combo'),
-                      icon: Icon(Icons.layers_rounded, size: 18),
+                      icon: Icon(Icons.style_rounded, size: 18),
                     ),
                   ],
                   selected: {_selectedFilter},
@@ -125,7 +130,6 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 final dateStr = entry.key;
                 final items = entry.value;
 
-                // Format date label (Today, Yesterday, or Date)
                 final date = DateTime.parse(dateStr);
                 final now = DateTime.now();
                 final today = DateTime(now.year, now.month, now.day);
@@ -140,24 +144,18 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   label = DateFormat('MMMM d, yyyy').format(date);
                 }
 
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: buildSettingsGroup(
-                    context,
-                    title: label,
-                    showBorder: false,
-                    isLargeTitle: true,
-                    children: items.mapIndexed((idx, data) {
-                      return HistoryItemCard(
-                        data: data,
-                        index: idx,
-                        isLast: idx == items.length - 1,
-                      );
-                    }).toList(),
-                  ),
+                return HistorySection(
+                  title: label,
+                  children: items.mapIndexed((idx, data) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: idx == items.length - 1 ? 0 : AppLayout.spaceTileGap,
+                      ),
+                      child: HistoryItemCard(data: data, index: idx),
+                    );
+                  }).toList(),
                 );
               }),
-              const SizedBox(height: 32),
             ],
           );
         },

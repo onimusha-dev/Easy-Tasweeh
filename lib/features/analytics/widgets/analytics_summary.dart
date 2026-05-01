@@ -1,4 +1,4 @@
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/analytics/widgets/analytics_widgets.dart';
 import 'package:flutter/material.dart';
 
 class AnalyticsSummary extends StatelessWidget {
@@ -17,36 +17,29 @@ class AnalyticsSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return buildSettingsGroup(
-      context,
+    return AnalyticsSection(
       title: 'Summary',
       children: [
-        buildSettingTile(
-          context,
+        AnalyticsTile(
           icon: Icons.insights_rounded,
           title: 'Total sessions',
           subtitle: 'Sessions completed',
           iconColor: colorScheme.primary,
-          trailingLabel: '$totalSessions',
-          showChevron: false,
+          value: '$totalSessions',
         ),
-        buildSettingTile(
-          context,
+        AnalyticsTile(
           icon: Icons.workspace_premium_rounded,
           title: 'Best session',
           subtitle: 'Single highest count',
           iconColor: Colors.amber,
-          trailingLabel: '$maxSession',
-          showChevron: false,
+          value: '$maxSession',
         ),
-        buildSettingTile(
-          context,
+        AnalyticsTile(
           icon: Icons.all_inclusive_rounded,
           title: 'Total count',
           subtitle: 'Lifetime tasbeeh count',
           iconColor: Colors.orange,
-          trailingLabel: '$totalCount',
-          showChevron: false,
+          value: '$totalCount',
         ),
       ],
     );

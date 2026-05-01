@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/analytics/widgets/activity_heatmap.dart';
@@ -38,19 +39,21 @@ class AnalyticsScreen extends ConsumerWidget {
           final stats = _calculateStats(history);
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             children: [
               WeeklyActivityBar(dailyTotals: stats.dailyTotals),
               const SizedBox(height: 16),
               ActivityHeatmap(dailyTotals: stats.dailyTotals),
               const SizedBox(height: 24),
               const _SectionHeader(title: 'Recent Activity'),
-              const SizedBox(height: 8),
               ...history
                   .take(6)
                   .indexed
                   .map(
-                    (entry) => HistoryItemCard(data: entry.$2, index: entry.$1),
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
+                      child: HistoryItemCard(data: entry.$2, index: entry.$1),
+                    ),
                   ),
               if (history.length > 6) ...[
                 const SizedBox(height: 16),
@@ -75,7 +78,6 @@ class AnalyticsScreen extends ConsumerWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: 40),
             ],
           );
         },
@@ -94,7 +96,6 @@ class AnalyticsScreen extends ConsumerWidget {
     Map<String, int> dailyTotals = {};
     final now = DateTime.now();
     for (int i = 0; i < 35; i++) {
-      // Covering ~5 weeks
       final date = now.subtract(Duration(days: i));
       dailyTotals[DateFormat('yyyy-MM-dd').format(date)] = 0;
     }
@@ -106,21 +107,14 @@ class AnalyticsScreen extends ConsumerWidget {
       }
     }
 
-    return _AnalyticsStats(
-      dailyTotals: dailyTotals,
-    );
+    return _AnalyticsStats(dailyTotals: dailyTotals);
   }
 }
 
 class _AnalyticsStats {
   final Map<String, int> dailyTotals;
-
-  _AnalyticsStats({
-    required this.dailyTotals,
-  });
+  _AnalyticsStats({required this.dailyTotals});
 }
-
-
 
 class _SectionHeader extends StatelessWidget {
   final String title;

@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/utils/color_utils.dart';
@@ -54,7 +55,7 @@ class ComboDetailsSheet extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: AppLayout.brSheet,
       ),
       child: SafeArea(
         top: false,
@@ -72,7 +73,7 @@ class ComboDetailsSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 28),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -116,7 +117,12 @@ class ComboDetailsSheet extends ConsumerWidget {
             const SizedBox(height: 16),
             Flexible(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                padding: const EdgeInsets.fromLTRB(
+                  AppLayout.spaceLarge,
+                  0,
+                  AppLayout.spaceLarge,
+                  AppLayout.spaceLarge,
+                ),
                 child: Column(
                   children: segments.asMap().entries.map((entry) {
                     final segment = entry.value;
