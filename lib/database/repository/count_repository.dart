@@ -139,7 +139,7 @@ class CountRepository {
       );
       // Reset current
       await reset();
-      
+
       // Reset restore lock
       _hasRestoredThisSession = false;
     }
@@ -152,6 +152,7 @@ class CountRepository {
       CurrentCountTableCompanion(
         id: Value(current.id),
         targetCount: Value(target),
+        currentCount: const Value(0),
         updatedAt: Value(DateTime.now()),
       ),
     );
@@ -164,6 +165,7 @@ class CountRepository {
       CurrentCountTableCompanion(
         id: Value(current.id),
         dhikrId: Value(dhikrId),
+        currentCount: const Value(0),
         updatedAt: Value(DateTime.now()),
       ),
     );
@@ -202,13 +204,15 @@ class CountRepository {
 
     // Check if the last session is from today, has progress, and was NOT completed
     // A session is completed if targetCount > 0 and currentCount >= targetCount
-    final isCompleted = last.targetCount > 0 && last.currentCount >= last.targetCount;
+    final isCompleted =
+        last.targetCount > 0 && last.currentCount >= last.targetCount;
     final isRestorable = last.currentCount > 0 && !isCompleted;
 
     if (isToday && isRestorable) {
       // Determine which session record to restore into
-      final restoredSessionId =
-          last.sessionMode == 'combo' ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+      final restoredSessionId = last.sessionMode == 'combo'
+          ? SESSION_ID_COMBO
+          : SESSION_ID_SINGLE;
 
       // Reset both current progress records to ensure "delete current progress"
       // (Though we already checked current.currentCount == 0, this is for safety)
@@ -260,7 +264,7 @@ class CountRepository {
 
       // Remove from history
       await _countHistoryDao.deleteById(last.id);
-      
+
       // Lock restoration until next save
       _hasRestoredThisSession = true;
       return true;
