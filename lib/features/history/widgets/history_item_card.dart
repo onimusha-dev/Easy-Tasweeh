@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/utils/color_utils.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/features/history/widgets/combo_details_sheet.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class HistoryItemCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isCompleted =
         data.targetCount > 0 && data.currentCount >= data.targetCount;
     final double percentage = data.targetCount > 0
@@ -31,164 +33,144 @@ class HistoryItemCard extends ConsumerWidget {
 
     final Color statusColor = setPercentageCompletionColor(context, percentage);
 
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(16),
+    return AppCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon/Status Indicator
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              data.sessionMode == 'combo'
+                  ? Icons.style_rounded
+                  : (isCompleted
+                        ? Icons.check_circle_rounded
+                        : Icons.history_rounded),
+              color: statusColor,
+              size: 22,
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
+          const SizedBox(width: 16),
+
+          // Content Info
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon/Status Indicator
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    data.sessionMode == 'combo'
-                        ? Icons.notes_rounded
-                        : (isCompleted
-                              ? Icons.check_circle_rounded
-                              : Icons.history_rounded),
-                    color: statusColor,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 16),
-
-                // Combo and Count Info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                if (data.sessionMode == 'combo') ...[
+                  Row(
                     children: [
-                      if (data.sessionMode == 'combo') ...[
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.15,
-                                ),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                (data.comboName ?? 'COMBO').toUpperCase(),
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
-                                  fontSize: 9,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () =>
-                                  ComboDetailsSheet.show(context, data),
-                              child: Icon(
-                                Icons.info_outline_rounded,
-                                size: 16,
-                                color: theme.colorScheme.primary.withValues(
-                                  alpha: 0.8,
-                                ),
-                              ),
-                            ),
-                          ],
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
                         ),
-                        const SizedBox(height: 4),
-                      ],
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            data.sessionMode == 'combo'
-                                ? 'Full Sequence Completed'
-                                : dhikrList
-                                      .firstWhere(
-                                        (d) => d.id == data.dhikrId,
-                                        orElse: () => dhikrList.first,
-                                      )
-                                      .arabic,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: data.sessionMode == 'combo'
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              fontSize: data.sessionMode == 'combo' ? 14 : 16,
-                            ),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          (data.comboName ?? 'COMBO').toUpperCase(),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.5,
+                            fontSize: 9,
                           ),
-                        ],
+                        ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        data.sessionMode == 'combo'
-                            ? 'Multi-Dhikr Collection • ${DateFormat('hh:mm a').format(data.createdAt)}'
-                            : '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
+                      const SizedBox(width: 4),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => ComboDetailsSheet.show(context, data),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Icon(
+                              Icons.info_outline_rounded,
+                              size: 16,
+                              color: colorScheme.primary.withValues(alpha: 0.6),
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 6),
+                ],
+                Text(
+                  data.sessionMode == 'combo'
+                      ? 'Combo Sequence'
+                      : dhikrList
+                            .firstWhere(
+                              (d) => d.id == data.dhikrId,
+                              orElse: () => dhikrList.first,
+                            )
+                            .arabic,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: data.sessionMode == 'combo' ? 15 : 17,
+                  ),
                 ),
-
-                // Progress/Score
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: '${data.currentCount}',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: statusColor,
-                            ),
-                          ),
-                          if (data.targetCount > 0)
-                            TextSpan(
-                              text: ' / ${data.targetCount}',
-                              style: theme.textTheme.bodySmall,
-                            ),
-                        ],
-                      ),
-                    ),
-                    if (data.targetCount > 0)
-                      Text(
-                        '${percentage.toInt()}%',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.outline.withValues(
-                            alpha: 0.7,
-                          ),
-                        ),
-                      ),
-                  ],
+                const SizedBox(height: 4),
+                Text(
+                  data.sessionMode == 'combo'
+                      ? 'Multi-dhikr session • ${DateFormat('hh:mm a').format(data.createdAt)}'
+                      : '${dhikrList.firstWhere((d) => d.id == data.dhikrId, orElse: () => dhikrList.first).transliteration} • ${DateFormat('hh:mm a').format(data.createdAt)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
           ),
-        ),
-        // if (showDivider && !isLast)
-        //   Divider(
-        //     height: 1,
-        //     indent: 56,
-        //     endIndent: 0,
-        //     color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
-        //   ),
-      ],
+
+          // Progress/Score
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    '${data.currentCount}',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: statusColor,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  if (data.targetCount > 0)
+                    Text(
+                      '/${data.targetCount}',
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.3),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
+              if (data.targetCount > 0)
+                Text(
+                  '${percentage.toInt()}%',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: statusColor.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 10,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

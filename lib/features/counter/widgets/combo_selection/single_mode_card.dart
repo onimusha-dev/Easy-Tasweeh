@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
@@ -30,7 +31,7 @@ class SingleModeCard extends ConsumerWidget {
     final currentTarget = countAsync.asData?.value?.targetCount ?? 0;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
       decoration: BoxDecoration(
         color: isSelected
             ? colorScheme.primary.withValues(alpha: 0.08)
@@ -42,9 +43,9 @@ class SingleModeCard extends ConsumerWidget {
           width: 1, // Smaller border width
         ),
       ),
-      child: InkWell(
+      child: GestureDetector(
         onTap: onSelect,
-        borderRadius: BorderRadius.circular(16),
+        behavior: HitTestBehavior.opaque,
         child: Column(
           children: [
             Padding(
@@ -94,6 +95,14 @@ class SingleModeCard extends ConsumerWidget {
                       color: colorScheme.primary,
                       size: 20,
                     ),
+                  IconButton(
+                    onPressed: () => _showEditSheet(context),
+                    icon: Icon(
+                      Icons.more_vert_rounded,
+                      color: colorScheme.outline,
+                    ),
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ],
               ),
             ),
@@ -109,7 +118,6 @@ class SingleModeCard extends ConsumerWidget {
                   Expanded(
                     child: InkWell(
                       onTap: onSelect,
-                      onLongPress: () => DhikrSheet.show(context),
                       child: Column(
                         children: [
                           Text(
@@ -141,12 +149,6 @@ class SingleModeCard extends ConsumerWidget {
                   Expanded(
                     child: InkWell(
                       onTap: onSelect,
-                      onLongPress: () => showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => const TargetGoalSheet(),
-                      ),
                       child: Column(
                         children: [
                           Text(
@@ -173,6 +175,47 @@ class SingleModeCard extends ConsumerWidget {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEditSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: AppLayout.brSheet,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.menu_book_rounded),
+              title: const Text('Change Dhikr'),
+              onTap: () {
+                Navigator.pop(context);
+                DhikrSheet.show(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.track_changes_rounded),
+              title: const Text('Set Count Target'),
+              onTap: () {
+                Navigator.pop(context);
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const TargetGoalSheet(),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),

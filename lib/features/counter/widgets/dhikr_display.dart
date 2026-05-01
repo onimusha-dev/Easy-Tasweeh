@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'dart:ui';
 
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
@@ -17,15 +18,20 @@ class DhikrDisplay extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(AppLayout.radiusLarge),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(12, 32, 12, 20),
+          padding: const EdgeInsets.fromLTRB(
+            AppLayout.spaceMedium,
+            32,
+            AppLayout.spaceMedium,
+            20,
+          ),
           decoration: BoxDecoration(
             color: Colors.black.withValues(alpha: 0.25),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppLayout.radiusLarge),
             border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
           ),
           child: AnimatedSwitcher(

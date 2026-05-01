@@ -29,7 +29,7 @@ class EmptyPresetsState extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              Icons.auto_awesome_motion_rounded,
+              Icons.style_rounded,
               size: 32,
               color: colorScheme.primary.withValues(alpha: 0.5),
             ),

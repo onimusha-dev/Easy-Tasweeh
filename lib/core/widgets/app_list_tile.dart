@@ -1,4 +1,6 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:flutter/material.dart';
+
 import 'app_card.dart';
 
 class AppListTile extends StatelessWidget {
@@ -8,6 +10,8 @@ class AppListTile extends StatelessWidget {
   final Color? iconColor;
   final Color? iconBackgroundColor;
   final Widget? trailing;
+  final String? trailingLabel;
+  final bool showChevron;
   final VoidCallback? onTap;
   final EdgeInsetsGeometry? margin;
   final double iconSize;
@@ -21,10 +25,12 @@ class AppListTile extends StatelessWidget {
     this.iconColor,
     this.iconBackgroundColor,
     this.trailing,
+    this.trailingLabel,
+    this.showChevron = false,
     this.onTap,
-    this.margin,
-    this.iconSize = 22,
-    this.iconContainerSize = 44,
+    this.margin = const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
+    this.iconSize = AppLayout.iconSizeMedium,
+    this.iconContainerSize = AppLayout.iconContainerSize,
   });
 
   @override
@@ -32,10 +38,43 @@ class AppListTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    Widget? effectiveTrailing = trailing;
+    if (trailing == null && (trailingLabel != null || showChevron)) {
+      effectiveTrailing = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (trailingLabel != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                trailingLabel!,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          if (showChevron) ...[
+            const SizedBox(width: 8),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: colorScheme.outlineVariant,
+            ),
+          ],
+        ],
+      );
+    }
+
     return AppCard(
       onTap: onTap,
       margin: margin,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
             Container(
@@ -74,9 +113,9 @@ class AppListTile extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null) ...[
+          if (effectiveTrailing != null) ...[
             const SizedBox(width: 8),
-            trailing!,
+            effectiveTrailing,
           ],
         ],
       ),

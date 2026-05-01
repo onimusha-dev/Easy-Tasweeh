@@ -1,5 +1,7 @@
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/core/widgets/app_list_tile.dart';
+import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:flutter/material.dart';
 
 Widget buildSettingTile(
@@ -14,51 +16,14 @@ Widget buildSettingTile(
   bool showChevron = true,
   ShapeBorder shape = const RoundedRectangleBorder(),
 }) {
-  final colorScheme = Theme.of(context).colorScheme;
-
-  Widget? effectiveTrailing = trailing;
-  if (trailing == null && trailingLabel != null) {
-    effectiveTrailing = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: colorScheme.primary.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            trailingLabel,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        if (showChevron) ...[
-          const SizedBox(width: 8),
-          Icon(
-            Icons.chevron_right_rounded,
-            size: 20,
-            color: colorScheme.outlineVariant,
-          ),
-        ],
-      ],
-    );
-  } else if (trailing == null && showChevron && onTap != null) {
-    effectiveTrailing = Icon(
-      Icons.chevron_right_rounded,
-      size: 22,
-      color: colorScheme.outlineVariant,
-    );
-  }
-
   return AppListTile(
     icon: icon,
     title: title,
     subtitle: subtitle,
     iconColor: iconColor,
-    trailing: effectiveTrailing,
+    trailing: trailing,
+    trailingLabel: trailingLabel,
+    showChevron: showChevron && onTap != null,
     onTap: onTap,
   );
 }
@@ -78,10 +43,12 @@ Widget buildTwoPartSettingTile(
 
   return AppCard(
     onTap: onTap,
+    margin: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 44,
@@ -131,15 +98,7 @@ Widget buildSettingSectionTitle(
   String title, {
   bool isLarge = false,
 }) {
-  final theme = Theme.of(context);
-  final style = isLarge
-      ? theme.textTheme.titleMedium
-      : theme.textTheme.titleSmall;
-
-  return Text(
-    title,
-    style: style?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5),
-  );
+  return AppSectionTitle(title: title, isLarge: isLarge);
 }
 
 Widget buildSettingsGroup(
@@ -151,24 +110,10 @@ Widget buildSettingsGroup(
   Color? borderColor,
   double? borderWidth,
 }) {
-  return Padding(
+  return AppSection(
+    title: title,
+    isLargeTitle: isLargeTitle,
     padding: const EdgeInsets.only(bottom: 12),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) ...[
-          Padding(
-            padding: const EdgeInsets.only(left: 4),
-            child: buildSettingSectionTitle(
-              context,
-              title,
-              isLarge: isLargeTitle,
-            ),
-          ),
-          const SizedBox(height: 12),
-        ],
-        ...children,
-      ],
-    ),
+    children: children,
   );
 }

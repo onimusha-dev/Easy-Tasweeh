@@ -1,4 +1,4 @@
-import 'package:easy_tasbeeh/features/settings/widgets/settings_tiles.dart';
+import 'package:easy_tasbeeh/features/analytics/widgets/analytics_widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,8 +19,7 @@ class ActivityChart extends StatelessWidget {
         ? 0
         : dailyTotals.values.reduce((a, b) => a > b ? a : b);
 
-    return buildSettingsGroup(
-      context,
+    return AnalyticsSection(
       title: 'Weekly Activity',
       children: [
         Padding(

@@ -45,21 +45,39 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            pinned: true,
-            elevation: 0,
-            backgroundColor: colorScheme.surface,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Learn Dhikr', style: textTheme.titleLarge),
-              centerTitle: true,
-            ),
-          ),
-          SliverToBoxAdapter(
+      appBar: AppBar(
+        title: Text('Learn Dhikr', style: textTheme.titleMedium),
+        centerTitle: true,
+      ),
+      body: Stack(
+        children: [
+          // The List (scrolls behind the search bar)
+          _filteredDhikrs.isEmpty
+              ? const Center(
+                  child: EmptyState(
+                    icon: Icons.search_off_rounded,
+                    message: 'No dhikrs found',
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 80, 16, 40),
+                  itemCount: _filteredDhikrs.length,
+                  itemBuilder: (context, index) {
+                    return DhikrTile(
+                      item: _filteredDhikrs[index],
+                      index: index + 1,
+                      isLast: index == _filteredDhikrs.length - 1,
+                    );
+                  },
+                ),
+
+          // Floating Glass Search Bar Area
+          Positioned(
+            top: 10,
+            left: 0,
+            right: 0,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SearchField(
                 controller: _searchController,
                 hintText: 'Search dhikr...',
@@ -71,43 +89,6 @@ class _LearnDhikrScreenState extends State<LearnDhikrScreen> {
               ),
             ),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 12)),
-          _filteredDhikrs.isEmpty
-              ? const SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: EmptyState(
-                    icon: Icons.search_off_rounded,
-                    message: 'No dhikrs found',
-                  ),
-                )
-              : SliverToBoxAdapter(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerLow,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      itemCount: _filteredDhikrs.length,
-                      separatorBuilder: (context, index) => Divider(
-                        height: 1,
-                        indent: 60,
-                        color: colorScheme.outlineVariant.withValues(
-                          alpha: 0.3,
-                        ),
-                      ),
-                      itemBuilder: (context, index) {
-                        return DhikrTile(
-                          item: _filteredDhikrs[index],
-                          index: index + 1,
-                          isLast: index == _filteredDhikrs.length - 1,
-                        );
-                      },
-                    ),
-                  ),
-                ),
         ],
       ),
     );

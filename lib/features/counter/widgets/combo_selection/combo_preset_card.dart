@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/app_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,7 +33,7 @@ class ComboPresetCard extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
       decoration: BoxDecoration(
         color: isSelected
             ? colorScheme.primary.withValues(alpha: 0.08)
@@ -63,7 +64,7 @@ class ComboPresetCard extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      Icons.notes_rounded,
+                      Icons.style_rounded,
                       size: 22,
                       color: isSelected
                           ? colorScheme.primary
@@ -169,7 +170,9 @@ class ComboPresetCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${preset.counts[i]}',
+                          preset.counts.length > i
+                              ? '${preset.counts[i]}'
+                              : '-',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: colorScheme.onSurface,

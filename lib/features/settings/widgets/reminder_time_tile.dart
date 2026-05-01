@@ -1,4 +1,5 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +33,12 @@ class ReminderTimeTile extends ConsumerWidget {
     final colorScheme = theme.colorScheme;
 
     return AppCard(
+      margin: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: 44,
@@ -104,8 +107,8 @@ class ReminderTimeTile extends ConsumerWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: Theme.of(context).colorScheme.primary,
-                ),
+              primary: Theme.of(context).colorScheme.primary,
+            ),
           ),
           child: MediaQuery(
             data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),

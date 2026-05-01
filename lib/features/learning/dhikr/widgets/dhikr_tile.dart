@@ -1,6 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/utils/dhikr_utils.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/features/learning/dhikr/screens/dhikr_detail_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -18,15 +19,14 @@ class DhikrTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final accentColor = DhikrUtils.getCategoryColor(context, item.category);
 
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(color: Colors.transparent),
-      child: Material(
-        color: Colors.transparent,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4), // Further reduced gap
+      child: AppCard(
+        padding: EdgeInsets.zero,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -36,58 +36,54 @@ class DhikrTile extends StatelessWidget {
               ),
             );
           },
-          child: IntrinsicHeight(
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 60,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      item.arabic.characters.first,
+                      style: AppTypography.arabicTitle(
+                        accentColor,
+                      ).copyWith(fontSize: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Translucent numbering box (expands)
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: accentColor.withValues(alpha: 0.15),
-                          ),
-                          child: Center(
-                            child: Text(
-                              DhikrUtils.toArabicDigits(index),
-                              style: AppTypography.arabicTitle(accentColor),
-                            ),
-                          ),
+                      Text(
+                        item.transliteration,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.arabic,
+                        style: AppTypography.arabicBody(
+                          colorScheme.onSurface.withValues(alpha: 0.7),
+                        ).copyWith(fontSize: 14),
                       ),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(12, 16, 12, isLast ? 40 : 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            item.arabic,
-                            textAlign: TextAlign.right,
-                            style: AppTypography.arabicBody(
-                              colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item.translation,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: colorScheme.outlineVariant,
+                  size: 20,
                 ),
               ],
             ),
