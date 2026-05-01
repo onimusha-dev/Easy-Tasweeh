@@ -1,12 +1,12 @@
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/session_action_button.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TargetGoalSheet extends ConsumerWidget {
   final Function(int)? onSelected;
-  const TargetGoalSheet({super.key, this.onSelected});
+  final bool showInfinite;
+  const TargetGoalSheet({super.key, this.onSelected, this.showInfinite = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -85,13 +85,10 @@ class TargetGoalSheet extends ConsumerWidget {
             currentTarget: currentTarget,
             countAsync: countAsync,
             onSelected: onSelected,
+            showInfinite: showInfinite,
           ),
           const SizedBox(height: 24),
 
-          // Session Actions
-          SessionActionButton(
-            currentCount: countAsync.asData?.value?.currentCount ?? 0,
-          ),
           const SizedBox(height: 24),
         ],
       ),

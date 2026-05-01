@@ -2,12 +2,9 @@ import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
-import 'package:easy_tasbeeh/features/counter/screens/combo_selection_screen.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_app_bar.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/counter_button.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/counter_progress.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/dhikr_display.dart';
-import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/counter_layout.dart';
 import 'package:easy_tasbeeh/features/left_menu_bar/widgets/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,174 +24,35 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     final settings = ref.watch(settingsProvider);
     final countAsync = ref.watch(currentCountStreamProvider);
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-
-        final now = DateTime.now();
-        final backButtonHasNotBeenPressedOrSnackBarHasExpired =
-            _lastPressedAt == null ||
-            now.difference(_lastPressedAt!) > const Duration(seconds: 2);
-
-        if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
-          _lastPressedAt = now;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Press back again to exit'),
-              duration: Duration(seconds: 2),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        } else {
-          SystemNavigator.pop();
-        }
-      },
+      onPopInvokedWithResult: _handlePop,
       child: CounterBackground(
         settings: settings,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           drawer: const SideDrawer(),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: const Icon(Icons.menu_rounded),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                );
-              },
-            ),
-            actions: [
-              IconButton(
-                onPressed: _showLayoutDialog,
-                icon: const Icon(Icons.swap_vert_rounded),
-                tooltip: 'Swap Layout',
-              ),
-              IconButton(
-                onPressed: _openComboScreen,
-                icon: const Icon(Icons.view_carousel),
-                tooltip: 'Dhikr Collection',
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
+          appBar: CounterAppBar(onShowLayoutDialog: _showLayoutDialog),
           body: countAsync.when(
             data: (countData) {
               final current = countData?.currentCount ?? 0;
               final target = countData?.targetCount ?? 33;
               final currentDhikr = ref.watch(currentDhikrProvider);
+              final progress =
+                  countData?.calculateProgress(settings.dhikr) ?? 0.0;
 
-              double progress = 0.0;
-              if (target > 0) {
-                if (settings.activeComboIndex >= 0 &&
-                    settings.activeComboIndex < settings.comboPresets.length) {
-                  final preset =
-                      settings.comboPresets[settings.activeComboIndex];
-                  final counts = preset.counts;
-
-                  int cumulativeTarget = 0;
-                  int segmentTarget = 0;
-                  int segmentCurrent = 0;
-                  bool found = false;
-
-                  for (int i = 0; i < counts.length; i++) {
-                    int nextCumulative = cumulativeTarget + counts[i];
-                    if (current < nextCumulative) {
-                      segmentTarget = counts[i];
-                      segmentCurrent = current - cumulativeTarget;
-                      found = true;
-                      break;
-                    }
-                    cumulativeTarget = nextCumulative;
-                  }
-
-                  if (!found && counts.isNotEmpty) {
-                    // If we've finished the combo but haven't reset yet
-                    segmentTarget = counts.last;
-                    segmentCurrent = counts.last;
-                  }
-
-                  if (segmentTarget > 0) {
-                    progress = (segmentCurrent / segmentTarget).clamp(0.0, 1.0);
-                  }
-                } else {
-                  progress = (current / target).clamp(0.0, 1.0);
-                }
-              }
-
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if (!settings.centerButton) ...[
-                              Column(
-                                children: [
-                                  CounterProgress(
-                                    colorScheme: colorScheme,
-                                    progress: progress,
-                                    textTheme: textTheme,
-                                    currentCountData: current,
-                                    targetCount: target,
-                                    settings: settings,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  DhikrDisplay(currentDhikr: currentDhikr),
-                                ],
-                              ),
-                              SizedBox(
-                                width: settings.buttonSize,
-                                height: settings.buttonSize,
-                                child: _getCounterStyle(
-                                  settings.pressButtonStyle,
-                                  _isFrozen
-                                      ? null
-                                      : () => _incrementCounter(countData),
-                                ),
-                              ),
-                            ] else ...[
-                              CounterProgress(
-                                colorScheme: colorScheme,
-                                progress: progress,
-                                textTheme: textTheme,
-                                currentCountData: current,
-                                targetCount: target,
-                                settings: settings,
-                              ),
-                              SizedBox(
-                                width: settings.buttonSize,
-                                height: settings.buttonSize,
-                                child: _getCounterStyle(
-                                  settings.pressButtonStyle,
-                                  _isFrozen
-                                      ? null
-                                      : () => _incrementCounter(countData),
-                                ),
-                              ),
-                              DhikrDisplay(currentDhikr: currentDhikr),
-                            ],
-                            const SizedBox(height: 32),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
+              return CounterLayout(
+                settings: settings,
+                current: current,
+                target: target,
+                progress: progress,
+                currentDhikr: currentDhikr,
+                onIncrement: _isFrozen
+                    ? null
+                    : () => _incrementCounter(countData),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -205,14 +63,33 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     );
   }
 
+  void _handlePop(bool didPop, dynamic result) {
+    if (didPop) return;
+
+    final now = DateTime.now();
+    final backButtonHasNotBeenPressedOrSnackBarHasExpired =
+        _lastPressedAt == null ||
+        now.difference(_lastPressedAt!) > const Duration(seconds: 2);
+
+    if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
+      _lastPressedAt = now;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Press back again to exit'),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      SystemNavigator.pop();
+    }
+  }
+
   Future<void> _incrementCounter(CurrentCountTableData? countData) async {
     if (_isFrozen) return;
 
-    // Initial freeze to prevent double-taps
     setState(() => _isFrozen = true);
 
-    // We will unfreeze after 100ms UNLESS we reach the target,
-    // in which case the completion logic handles the unfreeze.
     final nextCount = (countData?.currentCount ?? 0) + 1;
     final target = countData?.targetCount ?? 0;
     final isTargetReached = target > 0 && nextCount >= target;
@@ -234,7 +111,6 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         nextCount > 0 &&
         nextCount % settings.milestoneValue == 0 &&
         (target == 0 || nextCount < target)) {
-      debugPrint('Triggering milestone haptics');
       HapticFeedback.mediumImpact();
       Vibration.vibrate(duration: 60);
     }
@@ -242,8 +118,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     if (target > 0 && nextCount >= target) {
       if (mounted) {
         await repo.saveAndReset();
-      }
-      if (mounted) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Target reached! Session saved to history.'),
@@ -252,29 +127,18 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         );
       }
       if (settings.hapticEnabled) {
-        debugPrint('Triggering completion haptics');
-        // Playful vibration pattern: vibe 200, gap 100, vibe 200, gap 100, vibe 600
         const vibrationPattern = [0, 200, 100, 200, 100, 600];
-        // Reduced intensities (0 for gaps, ~120-150 for vibes)
         const intensities = [0, 120, 0, 120, 0, 150];
-        const totalDuration = 1200; // sum of pattern
+        const totalDuration = 1200;
 
         Vibration.vibrate(pattern: vibrationPattern, intensities: intensities);
 
-        // Freeze the button for the duration of the playful vibration
         setState(() => _isFrozen = true);
         Future.delayed(const Duration(milliseconds: totalDuration), () {
           if (mounted) setState(() => _isFrozen = false);
         });
       }
     }
-  }
-
-  void _openComboScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ComboSelectionScreen()),
-    );
   }
 
   void _showLayoutDialog() {
@@ -307,21 +171,5 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         ],
       ),
     );
-  }
-
-  // ignore: unused_element
-  void _showSetTargetSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      enableDrag: false,
-      isDismissible: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const TargetGoalSheet(),
-    );
-  }
-
-  Widget _getCounterStyle(PressButtonStyle style, VoidCallback? onTap) {
-    return CounterButton(onTap: onTap, previewStyle: style);
   }
 }

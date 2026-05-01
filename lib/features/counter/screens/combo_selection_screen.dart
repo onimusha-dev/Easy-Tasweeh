@@ -1,6 +1,9 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
+import 'package:easy_tasbeeh/core/widgets/save_progress_dialog.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_preset_card.dart';
+import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_selection_app_bar.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/empty_presets_state.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/preset_edit_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/single_mode_card.dart';
@@ -20,69 +23,41 @@ class ComboSelectionScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        title: Text(
-          'Dhikr Selection',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: const ComboSelectionAppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildSettingSectionTitle(context, 'Single Mode'),
-              SingleModeCard(
+              const SizedBox(height: 8),
+              _SingleModeSection(
                 isSelected: activeIndex == -1,
                 onSelect: () => _handleModeChange(context, ref, -1),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    buildSettingSectionTitle(context, 'Combo Presets'),
-
-                    if (settings.comboPresets.isNotEmpty)
-                      TextButton.icon(
-                        onPressed: () => _addNewPreset(ref),
-                        icon: const Icon(Icons.add_rounded, size: 18),
-                        label: const Text('New'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: colorScheme.primary,
-                          padding: const EdgeInsets.fromLTRB(12, 4, 12, 4),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                      ),
-                  ],
-                ),
+              const SizedBox(height: 12),
+              _ComboPresetsSection(
+                settings: settings,
+                activeIndex: activeIndex,
+                onAdd: () => _addNewPreset(ref),
+                onEdit: (preset) => _editPreset(context, preset),
+                onDelete: (preset) => _confirmDelete(context, ref, preset),
+                onSelect: (index) => _handleModeChange(context, ref, index),
+                onMoveUp: (index) => ref
+                    .read(settingsProvider.notifier)
+                    .moveComboPresetUp(index),
+                onMoveDown: (index) => ref
+                    .read(settingsProvider.notifier)
+                    .moveComboPresetDown(index),
               ),
-              if (settings.comboPresets.isEmpty)
-                EmptyPresetsState(onAdd: () => _addNewPreset(ref))
-              else
-                ...settings.comboPresets.asMap().entries.map((entry) {
-                  return ComboPresetCard(
-                    preset: entry.value,
-                    index: entry.key,
-                    isSelected: activeIndex == entry.key,
-                    onEdit: () => _editPreset(context, entry.value),
-                    onDelete: () => _confirmDelete(context, ref, entry.value),
-                    onSelect: () => _handleModeChange(context, ref, entry.key),
-                  );
-                }),
             ],
           ),
         ),
       ),
     );
   }
+
+  // --- Logic Methods ---
 
   void _addNewPreset(WidgetRef ref) {
     final settings = ref.read(settingsProvider);
@@ -113,11 +88,25 @@ class ComboSelectionScreen extends ConsumerWidget {
     int newIndex,
   ) async {
     final settings = ref.read(settingsProvider);
-    final currentIndex = settings.activeComboIndex;
+    if (settings.activeComboIndex == newIndex) return;
 
-    if (currentIndex == newIndex) return;
-
-    await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
+    final countData = ref.read(currentCountStreamProvider).asData?.value;
+    if ((countData?.currentCount ?? 0) > 0) {
+      SaveProgressDialog.show(
+        context,
+        title: 'Switch Mode?',
+        description:
+            'You have active progress. Switching modes will save your current session to history.',
+        confirmLabel: 'Switch',
+        onConfirm: () async {
+          await ref
+              .read(settingsProvider.notifier)
+              .setActiveComboIndex(newIndex);
+        },
+      );
+    } else {
+      await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
+    }
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, ComboPreset preset) {
@@ -133,6 +122,99 @@ class ComboSelectionScreen extends ConsumerWidget {
         onConfirm: () =>
             ref.read(settingsProvider.notifier).deleteComboPreset(preset.id),
       ),
+    );
+  }
+}
+
+class _SingleModeSection extends StatelessWidget {
+  final bool isSelected;
+  final VoidCallback onSelect;
+
+  const _SingleModeSection({required this.isSelected, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        buildSettingSectionTitle(context, 'Single Mode'),
+        const SizedBox(height: 8),
+        SingleModeCard(isSelected: isSelected, onSelect: onSelect),
+      ],
+    );
+  }
+}
+
+class _ComboPresetsSection extends StatelessWidget {
+  final SettingsState settings;
+  final int activeIndex;
+  final VoidCallback onAdd;
+  final Function(ComboPreset) onEdit;
+  final Function(ComboPreset) onDelete;
+  final Function(int) onSelect;
+  final Function(int) onMoveUp;
+  final Function(int) onMoveDown;
+
+  const _ComboPresetsSection({
+    required this.settings,
+    required this.activeIndex,
+    required this.onAdd,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onSelect,
+    required this.onMoveUp,
+    required this.onMoveDown,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            buildSettingSectionTitle(context, 'Combo Presets'),
+            if (settings.comboPresets.isNotEmpty)
+              TextButton.icon(
+                onPressed: onAdd,
+                icon: const Icon(Icons.add_rounded, size: 18),
+                label: const Text('New'),
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (settings.comboPresets.isEmpty)
+          EmptyPresetsState(onAdd: onAdd)
+        else
+          Column(
+            children: settings.comboPresets.asMap().entries.map((entry) {
+              final index = entry.key;
+              final preset = entry.value;
+              return ComboPresetCard(
+                key: ValueKey(preset.id),
+                preset: preset,
+                index: index,
+                isSelected: activeIndex == index,
+                onEdit: () => onEdit(preset),
+                onDelete: () => onDelete(preset),
+                onSelect: () => onSelect(index),
+                onMoveUp: index > 0 ? () => onMoveUp(index) : null,
+                onMoveDown: index < settings.comboPresets.length - 1
+                    ? () => onMoveDown(index)
+                    : null,
+              );
+            }).toList(),
+          ),
+      ],
     );
   }
 }

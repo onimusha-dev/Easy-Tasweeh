@@ -25,7 +25,7 @@ class SoundHapticsScreen extends ConsumerWidget {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
         children: [
           // ── Sound Section ────────────────────────────────────────────────
           buildSettingsGroup(
@@ -56,8 +56,6 @@ class SoundHapticsScreen extends ConsumerWidget {
               ),
             ],
           ),
-
-          const SizedBox(height: 16),
 
           // ── Haptics Section ──────────────────────────────────────────────
           buildSettingsGroup(
@@ -95,10 +93,6 @@ class SoundHapticsScreen extends ConsumerWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
-
-          const SizedBox(height: 16),
-
           // ── Behavior Section ─────────────────────────────────────────────
           buildSettingsGroup(
             context,
@@ -125,16 +119,6 @@ class SoundHapticsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // ── Milestones Section ──────────────────────────────────────────
-          buildSettingsGroup(
-            context,
-            title: 'Milestones',
-            children: [
               buildTwoPartSettingTile(
                 context,
                 icon: Icons.repeat_rounded,

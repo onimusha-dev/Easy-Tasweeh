@@ -26,7 +26,7 @@ class AppSwitch extends StatelessWidget {
         width: 44,
         height: 24,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(20),
           color: value
               ? effectiveActiveColor
               : colorScheme.outlineVariant.withValues(alpha: 0.5),

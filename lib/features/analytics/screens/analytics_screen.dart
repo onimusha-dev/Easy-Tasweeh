@@ -1,3 +1,4 @@
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/analytics/widgets/activity_heatmap.dart';
@@ -35,78 +36,58 @@ class AnalyticsScreen extends ConsumerWidget {
             return const _EmptyAnalyticsView();
           }
 
-          // Calculate statistics
           final stats = _calculateStats(history);
 
           return ListView(
+            padding: const EdgeInsets.all(16),
             children: [
               WeeklyActivityBar(dailyTotals: stats.dailyTotals),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ActivityHeatmap(dailyTotals: stats.dailyTotals),
-              ),
               const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: buildSettingSectionTitle(
-                  context,
-                  'Recent Activity',
-                  isLarge: true,
-                ),
-              ),
+              ActivityHeatmap(dailyTotals: stats.dailyTotals),
+              const SizedBox(height: 24),
+              const _SectionHeader(title: 'Recent Activity'),
+              const SizedBox(height: 8),
               ...history
-                  .take(5)
+                  .take(6)
                   .indexed
                   .map(
-                    (entry) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: HistoryItemCard(
-                        data: entry.$2,
-                        index: entry.$1,
-                        isLast: entry.$1 == 4 || entry.$1 == history.length - 1,
-                      ),
-                    ),
+                    (entry) => HistoryItemCard(data: entry.$2, index: entry.$1),
                   ),
-              if (history.length > 5)
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Center(
-                    child: TextButton(
-                      onPressed: () => Navigator.push(
+              if (history.length > 6) ...[
+                const SizedBox(height: 16),
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () => _navigateToHistory(context),
+                    icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                    label: const Text('See More'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      backgroundColor: Theme.of(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const HistoryScreen(),
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.05),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      child: Text(
-                        'Move to History',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
+                      ).colorScheme.primary.withValues(alpha: 0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                   ),
                 ),
+              ],
               const SizedBox(height: 40),
             ],
           );
         },
       ),
+    );
+  }
+
+  void _navigateToHistory(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HistoryScreen()),
     );
   }
 
@@ -156,6 +137,84 @@ class _AnalyticsStats {
     required this.maxSession,
     required this.dailyTotals,
   });
+}
+
+class _StatsSummaryGrid extends StatelessWidget {
+  final _AnalyticsStats stats;
+  const _StatsSummaryGrid({required this.stats});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      children: [
+        Expanded(
+          child: AppCard(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.query_stats_rounded, color: colorScheme.primary),
+                const SizedBox(height: 12),
+                Text(
+                  '${stats.totalCount}',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                Text(
+                  'Total Counts',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: AppCard(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.calendar_today_rounded, color: colorScheme.primary),
+                const SizedBox(height: 12),
+                Text(
+                  '${stats.totalSessions}',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                Text(
+                  'Sessions',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  const _SectionHeader({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: buildSettingSectionTitle(context, title, isLarge: true),
+    );
+  }
 }
 
 class _EmptyAnalyticsView extends StatelessWidget {

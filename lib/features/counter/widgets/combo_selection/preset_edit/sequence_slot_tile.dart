@@ -118,6 +118,7 @@ class SequenceSlotTile extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
           builder: (context) => TargetGoalSheet(
+            showInfinite: false,
             onSelected: (newTarget) {
               onGoalChanged(newTarget);
               Navigator.pop(context);

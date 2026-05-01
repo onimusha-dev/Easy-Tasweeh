@@ -49,7 +49,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
         children: [
           // ── Permission banner ────────────────────────────────────────────
           const NotificationPermissionBanner(),
@@ -97,7 +97,6 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             ],
           ),
 
-          const SizedBox(height: 16),
           // ── Prophet's Sayings ─────────────────────────────────────────────
           buildSettingsGroup(
             context,
@@ -122,6 +121,7 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
                                         Theme.of(context).colorScheme.primary,
                                     fontSize: 10,
                                     letterSpacing: 0.5,
+                                    fontWeight: FontWeight.bold,
                                   ),
                         ),
                         AppSwitch(
@@ -152,7 +152,6 @@ class _RemindersScreenState extends ConsumerState<RemindersScreen>
             ],
           ),
 
-          const SizedBox(height: 16),
           buildSettingsGroup(
             context,
             title: 'Advance',

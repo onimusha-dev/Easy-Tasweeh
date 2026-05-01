@@ -8,6 +8,9 @@ class WeeklyActivityBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     // Get current week dates (Sun to Sat)
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -31,16 +34,70 @@ class WeeklyActivityBar extends StatelessWidget {
     });
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: days,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Weekly Activity',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Sessions completed this week',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  DateFormat('MMMM').format(now),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: days,
+          ),
+        ],
       ),
     );
   }
 
   String _getDayLabel(int index) {
-    const labels = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
+    const labels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return labels[index];
   }
 }
@@ -60,68 +117,78 @@ class _DayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final hasActivity = count > 0;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 44,
-          height: 44,
+          width: 38,
+          height: 38,
           decoration: BoxDecoration(
             color: isToday
-                ? colorScheme.surfaceContainerHighest
-                : colorScheme.surfaceContainerHigh.withValues(alpha: 0.4),
+                ? colorScheme.primary
+                : (hasActivity
+                      ? colorScheme.primary.withValues(alpha: 0.1)
+                      : colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.3,
+                        )),
             shape: BoxShape.circle,
             border: isToday
-                ? Border.all(
-                    color: colorScheme.primary.withValues(alpha: 0.2),
+                ? null
+                : Border.all(
+                    color: hasActivity
+                        ? colorScheme.primary.withValues(alpha: 0.3)
+                        : Colors.transparent,
                     width: 1,
-                  )
-                : null,
+                  ),
           ),
-
           child: Center(
             child: Text(
               label,
-              style: textTheme.labelLarge?.copyWith(
+              style: theme.textTheme.labelMedium?.copyWith(
                 color: isToday
-                    ? colorScheme.primary
-                    : colorScheme.onSurface.withValues(
-                        alpha: isPast ? 0.7 : 0.3,
-                      ),
-                fontWeight: isToday ? FontWeight.w900 : FontWeight.w600,
-                fontSize: 13,
+                    ? colorScheme.onPrimary
+                    : (hasActivity
+                          ? colorScheme.primary
+                          : colorScheme.onSurface.withValues(alpha: 0.4)),
+                fontWeight: isToday || hasActivity
+                    ? FontWeight.bold
+                    : FontWeight.normal,
               ),
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        Column(
-          children: [
-            Text(
-              '${count}s',
-              style: textTheme.labelSmall?.copyWith(
-                color: isToday
-                    ? colorScheme.onSurface
-                    : colorScheme.onSurface.withValues(alpha: 0.5),
-                fontWeight: isToday ? FontWeight.w800 : FontWeight.w500,
-                fontSize: 11,
-              ),
-            ),
-            if (isToday) ...[
-              const SizedBox(height: 6),
-              Container(
-                width: 14,
-                height: 2.5,
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ],
-          ],
+        const SizedBox(height: 10),
+        Text(
+          hasActivity ? '$count' : '',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: isToday
+                ? colorScheme.onSurface
+                : colorScheme.onSurface.withValues(
+                    alpha: hasActivity ? 0.8 : 0.3,
+                  ),
+            fontWeight: isToday || hasActivity
+                ? FontWeight.bold
+                : FontWeight.normal,
+            fontSize: 10,
+          ),
+        ),
+        const SizedBox(height: 4),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: 4,
+          height: 4,
+          decoration: BoxDecoration(
+            color: isToday
+                ? colorScheme.primary
+                : (hasActivity
+                      ? colorScheme.primary.withValues(alpha: 0.4)
+                      : Colors.transparent),
+            shape: BoxShape.circle,
+          ),
         ),
       ],
     );

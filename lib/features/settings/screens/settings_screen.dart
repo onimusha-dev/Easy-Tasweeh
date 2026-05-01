@@ -17,14 +17,11 @@ class SettingsScreen extends ConsumerWidget {
         title: Text('Settings', style: Theme.of(context).textTheme.titleMedium),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
         children: [
-          const SizedBox(height: 8),
-          buildSettingSectionTitle(context, "General"),
-          const SizedBox(height: 8),
-
           buildSettingsGroup(
             context,
+            title: "General",
             children: [
               buildSettingTile(
                 context,
@@ -53,13 +50,9 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
-          const Padding(padding: EdgeInsets.symmetric(horizontal: 20)),
-          buildSettingSectionTitle(context, "Others"),
-          const SizedBox(height: 8),
-
           buildSettingsGroup(
             context,
+            title: "Others",
             children: [
               buildSettingTile(
                 context,
@@ -81,13 +74,13 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // ── Footer ─────────────────────────────────────────────────────────
-          const SizedBox(height: 100),
+          const SizedBox(height: 64),
           Center(
             child: Text(
               '${AppConstants.appName} v$appVersion · Non-profit',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
             ),
           ),
           const SizedBox(height: 32),

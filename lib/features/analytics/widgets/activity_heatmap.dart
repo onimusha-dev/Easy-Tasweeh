@@ -60,7 +60,7 @@ class ActivityHeatmap extends StatelessWidget {
               children: [
                 buildSettingSectionTitle(
                   context,
-                  'Activity History',
+                  'Commit History',
                   isLarge: true,
                 ),
                 Text(

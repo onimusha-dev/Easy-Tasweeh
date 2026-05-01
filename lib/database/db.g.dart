@@ -82,6 +82,29 @@ class $CurrentCountTableTable extends CurrentCountTable
     requiredDuringInsert: false,
     defaultValue: const Constant('subhanallah'),
   );
+  static const VerificationMeta _comboNameMeta = const VerificationMeta(
+    'comboName',
+  );
+  @override
+  late final GeneratedColumn<String> comboName = GeneratedColumn<String>(
+    'combo_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sessionModeMeta = const VerificationMeta(
+    'sessionMode',
+  );
+  @override
+  late final GeneratedColumn<String> sessionMode = GeneratedColumn<String>(
+    'session_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('single'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -90,6 +113,8 @@ class $CurrentCountTableTable extends CurrentCountTable
     createdAt,
     updatedAt,
     dhikrId,
+    comboName,
+    sessionMode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -142,6 +167,21 @@ class $CurrentCountTableTable extends CurrentCountTable
         dhikrId.isAcceptableOrUnknown(data['dhikr_id']!, _dhikrIdMeta),
       );
     }
+    if (data.containsKey('combo_name')) {
+      context.handle(
+        _comboNameMeta,
+        comboName.isAcceptableOrUnknown(data['combo_name']!, _comboNameMeta),
+      );
+    }
+    if (data.containsKey('session_mode')) {
+      context.handle(
+        _sessionModeMeta,
+        sessionMode.isAcceptableOrUnknown(
+          data['session_mode']!,
+          _sessionModeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -175,6 +215,14 @@ class $CurrentCountTableTable extends CurrentCountTable
         DriftSqlType.string,
         data['${effectivePrefix}dhikr_id'],
       )!,
+      comboName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}combo_name'],
+      ),
+      sessionMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_mode'],
+      )!,
     );
   }
 
@@ -192,6 +240,8 @@ class CurrentCountTableData extends DataClass
   final DateTime createdAt;
   final DateTime updatedAt;
   final String dhikrId;
+  final String? comboName;
+  final String sessionMode;
   const CurrentCountTableData({
     required this.id,
     required this.targetCount,
@@ -199,6 +249,8 @@ class CurrentCountTableData extends DataClass
     required this.createdAt,
     required this.updatedAt,
     required this.dhikrId,
+    this.comboName,
+    required this.sessionMode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -209,6 +261,10 @@ class CurrentCountTableData extends DataClass
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['dhikr_id'] = Variable<String>(dhikrId);
+    if (!nullToAbsent || comboName != null) {
+      map['combo_name'] = Variable<String>(comboName);
+    }
+    map['session_mode'] = Variable<String>(sessionMode);
     return map;
   }
 
@@ -220,6 +276,10 @@ class CurrentCountTableData extends DataClass
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       dhikrId: Value(dhikrId),
+      comboName: comboName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comboName),
+      sessionMode: Value(sessionMode),
     );
   }
 
@@ -235,6 +295,8 @@ class CurrentCountTableData extends DataClass
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dhikrId: serializer.fromJson<String>(json['dhikrId']),
+      comboName: serializer.fromJson<String?>(json['comboName']),
+      sessionMode: serializer.fromJson<String>(json['sessionMode']),
     );
   }
   @override
@@ -247,6 +309,8 @@ class CurrentCountTableData extends DataClass
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dhikrId': serializer.toJson<String>(dhikrId),
+      'comboName': serializer.toJson<String?>(comboName),
+      'sessionMode': serializer.toJson<String>(sessionMode),
     };
   }
 
@@ -257,6 +321,8 @@ class CurrentCountTableData extends DataClass
     DateTime? createdAt,
     DateTime? updatedAt,
     String? dhikrId,
+    Value<String?> comboName = const Value.absent(),
+    String? sessionMode,
   }) => CurrentCountTableData(
     id: id ?? this.id,
     targetCount: targetCount ?? this.targetCount,
@@ -264,6 +330,8 @@ class CurrentCountTableData extends DataClass
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     dhikrId: dhikrId ?? this.dhikrId,
+    comboName: comboName.present ? comboName.value : this.comboName,
+    sessionMode: sessionMode ?? this.sessionMode,
   );
   CurrentCountTableData copyWithCompanion(CurrentCountTableCompanion data) {
     return CurrentCountTableData(
@@ -277,6 +345,10 @@ class CurrentCountTableData extends DataClass
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dhikrId: data.dhikrId.present ? data.dhikrId.value : this.dhikrId,
+      comboName: data.comboName.present ? data.comboName.value : this.comboName,
+      sessionMode: data.sessionMode.present
+          ? data.sessionMode.value
+          : this.sessionMode,
     );
   }
 
@@ -288,14 +360,24 @@ class CurrentCountTableData extends DataClass
           ..write('currentCount: $currentCount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('dhikrId: $dhikrId')
+          ..write('dhikrId: $dhikrId, ')
+          ..write('comboName: $comboName, ')
+          ..write('sessionMode: $sessionMode')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, targetCount, currentCount, createdAt, updatedAt, dhikrId);
+  int get hashCode => Object.hash(
+    id,
+    targetCount,
+    currentCount,
+    createdAt,
+    updatedAt,
+    dhikrId,
+    comboName,
+    sessionMode,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -305,7 +387,9 @@ class CurrentCountTableData extends DataClass
           other.currentCount == this.currentCount &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
-          other.dhikrId == this.dhikrId);
+          other.dhikrId == this.dhikrId &&
+          other.comboName == this.comboName &&
+          other.sessionMode == this.sessionMode);
 }
 
 class CurrentCountTableCompanion
@@ -316,6 +400,8 @@ class CurrentCountTableCompanion
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<String> dhikrId;
+  final Value<String?> comboName;
+  final Value<String> sessionMode;
   const CurrentCountTableCompanion({
     this.id = const Value.absent(),
     this.targetCount = const Value.absent(),
@@ -323,6 +409,8 @@ class CurrentCountTableCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
+    this.comboName = const Value.absent(),
+    this.sessionMode = const Value.absent(),
   });
   CurrentCountTableCompanion.insert({
     this.id = const Value.absent(),
@@ -331,6 +419,8 @@ class CurrentCountTableCompanion
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
+    this.comboName = const Value.absent(),
+    this.sessionMode = const Value.absent(),
   });
   static Insertable<CurrentCountTableData> custom({
     Expression<int>? id,
@@ -339,6 +429,8 @@ class CurrentCountTableCompanion
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? dhikrId,
+    Expression<String>? comboName,
+    Expression<String>? sessionMode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -347,6 +439,8 @@ class CurrentCountTableCompanion
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dhikrId != null) 'dhikr_id': dhikrId,
+      if (comboName != null) 'combo_name': comboName,
+      if (sessionMode != null) 'session_mode': sessionMode,
     });
   }
 
@@ -357,6 +451,8 @@ class CurrentCountTableCompanion
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<String>? dhikrId,
+    Value<String?>? comboName,
+    Value<String>? sessionMode,
   }) {
     return CurrentCountTableCompanion(
       id: id ?? this.id,
@@ -365,6 +461,8 @@ class CurrentCountTableCompanion
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       dhikrId: dhikrId ?? this.dhikrId,
+      comboName: comboName ?? this.comboName,
+      sessionMode: sessionMode ?? this.sessionMode,
     );
   }
 
@@ -389,6 +487,12 @@ class CurrentCountTableCompanion
     if (dhikrId.present) {
       map['dhikr_id'] = Variable<String>(dhikrId.value);
     }
+    if (comboName.present) {
+      map['combo_name'] = Variable<String>(comboName.value);
+    }
+    if (sessionMode.present) {
+      map['session_mode'] = Variable<String>(sessionMode.value);
+    }
     return map;
   }
 
@@ -400,7 +504,9 @@ class CurrentCountTableCompanion
           ..write('currentCount: $currentCount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('dhikrId: $dhikrId')
+          ..write('dhikrId: $dhikrId, ')
+          ..write('comboName: $comboName, ')
+          ..write('sessionMode: $sessionMode')
           ..write(')'))
         .toString();
   }
@@ -496,6 +602,18 @@ class $CountHistoryTableTable extends CountHistoryTable
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _sessionModeMeta = const VerificationMeta(
+    'sessionMode',
+  );
+  @override
+  late final GeneratedColumn<String> sessionMode = GeneratedColumn<String>(
+    'session_mode',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('single'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -505,6 +623,7 @@ class $CountHistoryTableTable extends CountHistoryTable
     updatedAt,
     dhikrId,
     comboName,
+    sessionMode,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -563,6 +682,15 @@ class $CountHistoryTableTable extends CountHistoryTable
         comboName.isAcceptableOrUnknown(data['combo_name']!, _comboNameMeta),
       );
     }
+    if (data.containsKey('session_mode')) {
+      context.handle(
+        _sessionModeMeta,
+        sessionMode.isAcceptableOrUnknown(
+          data['session_mode']!,
+          _sessionModeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -600,6 +728,10 @@ class $CountHistoryTableTable extends CountHistoryTable
         DriftSqlType.string,
         data['${effectivePrefix}combo_name'],
       ),
+      sessionMode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session_mode'],
+      )!,
     );
   }
 
@@ -618,6 +750,7 @@ class CountHistoryTableData extends DataClass
   final DateTime updatedAt;
   final String dhikrId;
   final String? comboName;
+  final String sessionMode;
   const CountHistoryTableData({
     required this.id,
     required this.targetCount,
@@ -626,6 +759,7 @@ class CountHistoryTableData extends DataClass
     required this.updatedAt,
     required this.dhikrId,
     this.comboName,
+    required this.sessionMode,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -639,6 +773,7 @@ class CountHistoryTableData extends DataClass
     if (!nullToAbsent || comboName != null) {
       map['combo_name'] = Variable<String>(comboName);
     }
+    map['session_mode'] = Variable<String>(sessionMode);
     return map;
   }
 
@@ -653,6 +788,7 @@ class CountHistoryTableData extends DataClass
       comboName: comboName == null && nullToAbsent
           ? const Value.absent()
           : Value(comboName),
+      sessionMode: Value(sessionMode),
     );
   }
 
@@ -669,6 +805,7 @@ class CountHistoryTableData extends DataClass
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dhikrId: serializer.fromJson<String>(json['dhikrId']),
       comboName: serializer.fromJson<String?>(json['comboName']),
+      sessionMode: serializer.fromJson<String>(json['sessionMode']),
     );
   }
   @override
@@ -682,6 +819,7 @@ class CountHistoryTableData extends DataClass
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dhikrId': serializer.toJson<String>(dhikrId),
       'comboName': serializer.toJson<String?>(comboName),
+      'sessionMode': serializer.toJson<String>(sessionMode),
     };
   }
 
@@ -693,6 +831,7 @@ class CountHistoryTableData extends DataClass
     DateTime? updatedAt,
     String? dhikrId,
     Value<String?> comboName = const Value.absent(),
+    String? sessionMode,
   }) => CountHistoryTableData(
     id: id ?? this.id,
     targetCount: targetCount ?? this.targetCount,
@@ -701,6 +840,7 @@ class CountHistoryTableData extends DataClass
     updatedAt: updatedAt ?? this.updatedAt,
     dhikrId: dhikrId ?? this.dhikrId,
     comboName: comboName.present ? comboName.value : this.comboName,
+    sessionMode: sessionMode ?? this.sessionMode,
   );
   CountHistoryTableData copyWithCompanion(CountHistoryTableCompanion data) {
     return CountHistoryTableData(
@@ -715,6 +855,9 @@ class CountHistoryTableData extends DataClass
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dhikrId: data.dhikrId.present ? data.dhikrId.value : this.dhikrId,
       comboName: data.comboName.present ? data.comboName.value : this.comboName,
+      sessionMode: data.sessionMode.present
+          ? data.sessionMode.value
+          : this.sessionMode,
     );
   }
 
@@ -727,7 +870,8 @@ class CountHistoryTableData extends DataClass
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dhikrId: $dhikrId, ')
-          ..write('comboName: $comboName')
+          ..write('comboName: $comboName, ')
+          ..write('sessionMode: $sessionMode')
           ..write(')'))
         .toString();
   }
@@ -741,6 +885,7 @@ class CountHistoryTableData extends DataClass
     updatedAt,
     dhikrId,
     comboName,
+    sessionMode,
   );
   @override
   bool operator ==(Object other) =>
@@ -752,7 +897,8 @@ class CountHistoryTableData extends DataClass
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.dhikrId == this.dhikrId &&
-          other.comboName == this.comboName);
+          other.comboName == this.comboName &&
+          other.sessionMode == this.sessionMode);
 }
 
 class CountHistoryTableCompanion
@@ -764,6 +910,7 @@ class CountHistoryTableCompanion
   final Value<DateTime> updatedAt;
   final Value<String> dhikrId;
   final Value<String?> comboName;
+  final Value<String> sessionMode;
   const CountHistoryTableCompanion({
     this.id = const Value.absent(),
     this.targetCount = const Value.absent(),
@@ -772,6 +919,7 @@ class CountHistoryTableCompanion
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
     this.comboName = const Value.absent(),
+    this.sessionMode = const Value.absent(),
   });
   CountHistoryTableCompanion.insert({
     this.id = const Value.absent(),
@@ -781,6 +929,7 @@ class CountHistoryTableCompanion
     this.updatedAt = const Value.absent(),
     this.dhikrId = const Value.absent(),
     this.comboName = const Value.absent(),
+    this.sessionMode = const Value.absent(),
   });
   static Insertable<CountHistoryTableData> custom({
     Expression<int>? id,
@@ -790,6 +939,7 @@ class CountHistoryTableCompanion
     Expression<DateTime>? updatedAt,
     Expression<String>? dhikrId,
     Expression<String>? comboName,
+    Expression<String>? sessionMode,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -799,6 +949,7 @@ class CountHistoryTableCompanion
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dhikrId != null) 'dhikr_id': dhikrId,
       if (comboName != null) 'combo_name': comboName,
+      if (sessionMode != null) 'session_mode': sessionMode,
     });
   }
 
@@ -810,6 +961,7 @@ class CountHistoryTableCompanion
     Value<DateTime>? updatedAt,
     Value<String>? dhikrId,
     Value<String?>? comboName,
+    Value<String>? sessionMode,
   }) {
     return CountHistoryTableCompanion(
       id: id ?? this.id,
@@ -819,6 +971,7 @@ class CountHistoryTableCompanion
       updatedAt: updatedAt ?? this.updatedAt,
       dhikrId: dhikrId ?? this.dhikrId,
       comboName: comboName ?? this.comboName,
+      sessionMode: sessionMode ?? this.sessionMode,
     );
   }
 
@@ -846,6 +999,9 @@ class CountHistoryTableCompanion
     if (comboName.present) {
       map['combo_name'] = Variable<String>(comboName.value);
     }
+    if (sessionMode.present) {
+      map['session_mode'] = Variable<String>(sessionMode.value);
+    }
     return map;
   }
 
@@ -858,7 +1014,412 @@ class CountHistoryTableCompanion
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dhikrId: $dhikrId, ')
-          ..write('comboName: $comboName')
+          ..write('comboName: $comboName, ')
+          ..write('sessionMode: $sessionMode')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ComboPresetsTableTable extends ComboPresetsTable
+    with TableInfo<$ComboPresetsTableTable, ComboPresetsTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ComboPresetsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dhikrIdsMeta = const VerificationMeta(
+    'dhikrIds',
+  );
+  @override
+  late final GeneratedColumn<String> dhikrIds = GeneratedColumn<String>(
+    'dhikr_ids',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _countsMeta = const VerificationMeta('counts');
+  @override
+  late final GeneratedColumn<String> counts = GeneratedColumn<String>(
+    'counts',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    dhikrIds,
+    counts,
+    position,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'combo_presets_table';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ComboPresetsTableData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('dhikr_ids')) {
+      context.handle(
+        _dhikrIdsMeta,
+        dhikrIds.isAcceptableOrUnknown(data['dhikr_ids']!, _dhikrIdsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dhikrIdsMeta);
+    }
+    if (data.containsKey('counts')) {
+      context.handle(
+        _countsMeta,
+        counts.isAcceptableOrUnknown(data['counts']!, _countsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_countsMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ComboPresetsTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ComboPresetsTableData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      dhikrIds: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dhikr_ids'],
+      )!,
+      counts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}counts'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $ComboPresetsTableTable createAlias(String alias) {
+    return $ComboPresetsTableTable(attachedDatabase, alias);
+  }
+}
+
+class ComboPresetsTableData extends DataClass
+    implements Insertable<ComboPresetsTableData> {
+  final String id;
+  final String name;
+  final String dhikrIds;
+  final String counts;
+  final int position;
+  final DateTime createdAt;
+  const ComboPresetsTableData({
+    required this.id,
+    required this.name,
+    required this.dhikrIds,
+    required this.counts,
+    required this.position,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['dhikr_ids'] = Variable<String>(dhikrIds);
+    map['counts'] = Variable<String>(counts);
+    map['position'] = Variable<int>(position);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  ComboPresetsTableCompanion toCompanion(bool nullToAbsent) {
+    return ComboPresetsTableCompanion(
+      id: Value(id),
+      name: Value(name),
+      dhikrIds: Value(dhikrIds),
+      counts: Value(counts),
+      position: Value(position),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory ComboPresetsTableData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ComboPresetsTableData(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      dhikrIds: serializer.fromJson<String>(json['dhikrIds']),
+      counts: serializer.fromJson<String>(json['counts']),
+      position: serializer.fromJson<int>(json['position']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'dhikrIds': serializer.toJson<String>(dhikrIds),
+      'counts': serializer.toJson<String>(counts),
+      'position': serializer.toJson<int>(position),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  ComboPresetsTableData copyWith({
+    String? id,
+    String? name,
+    String? dhikrIds,
+    String? counts,
+    int? position,
+    DateTime? createdAt,
+  }) => ComboPresetsTableData(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    dhikrIds: dhikrIds ?? this.dhikrIds,
+    counts: counts ?? this.counts,
+    position: position ?? this.position,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  ComboPresetsTableData copyWithCompanion(ComboPresetsTableCompanion data) {
+    return ComboPresetsTableData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      dhikrIds: data.dhikrIds.present ? data.dhikrIds.value : this.dhikrIds,
+      counts: data.counts.present ? data.counts.value : this.counts,
+      position: data.position.present ? data.position.value : this.position,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ComboPresetsTableData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('dhikrIds: $dhikrIds, ')
+          ..write('counts: $counts, ')
+          ..write('position: $position, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, dhikrIds, counts, position, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ComboPresetsTableData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.dhikrIds == this.dhikrIds &&
+          other.counts == this.counts &&
+          other.position == this.position &&
+          other.createdAt == this.createdAt);
+}
+
+class ComboPresetsTableCompanion
+    extends UpdateCompanion<ComboPresetsTableData> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> dhikrIds;
+  final Value<String> counts;
+  final Value<int> position;
+  final Value<DateTime> createdAt;
+  final Value<int> rowid;
+  const ComboPresetsTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.dhikrIds = const Value.absent(),
+    this.counts = const Value.absent(),
+    this.position = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ComboPresetsTableCompanion.insert({
+    required String id,
+    required String name,
+    required String dhikrIds,
+    required String counts,
+    this.position = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       name = Value(name),
+       dhikrIds = Value(dhikrIds),
+       counts = Value(counts);
+  static Insertable<ComboPresetsTableData> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? dhikrIds,
+    Expression<String>? counts,
+    Expression<int>? position,
+    Expression<DateTime>? createdAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (dhikrIds != null) 'dhikr_ids': dhikrIds,
+      if (counts != null) 'counts': counts,
+      if (position != null) 'position': position,
+      if (createdAt != null) 'created_at': createdAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ComboPresetsTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? name,
+    Value<String>? dhikrIds,
+    Value<String>? counts,
+    Value<int>? position,
+    Value<DateTime>? createdAt,
+    Value<int>? rowid,
+  }) {
+    return ComboPresetsTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      dhikrIds: dhikrIds ?? this.dhikrIds,
+      counts: counts ?? this.counts,
+      position: position ?? this.position,
+      createdAt: createdAt ?? this.createdAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (dhikrIds.present) {
+      map['dhikr_ids'] = Variable<String>(dhikrIds.value);
+    }
+    if (counts.present) {
+      map['counts'] = Variable<String>(counts.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ComboPresetsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('dhikrIds: $dhikrIds, ')
+          ..write('counts: $counts, ')
+          ..write('position: $position, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -871,10 +1432,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $CurrentCountTableTable(this);
   late final $CountHistoryTableTable countHistoryTable =
       $CountHistoryTableTable(this);
+  late final $ComboPresetsTableTable comboPresetsTable =
+      $ComboPresetsTableTable(this);
   late final CurrentCountDao currentCountDao = CurrentCountDao(
     this as AppDatabase,
   );
   late final CountHistoryDao countHistoryDao = CountHistoryDao(
+    this as AppDatabase,
+  );
+  late final ComboPresetsDao comboPresetsDao = ComboPresetsDao(
     this as AppDatabase,
   );
   @override
@@ -884,6 +1450,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     currentCountTable,
     countHistoryTable,
+    comboPresetsTable,
   ];
 }
 
@@ -895,6 +1462,8 @@ typedef $$CurrentCountTableTableCreateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
+      Value<String?> comboName,
+      Value<String> sessionMode,
     });
 typedef $$CurrentCountTableTableUpdateCompanionBuilder =
     CurrentCountTableCompanion Function({
@@ -904,6 +1473,8 @@ typedef $$CurrentCountTableTableUpdateCompanionBuilder =
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
+      Value<String?> comboName,
+      Value<String> sessionMode,
     });
 
 class $$CurrentCountTableTableFilterComposer
@@ -942,6 +1513,16 @@ class $$CurrentCountTableTableFilterComposer
 
   ColumnFilters<String> get dhikrId => $composableBuilder(
     column: $table.dhikrId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get comboName => $composableBuilder(
+    column: $table.comboName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -984,6 +1565,16 @@ class $$CurrentCountTableTableOrderingComposer
     column: $table.dhikrId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get comboName => $composableBuilder(
+    column: $table.comboName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CurrentCountTableTableAnnotationComposer
@@ -1016,6 +1607,14 @@ class $$CurrentCountTableTableAnnotationComposer
 
   GeneratedColumn<String> get dhikrId =>
       $composableBuilder(column: $table.dhikrId, builder: (column) => column);
+
+  GeneratedColumn<String> get comboName =>
+      $composableBuilder(column: $table.comboName, builder: (column) => column);
+
+  GeneratedColumn<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
+    builder: (column) => column,
+  );
 }
 
 class $$CurrentCountTableTableTableManager
@@ -1064,6 +1663,8 @@ class $$CurrentCountTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
+                Value<String?> comboName = const Value.absent(),
+                Value<String> sessionMode = const Value.absent(),
               }) => CurrentCountTableCompanion(
                 id: id,
                 targetCount: targetCount,
@@ -1071,6 +1672,8 @@ class $$CurrentCountTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
+                comboName: comboName,
+                sessionMode: sessionMode,
               ),
           createCompanionCallback:
               ({
@@ -1080,6 +1683,8 @@ class $$CurrentCountTableTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
+                Value<String?> comboName = const Value.absent(),
+                Value<String> sessionMode = const Value.absent(),
               }) => CurrentCountTableCompanion.insert(
                 id: id,
                 targetCount: targetCount,
@@ -1087,6 +1692,8 @@ class $$CurrentCountTableTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
+                comboName: comboName,
+                sessionMode: sessionMode,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1126,6 +1733,7 @@ typedef $$CountHistoryTableTableCreateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
       Value<String?> comboName,
+      Value<String> sessionMode,
     });
 typedef $$CountHistoryTableTableUpdateCompanionBuilder =
     CountHistoryTableCompanion Function({
@@ -1136,6 +1744,7 @@ typedef $$CountHistoryTableTableUpdateCompanionBuilder =
       Value<DateTime> updatedAt,
       Value<String> dhikrId,
       Value<String?> comboName,
+      Value<String> sessionMode,
     });
 
 class $$CountHistoryTableTableFilterComposer
@@ -1179,6 +1788,11 @@ class $$CountHistoryTableTableFilterComposer
 
   ColumnFilters<String> get comboName => $composableBuilder(
     column: $table.comboName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1226,6 +1840,11 @@ class $$CountHistoryTableTableOrderingComposer
     column: $table.comboName,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CountHistoryTableTableAnnotationComposer
@@ -1261,6 +1880,11 @@ class $$CountHistoryTableTableAnnotationComposer
 
   GeneratedColumn<String> get comboName =>
       $composableBuilder(column: $table.comboName, builder: (column) => column);
+
+  GeneratedColumn<String> get sessionMode => $composableBuilder(
+    column: $table.sessionMode,
+    builder: (column) => column,
+  );
 }
 
 class $$CountHistoryTableTableTableManager
@@ -1310,6 +1934,7 @@ class $$CountHistoryTableTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
                 Value<String?> comboName = const Value.absent(),
+                Value<String> sessionMode = const Value.absent(),
               }) => CountHistoryTableCompanion(
                 id: id,
                 targetCount: targetCount,
@@ -1318,6 +1943,7 @@ class $$CountHistoryTableTableTableManager
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
                 comboName: comboName,
+                sessionMode: sessionMode,
               ),
           createCompanionCallback:
               ({
@@ -1328,6 +1954,7 @@ class $$CountHistoryTableTableTableManager
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> dhikrId = const Value.absent(),
                 Value<String?> comboName = const Value.absent(),
+                Value<String> sessionMode = const Value.absent(),
               }) => CountHistoryTableCompanion.insert(
                 id: id,
                 targetCount: targetCount,
@@ -1336,6 +1963,7 @@ class $$CountHistoryTableTableTableManager
                 updatedAt: updatedAt,
                 dhikrId: dhikrId,
                 comboName: comboName,
+                sessionMode: sessionMode,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1366,6 +1994,238 @@ typedef $$CountHistoryTableTableProcessedTableManager =
       CountHistoryTableData,
       PrefetchHooks Function()
     >;
+typedef $$ComboPresetsTableTableCreateCompanionBuilder =
+    ComboPresetsTableCompanion Function({
+      required String id,
+      required String name,
+      required String dhikrIds,
+      required String counts,
+      Value<int> position,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+typedef $$ComboPresetsTableTableUpdateCompanionBuilder =
+    ComboPresetsTableCompanion Function({
+      Value<String> id,
+      Value<String> name,
+      Value<String> dhikrIds,
+      Value<String> counts,
+      Value<int> position,
+      Value<DateTime> createdAt,
+      Value<int> rowid,
+    });
+
+class $$ComboPresetsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $ComboPresetsTableTable> {
+  $$ComboPresetsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dhikrIds => $composableBuilder(
+    column: $table.dhikrIds,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get counts => $composableBuilder(
+    column: $table.counts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ComboPresetsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $ComboPresetsTableTable> {
+  $$ComboPresetsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dhikrIds => $composableBuilder(
+    column: $table.dhikrIds,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get counts => $composableBuilder(
+    column: $table.counts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ComboPresetsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ComboPresetsTableTable> {
+  $$ComboPresetsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get dhikrIds =>
+      $composableBuilder(column: $table.dhikrIds, builder: (column) => column);
+
+  GeneratedColumn<String> get counts =>
+      $composableBuilder(column: $table.counts, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$ComboPresetsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ComboPresetsTableTable,
+          ComboPresetsTableData,
+          $$ComboPresetsTableTableFilterComposer,
+          $$ComboPresetsTableTableOrderingComposer,
+          $$ComboPresetsTableTableAnnotationComposer,
+          $$ComboPresetsTableTableCreateCompanionBuilder,
+          $$ComboPresetsTableTableUpdateCompanionBuilder,
+          (
+            ComboPresetsTableData,
+            BaseReferences<
+              _$AppDatabase,
+              $ComboPresetsTableTable,
+              ComboPresetsTableData
+            >,
+          ),
+          ComboPresetsTableData,
+          PrefetchHooks Function()
+        > {
+  $$ComboPresetsTableTableTableManager(
+    _$AppDatabase db,
+    $ComboPresetsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ComboPresetsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ComboPresetsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ComboPresetsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> dhikrIds = const Value.absent(),
+                Value<String> counts = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ComboPresetsTableCompanion(
+                id: id,
+                name: name,
+                dhikrIds: dhikrIds,
+                counts: counts,
+                position: position,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String name,
+                required String dhikrIds,
+                required String counts,
+                Value<int> position = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ComboPresetsTableCompanion.insert(
+                id: id,
+                name: name,
+                dhikrIds: dhikrIds,
+                counts: counts,
+                position: position,
+                createdAt: createdAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ComboPresetsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ComboPresetsTableTable,
+      ComboPresetsTableData,
+      $$ComboPresetsTableTableFilterComposer,
+      $$ComboPresetsTableTableOrderingComposer,
+      $$ComboPresetsTableTableAnnotationComposer,
+      $$ComboPresetsTableTableCreateCompanionBuilder,
+      $$ComboPresetsTableTableUpdateCompanionBuilder,
+      (
+        ComboPresetsTableData,
+        BaseReferences<
+          _$AppDatabase,
+          $ComboPresetsTableTable,
+          ComboPresetsTableData
+        >,
+      ),
+      ComboPresetsTableData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1374,6 +2234,8 @@ class $AppDatabaseManager {
       $$CurrentCountTableTableTableManager(_db, _db.currentCountTable);
   $$CountHistoryTableTableTableManager get countHistoryTable =>
       $$CountHistoryTableTableTableManager(_db, _db.countHistoryTable);
+  $$ComboPresetsTableTableTableManager get comboPresetsTable =>
+      $$ComboPresetsTableTableTableManager(_db, _db.comboPresetsTable);
 }
 
 // **************************************************************************

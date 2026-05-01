@@ -60,7 +60,7 @@ class CounterProgress extends StatelessWidget {
                 ],
               ),
               if (hasTarget)
-                if (settings.comboEnabled)
+                if (settings.activeComboIndex >= 0)
                   _buildComboCheckmarks(context)
                 else
                   const SizedBox.shrink()

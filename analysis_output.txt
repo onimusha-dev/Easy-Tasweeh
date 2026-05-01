@@ -1,0 +1,21 @@
+Analyzing easy_tasweeh...                                       
+
+  error • The argument type 'TextColumn' can't be assigned to the parameter type 'GeneratedColumn<Object>'.  • lib/database/db.dart:51:11 • argument_type_not_assignable
+   info • The constant name 'SESSION_ID_SINGLE' isn't a lowerCamelCase identifier • lib/database/repository/count_repository.dart:36:11 • constant_identifier_names
+   info • The constant name 'SESSION_ID_COMBO' isn't a lowerCamelCase identifier • lib/database/repository/count_repository.dart:37:11 • constant_identifier_names
+  error • The named parameter 'comboName' isn't defined • lib/database/repository/count_repository.dart:62:9 • undefined_named_parameter
+  error • The named parameter 'comboName' isn't defined • lib/database/repository/count_repository.dart:74:11 • undefined_named_parameter
+  error • The getter 'comboName' isn't defined for the type 'CurrentCountTableData' • lib/database/repository/count_repository.dart:74:36 • undefined_getter
+  error • The getter 'comboName' isn't defined for the type 'CurrentCountTableData' • lib/database/repository/count_repository.dart:132:36 • undefined_getter
+  error • The named parameter 'comboName' isn't defined • lib/database/repository/count_repository.dart:196:11 • undefined_named_parameter
+  error • Undefined name 'comboName' • lib/database/repository/count_repository.dart:222:9 • undefined_identifier
+  error • Undefined name 'comboName' • lib/database/repository/count_repository.dart:224:26 • undefined_identifier
+  error • Undefined name 'currentCountStreamProvider' • lib/features/counter/screens/combo_selection_screen.dart:128:32 • undefined_identifier
+  error • Undefined name 'countRepositoryProvider' • lib/features/counter/screens/combo_selection_screen.dart:141:28 • undefined_identifier
+  error • Undefined name 'currentCountStreamProvider' • lib/features/counter/screens/combo_selection_screen.dart:171:32 • undefined_identifier
+  error • Undefined name 'countRepositoryProvider' • lib/features/counter/screens/combo_selection_screen.dart:186:36 • undefined_identifier
+warning • Unused import: 'package:easy_tasbeeh/features/counter/widgets/set_count_target/session_action_button.dart' • lib/features/counter/widgets/set_count_target/target_goal_sheet.dart:2:8 • unused_import
+  error • Expected an identifier • lib/features/counter/widgets/set_count_target/target_goal_sheet.dart:93:9 • missing_identifier
+  error • Expected to find ')' • lib/features/counter/widgets/set_count_target/target_goal_sheet.dart:93:9 • expected_token
+
+17 issues found. (ran in 7.1s)
