@@ -69,6 +69,16 @@ class ComboSelectionScreen extends ConsumerWidget {
                     onEdit: () => _editPreset(context, entry.value),
                     onDelete: () => _confirmDelete(context, ref, entry.value),
                     onSelect: () => _handleModeChange(context, ref, entry.key),
+                    onMoveUp: entry.key > 0
+                        ? () => ref
+                            .read(settingsProvider.notifier)
+                            .moveComboPresetUp(entry.key)
+                        : null,
+                    onMoveDown: entry.key < settings.comboPresets.length - 1
+                        ? () => ref
+                            .read(settingsProvider.notifier)
+                            .moveComboPresetDown(entry.key)
+                        : null,
                   );
                 }),
             ],

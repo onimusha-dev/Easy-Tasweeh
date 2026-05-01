@@ -5,6 +5,7 @@ class ComboPresetsTable extends Table {
   TextColumn get name => text()();
   TextColumn get dhikrIds => text()(); // JSON string of List<String>
   TextColumn get counts => text()(); // JSON string of List<int>
+  IntColumn get position => integer().withDefault(const Constant(0))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   @override

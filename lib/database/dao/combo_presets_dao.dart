@@ -15,13 +15,27 @@ ComboPresetsDao comboPresetsDao(Ref ref) {
 class ComboPresetsDao extends DatabaseAccessor<AppDatabase> with _$ComboPresetsDaoMixin {
   ComboPresetsDao(super.attachedDatabase);
 
-  Future<List<ComboPresetsTableData>> getAllPresets() => select(comboPresetsTable).get();
+  Future<List<ComboPresetsTableData>> getAllPresets() =>
+      (select(comboPresetsTable)..orderBy([(t) => OrderingTerm(expression: t.position)])).get();
 
-  Stream<List<ComboPresetsTableData>> watchAllPresets() => select(comboPresetsTable).watch();
+  Stream<List<ComboPresetsTableData>> watchAllPresets() =>
+      (select(comboPresetsTable)..orderBy([(t) => OrderingTerm(expression: t.position)])).watch();
 
   Future<int> insertPreset(ComboPresetsTableCompanion preset) =>
       into(comboPresetsTable).insertOnConflictUpdate(preset);
 
   Future<int> deletePreset(String id) =>
       (delete(comboPresetsTable)..where((t) => t.id.equals(id))).go();
+
+  Future<void> updatePresetsPositions(List<ComboPresetsTableData> presets) async {
+    await batch((batch) {
+      for (int i = 0; i < presets.length; i++) {
+        batch.update(
+          comboPresetsTable,
+          ComboPresetsTableCompanion(position: Value(i)),
+          where: (t) => t.id.equals(presets[i].id),
+        );
+      }
+    });
+  }
 }

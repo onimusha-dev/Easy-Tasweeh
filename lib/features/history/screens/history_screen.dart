@@ -109,7 +109,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: Text(
-                      'No ${_selectedFilter} sessions found',
+                      'No $_selectedFilter sessions found',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.outline,
                       ),

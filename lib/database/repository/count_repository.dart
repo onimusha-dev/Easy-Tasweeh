@@ -22,15 +22,15 @@ final currentCountStreamProvider = StreamProvider<CurrentCountTableData?>((
 });
 
 final singleCountStreamProvider = StreamProvider<CurrentCountTableData?>((ref) {
-  return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_SINGLE);
+  return ref.watch(countRepositoryProvider).watchCountById(sessionIdSingle);
 });
 
 final comboCountStreamProvider = StreamProvider<CurrentCountTableData?>((ref) {
-  return ref.watch(countRepositoryProvider).watchCountById(SESSION_ID_COMBO);
+  return ref.watch(countRepositoryProvider).watchCountById(sessionIdCombo);
 });
 
-const int SESSION_ID_SINGLE = 1;
-const int SESSION_ID_COMBO = 2;
+const int sessionIdSingle = 1;
+const int sessionIdCombo = 2;
 
 class CountRepository {
   final Ref _ref;
@@ -43,7 +43,7 @@ class CountRepository {
   Future<CurrentCountTableData> getOrCreateCurrentCount() async {
     final settings = _ref.read(settingsProvider);
     final isCombo = settings.activeComboIndex >= 0;
-    final sessionId = isCombo ? SESSION_ID_COMBO : SESSION_ID_SINGLE;
+    final sessionId = isCombo ? sessionIdCombo : sessionIdSingle;
 
     final counts = await _currentCountDao.getAllCounts();
     final session = counts.firstWhere(
@@ -83,8 +83,8 @@ class CountRepository {
   Stream<CurrentCountTableData?> watchCurrentCount() {
     final settings = _ref.watch(settingsProvider);
     final sessionId = settings.activeComboIndex >= 0
-        ? SESSION_ID_COMBO
-        : SESSION_ID_SINGLE;
+        ? sessionIdCombo
+        : sessionIdSingle;
 
     return _currentCountDao.watchCountById(sessionId);
   }
@@ -211,14 +211,14 @@ class CountRepository {
     if (isToday && isRestorable) {
       // Determine which session record to restore into
       final restoredSessionId = last.sessionMode == 'combo'
-          ? SESSION_ID_COMBO
-          : SESSION_ID_SINGLE;
+          ? sessionIdCombo
+          : sessionIdSingle;
 
       // Reset both current progress records to ensure "delete current progress"
       // (Though we already checked current.currentCount == 0, this is for safety)
       await _currentCountDao.updateCount(
         const CurrentCountTableCompanion(
-          id: Value(SESSION_ID_SINGLE),
+          id: Value(sessionIdSingle),
           currentCount: Value(0),
           comboName: Value(null),
           sessionMode: Value('single'),
@@ -226,7 +226,7 @@ class CountRepository {
       );
       await _currentCountDao.updateCount(
         const CurrentCountTableCompanion(
-          id: Value(SESSION_ID_COMBO),
+          id: Value(sessionIdCombo),
           currentCount: Value(0),
           comboName: Value(null),
           sessionMode: Value('combo'),
@@ -277,7 +277,7 @@ extension CountProgressExtension on CurrentCountTableData {
   double calculateProgress(DhikrSettings settings) {
     if (targetCount <= 0) return 0.0;
 
-    if (id == SESSION_ID_COMBO && comboName != null) {
+    if (id == sessionIdCombo && comboName != null) {
       final preset = settings.comboPresets.firstWhere(
         (p) => p.name == comboName,
         orElse: () => settings.comboPresets.isNotEmpty

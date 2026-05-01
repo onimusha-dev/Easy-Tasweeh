@@ -1,5 +1,6 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,6 +11,8 @@ class ComboPresetCard extends ConsumerWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onSelect;
+  final VoidCallback? onMoveUp;
+  final VoidCallback? onMoveDown;
 
   const ComboPresetCard({
     super.key,
@@ -19,6 +22,8 @@ class ComboPresetCard extends ConsumerWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onSelect,
+    this.onMoveUp,
+    this.onMoveDown,
   });
 
   @override
@@ -85,84 +90,44 @@ class ComboPresetCard extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  Transform.translate(
-                    offset: const Offset(8, 0),
-                    child: Builder(
-                      builder: (context) {
-                        return IconButton(
-                          onPressed: () async {
-                            final RenderBox button =
-                                context.findRenderObject() as RenderBox;
-                            final RenderBox overlay =
-                                Overlay.of(context).context.findRenderObject()
-                                    as RenderBox;
-                            final RelativeRect position = RelativeRect.fromRect(
-                              Rect.fromPoints(
-                                button.localToGlobal(
-                                  Offset.zero,
-                                  ancestor: overlay,
-                                ),
-                                button.localToGlobal(
-                                  button.size.bottomRight(Offset.zero),
-                                  ancestor: overlay,
-                                ),
-                              ),
-                              Offset.zero & overlay.size,
-                            );
-
-                            final String? result = await showMenu<String>(
-                              context: context,
-                              position: position,
-                              items: [
-                                const PopupMenuItem(
-                                  value: 'edit',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.edit_rounded, size: 18),
-                                      SizedBox(width: 12),
-                                      Text('Edit'),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: 'delete',
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.delete_outline_rounded,
-                                        size: 18,
-                                        color: colorScheme.error,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Text(
-                                        'Delete',
-                                        style: TextStyle(
-                                          color: colorScheme.error,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-
-                            if (result == 'edit') {
-                              onEdit();
-                            } else if (result == 'delete') {
-                              onDelete();
-                            }
-                          },
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          splashRadius: 20,
-                          icon: Icon(
-                            Icons.more_vert_rounded,
-                            size: 22,
-                            color: colorScheme.onSurface.withValues(alpha: 0.5),
-                          ),
-                        );
-                      },
-                    ),
+                  AppMenuButton(
+                    offsetRight: 8,
+                    items: [
+                      AppMenuItem(
+                        value: 'edit',
+                        label: 'Edit',
+                        icon: Icons.edit_rounded,
+                      ),
+                      if (onMoveUp != null)
+                        AppMenuItem(
+                          value: 'move_up',
+                          label: 'Move Up',
+                          icon: Icons.arrow_upward_rounded,
+                        ),
+                      if (onMoveDown != null)
+                        AppMenuItem(
+                          value: 'move_down',
+                          label: 'Move Down',
+                          icon: Icons.arrow_downward_rounded,
+                        ),
+                      AppMenuItem(
+                        value: 'delete',
+                        label: 'Delete',
+                        icon: Icons.delete_outline_rounded,
+                        isDestructive: true,
+                      ),
+                    ],
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        onEdit();
+                      } else if (value == 'move_up') {
+                        onMoveUp?.call();
+                      } else if (value == 'move_down') {
+                        onMoveDown?.call();
+                      } else if (value == 'delete') {
+                        onDelete();
+                      }
+                    },
                   ),
                 ],
               ),

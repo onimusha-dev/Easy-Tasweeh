@@ -1065,6 +1065,18 @@ class $ComboPresetsTableTable extends ComboPresetsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1078,7 +1090,14 @@ class $ComboPresetsTableTable extends ComboPresetsTable
     defaultValue: currentDateAndTime,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, name, dhikrIds, counts, createdAt];
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    dhikrIds,
+    counts,
+    position,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1120,6 +1139,12 @@ class $ComboPresetsTableTable extends ComboPresetsTable
     } else if (isInserting) {
       context.missing(_countsMeta);
     }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -1151,6 +1176,10 @@ class $ComboPresetsTableTable extends ComboPresetsTable
         DriftSqlType.string,
         data['${effectivePrefix}counts'],
       )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1170,12 +1199,14 @@ class ComboPresetsTableData extends DataClass
   final String name;
   final String dhikrIds;
   final String counts;
+  final int position;
   final DateTime createdAt;
   const ComboPresetsTableData({
     required this.id,
     required this.name,
     required this.dhikrIds,
     required this.counts,
+    required this.position,
     required this.createdAt,
   });
   @override
@@ -1185,6 +1216,7 @@ class ComboPresetsTableData extends DataClass
     map['name'] = Variable<String>(name);
     map['dhikr_ids'] = Variable<String>(dhikrIds);
     map['counts'] = Variable<String>(counts);
+    map['position'] = Variable<int>(position);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -1195,6 +1227,7 @@ class ComboPresetsTableData extends DataClass
       name: Value(name),
       dhikrIds: Value(dhikrIds),
       counts: Value(counts),
+      position: Value(position),
       createdAt: Value(createdAt),
     );
   }
@@ -1209,6 +1242,7 @@ class ComboPresetsTableData extends DataClass
       name: serializer.fromJson<String>(json['name']),
       dhikrIds: serializer.fromJson<String>(json['dhikrIds']),
       counts: serializer.fromJson<String>(json['counts']),
+      position: serializer.fromJson<int>(json['position']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -1220,6 +1254,7 @@ class ComboPresetsTableData extends DataClass
       'name': serializer.toJson<String>(name),
       'dhikrIds': serializer.toJson<String>(dhikrIds),
       'counts': serializer.toJson<String>(counts),
+      'position': serializer.toJson<int>(position),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -1229,12 +1264,14 @@ class ComboPresetsTableData extends DataClass
     String? name,
     String? dhikrIds,
     String? counts,
+    int? position,
     DateTime? createdAt,
   }) => ComboPresetsTableData(
     id: id ?? this.id,
     name: name ?? this.name,
     dhikrIds: dhikrIds ?? this.dhikrIds,
     counts: counts ?? this.counts,
+    position: position ?? this.position,
     createdAt: createdAt ?? this.createdAt,
   );
   ComboPresetsTableData copyWithCompanion(ComboPresetsTableCompanion data) {
@@ -1243,6 +1280,7 @@ class ComboPresetsTableData extends DataClass
       name: data.name.present ? data.name.value : this.name,
       dhikrIds: data.dhikrIds.present ? data.dhikrIds.value : this.dhikrIds,
       counts: data.counts.present ? data.counts.value : this.counts,
+      position: data.position.present ? data.position.value : this.position,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -1254,13 +1292,15 @@ class ComboPresetsTableData extends DataClass
           ..write('name: $name, ')
           ..write('dhikrIds: $dhikrIds, ')
           ..write('counts: $counts, ')
+          ..write('position: $position, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, dhikrIds, counts, createdAt);
+  int get hashCode =>
+      Object.hash(id, name, dhikrIds, counts, position, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1269,6 +1309,7 @@ class ComboPresetsTableData extends DataClass
           other.name == this.name &&
           other.dhikrIds == this.dhikrIds &&
           other.counts == this.counts &&
+          other.position == this.position &&
           other.createdAt == this.createdAt);
 }
 
@@ -1278,6 +1319,7 @@ class ComboPresetsTableCompanion
   final Value<String> name;
   final Value<String> dhikrIds;
   final Value<String> counts;
+  final Value<int> position;
   final Value<DateTime> createdAt;
   final Value<int> rowid;
   const ComboPresetsTableCompanion({
@@ -1285,6 +1327,7 @@ class ComboPresetsTableCompanion
     this.name = const Value.absent(),
     this.dhikrIds = const Value.absent(),
     this.counts = const Value.absent(),
+    this.position = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1293,6 +1336,7 @@ class ComboPresetsTableCompanion
     required String name,
     required String dhikrIds,
     required String counts,
+    this.position = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1304,6 +1348,7 @@ class ComboPresetsTableCompanion
     Expression<String>? name,
     Expression<String>? dhikrIds,
     Expression<String>? counts,
+    Expression<int>? position,
     Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
@@ -1312,6 +1357,7 @@ class ComboPresetsTableCompanion
       if (name != null) 'name': name,
       if (dhikrIds != null) 'dhikr_ids': dhikrIds,
       if (counts != null) 'counts': counts,
+      if (position != null) 'position': position,
       if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1322,6 +1368,7 @@ class ComboPresetsTableCompanion
     Value<String>? name,
     Value<String>? dhikrIds,
     Value<String>? counts,
+    Value<int>? position,
     Value<DateTime>? createdAt,
     Value<int>? rowid,
   }) {
@@ -1330,6 +1377,7 @@ class ComboPresetsTableCompanion
       name: name ?? this.name,
       dhikrIds: dhikrIds ?? this.dhikrIds,
       counts: counts ?? this.counts,
+      position: position ?? this.position,
       createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
@@ -1350,6 +1398,9 @@ class ComboPresetsTableCompanion
     if (counts.present) {
       map['counts'] = Variable<String>(counts.value);
     }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1366,6 +1417,7 @@ class ComboPresetsTableCompanion
           ..write('name: $name, ')
           ..write('dhikrIds: $dhikrIds, ')
           ..write('counts: $counts, ')
+          ..write('position: $position, ')
           ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1948,6 +2000,7 @@ typedef $$ComboPresetsTableTableCreateCompanionBuilder =
       required String name,
       required String dhikrIds,
       required String counts,
+      Value<int> position,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -1957,6 +2010,7 @@ typedef $$ComboPresetsTableTableUpdateCompanionBuilder =
       Value<String> name,
       Value<String> dhikrIds,
       Value<String> counts,
+      Value<int> position,
       Value<DateTime> createdAt,
       Value<int> rowid,
     });
@@ -1987,6 +2041,11 @@ class $$ComboPresetsTableTableFilterComposer
 
   ColumnFilters<String> get counts => $composableBuilder(
     column: $table.counts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2025,6 +2084,11 @@ class $$ComboPresetsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -2051,6 +2115,9 @@ class $$ComboPresetsTableTableAnnotationComposer
 
   GeneratedColumn<String> get counts =>
       $composableBuilder(column: $table.counts, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -2100,6 +2167,7 @@ class $$ComboPresetsTableTableTableManager
                 Value<String> name = const Value.absent(),
                 Value<String> dhikrIds = const Value.absent(),
                 Value<String> counts = const Value.absent(),
+                Value<int> position = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ComboPresetsTableCompanion(
@@ -2107,6 +2175,7 @@ class $$ComboPresetsTableTableTableManager
                 name: name,
                 dhikrIds: dhikrIds,
                 counts: counts,
+                position: position,
                 createdAt: createdAt,
                 rowid: rowid,
               ),
@@ -2116,6 +2185,7 @@ class $$ComboPresetsTableTableTableManager
                 required String name,
                 required String dhikrIds,
                 required String counts,
+                Value<int> position = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ComboPresetsTableCompanion.insert(
@@ -2123,6 +2193,7 @@ class $$ComboPresetsTableTableTableManager
                 name: name,
                 dhikrIds: dhikrIds,
                 counts: counts,
+                position: position,
                 createdAt: createdAt,
                 rowid: rowid,
               ),

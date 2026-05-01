@@ -118,6 +118,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     if (target > 0 && nextCount >= target) {
       if (mounted) {
         await repo.saveAndReset();
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Target reached! Session saved to history.'),

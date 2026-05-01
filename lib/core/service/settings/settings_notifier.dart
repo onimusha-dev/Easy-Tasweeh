@@ -279,6 +279,59 @@ class SettingsNotifier extends Notifier<SettingsState> {
     );
   }
 
+  Future<void> moveComboPresetUp(int index) async {
+    if (index <= 0) return;
+    await _reorderPresets(index, index - 1);
+  }
+
+  Future<void> moveComboPresetDown(int index) async {
+    if (index >= state.dhikr.comboPresets.length - 1) return;
+    await _reorderPresets(index, index + 1);
+  }
+
+  Future<void> _reorderPresets(int oldIndex, int newIndex) async {
+    final presets = List<ComboPreset>.from(state.dhikr.comboPresets);
+    final item = presets.removeAt(oldIndex);
+    presets.insert(newIndex, item);
+
+    // Update SP
+    await _service.setStringList(
+      'comboPresets',
+      presets.map((e) => jsonEncode(e.toJson())).toList(),
+    );
+
+    // Update DB
+    final tableData = presets
+        .map(
+          (p) => ComboPresetsTableData(
+            id: p.id,
+            name: p.name,
+            dhikrIds: jsonEncode(p.dhikrIds),
+            counts: jsonEncode(p.counts),
+            position: 0, // Will be set by updatePresetsPositions
+            createdAt: DateTime.now(),
+          ),
+        )
+        .toList();
+    await _presetsDao.updatePresetsPositions(tableData);
+
+    // If active index was affected, update it
+    int activeIndex = state.dhikr.activeComboIndex;
+    if (activeIndex == oldIndex) {
+      activeIndex = newIndex;
+    } else if (activeIndex == newIndex) {
+      activeIndex = oldIndex;
+    }
+    await _service.setInt('activeComboIndex', activeIndex);
+
+    state = state.copyWith(
+      dhikr: state.dhikr.copyWith(
+        comboPresets: presets,
+        activeComboIndex: activeIndex,
+      ),
+    );
+  }
+
   Future<void> _syncPresetsFromDb() async {
     final dbPresets = await _presetsDao.getAllPresets();
     final spPresets = state.dhikr.comboPresets;
