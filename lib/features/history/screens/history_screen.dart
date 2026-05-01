@@ -31,7 +31,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         actions: [
           IconButton(
             onPressed: () => _clearHistory(context, ref),
-            icon: const Icon(Icons.delete_sweep_rounded),
+            icon: const Icon(Icons.delete_sweep_rounded, color: Colors.red),
             tooltip: 'Clear History',
           ),
           const SizedBox(width: 8),
@@ -67,7 +67,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
               const SizedBox(height: 8),
               HistoryTotalsCard(history: rawHistoryList),
               const SizedBox(height: 20),
-              
+
               // Filter Toggle
               Center(
                 child: SegmentedButton<String>(
@@ -97,8 +97,12 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   showSelectedIcon: false,
                   style: SegmentedButton.styleFrom(
                     visualDensity: VisualDensity.compact,
-                    selectedBackgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                    selectedForegroundColor: Theme.of(context).colorScheme.primary,
+                    selectedBackgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
+                    selectedForegroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary,
                   ),
                 ),
               ),

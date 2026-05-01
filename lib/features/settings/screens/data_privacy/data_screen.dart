@@ -20,12 +20,8 @@ class DataPrivacyScreen extends ConsumerWidget {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
         children: [
-          const SizedBox(height: 8),
-
-          const SizedBox(height: 8),
-
           buildSettingsGroup(
             context,
             title: 'Backup & Restore',
@@ -49,7 +45,6 @@ class DataPrivacyScreen extends ConsumerWidget {
             ],
           ),
 
-          const SizedBox(height: 16),
           buildSettingsGroup(
             context,
             title: 'Data Portability',
@@ -64,7 +59,6 @@ class DataPrivacyScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
 
           buildSettingsGroup(
             context,
@@ -106,7 +100,7 @@ class DataPrivacyScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+
           buildSettingsGroup(
             context,
             title: 'Danger Zone',

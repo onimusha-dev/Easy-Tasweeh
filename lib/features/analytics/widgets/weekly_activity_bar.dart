@@ -34,7 +34,7 @@ class WeeklyActivityBar extends StatelessWidget {
     });
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerLow,

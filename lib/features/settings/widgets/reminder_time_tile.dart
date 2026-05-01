@@ -1,35 +1,17 @@
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/core/widgets/app_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// A self-contained tile that handles a single daily reminder.
-/// It combines:
-///   • a toggle switch to enable/disable the reminder
-///   • a time-picker button showing the current scheduled time
 class ReminderTimeTile extends ConsumerWidget {
-  /// Label displayed in the tile title, e.g. "Morning Reminder"
   final String title;
-
-  /// Short description shown as subtitle
   final String subtitle;
-
-  /// Icon drawn inside the leading container
   final IconData icon;
-
-  /// Whether this reminder is currently enabled
   final bool enabled;
-
-  /// The time currently scheduled for this reminder
   final ReminderTime time;
-
-  /// Called when the user toggles the switch
   final ValueChanged<bool> onToggle;
-
-  /// Called when the user picks a new time
   final ValueChanged<TimeOfDay> onTimePicked;
-
-  /// Custom icon color
   final Color? iconColor;
 
   const ReminderTimeTile({
@@ -46,65 +28,69 @@ class ReminderTimeTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Icon(icon, color: iconColor ?? scheme.primary, size: 22),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: scheme.outline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor ?? colorScheme.primary,
+                  size: 22,
+                ),
               ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _TimeChip(
-                    label: time.label,
-                    color: enabled ? iconColor : scheme.outline,
-                    onTap: () => _pickTime(context),
-                  ),
-                  AppSwitch(
-                    value: enabled,
-                    onChanged: onToggle,
-                    activeColor: iconColor,
-                  ),
-                ],
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _TimeChip(
+                label: time.label,
+                color: enabled ? colorScheme.primary : colorScheme.outline,
+                onTap: () => _pickTime(context),
+              ),
+              AppSwitch(
+                value: enabled,
+                onChanged: onToggle,
+                activeColor: colorScheme.primary,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,9 +101,16 @@ class ReminderTimeTile extends ConsumerWidget {
       initialTime: initial,
       helpText: 'SELECT REMINDER TIME',
       builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child ?? const SizedBox.shrink(),
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
     );
@@ -136,32 +129,40 @@ class _TimeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final effectiveColor = color ?? scheme.primary;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: effectiveColor.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: effectiveColor.withValues(alpha: 0.25)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: effectiveColor,
-                fontWeight: FontWeight.bold,
-              ),
+
+    return Material(
+      color: effectiveColor.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: effectiveColor.withValues(alpha: 0.15),
+              width: 1,
             ),
-            if (onTap != null) ...[
-              const SizedBox(width: 4),
-              Icon(Icons.edit_rounded, size: 10, color: effectiveColor),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.access_time_rounded, size: 16, color: effectiveColor),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: effectiveColor,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
+                ),
+              ),
             ],
-          ],
+          ),
         ),
       ),
     );

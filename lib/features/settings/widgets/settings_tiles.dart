@@ -1,3 +1,5 @@
+import 'package:easy_tasbeeh/core/widgets/app_card.dart';
+import 'package:easy_tasbeeh/core/widgets/app_list_tile.dart';
 import 'package:flutter/material.dart';
 
 Widget buildSettingTile(
@@ -10,84 +12,54 @@ Widget buildSettingTile(
   String? trailingLabel,
   VoidCallback? onTap,
   bool showChevron = true,
-  // Shape is injected by buildSettingsGroup to clip the ink splash correctly.
   ShapeBorder shape = const RoundedRectangleBorder(),
 }) {
-  Widget? trailingWidget;
+  final colorScheme = Theme.of(context).colorScheme;
 
-  if (trailing != null) {
-    trailingWidget = trailing;
-  } else if (trailingLabel != null) {
-    trailingWidget = Row(
+  Widget? effectiveTrailing = trailing;
+  if (trailing == null && trailingLabel != null) {
+    effectiveTrailing = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(4, 4, 8, 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-            borderRadius: BorderRadius.circular(6),
+            color: colorScheme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
             trailingLabel,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: colorScheme.primary,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
         if (showChevron) ...[
-          const SizedBox(width: 4),
+          const SizedBox(width: 8),
           Icon(
             Icons.chevron_right_rounded,
-            size: 16,
-            color: Theme.of(context).colorScheme.outlineVariant,
+            size: 20,
+            color: colorScheme.outlineVariant,
           ),
         ],
       ],
     );
-  } else if (showChevron && onTap != null) {
-    trailingWidget = Icon(
+  } else if (trailing == null && showChevron && onTap != null) {
+    effectiveTrailing = Icon(
       Icons.chevron_right_rounded,
-      size: 18,
-      color: Theme.of(context).colorScheme.outlineVariant,
+      size: 22,
+      color: colorScheme.outlineVariant,
     );
   }
 
-  return GestureDetector(
+  return AppListTile(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    iconColor: iconColor,
+    trailing: effectiveTrailing,
     onTap: onTap,
-    behavior: HitTestBehavior.opaque,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 2),
-            child: Icon(
-              icon,
-              color: iconColor ?? Theme.of(context).colorScheme.primary,
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 2),
-                Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-              ],
-            ),
-          ),
-          if (trailingWidget != null) ...[
-            const SizedBox(width: 8),
-            trailingWidget,
-          ],
-        ],
-      ),
-    ),
   );
 }
 
@@ -101,44 +73,55 @@ Widget buildTwoPartSettingTile(
   VoidCallback? onTap,
   ShapeBorder shape = const RoundedRectangleBorder(),
 }) {
-  final scheme = Theme.of(context).colorScheme;
+  final theme = Theme.of(context);
+  final colorScheme = theme.colorScheme;
 
-  return GestureDetector(
+  return AppCard(
     onTap: onTap,
-    behavior: HitTestBehavior.opaque,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 0, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: Icon(icon, color: iconColor ?? scheme.primary, size: 22),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: Theme.of(context).textTheme.bodySmall,
+              child: Icon(
+                icon,
+                color: iconColor ?? colorScheme.primary,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          action,
-          const SizedBox(height: 16),
-        ],
-      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        action,
+      ],
     ),
   );
 }
@@ -168,54 +151,24 @@ Widget buildSettingsGroup(
   Color? borderColor,
   double? borderWidth,
 }) {
-  const r = Radius.circular(8);
-  const none = Radius.zero;
-  final n = children.length;
-
-  // Assign each child the border radius that matches its position in the card
-  // so the ListTile ink splash is clipped to the card's rounded corners.
-  final shaped = List<Widget>.generate(n, (i) {
-    final borderRadius = BorderRadius.only(
-      topLeft: i == 0 ? r : none,
-      topRight: i == 0 ? r : none,
-      bottomLeft: i == n - 1 ? r : none,
-      bottomRight: i == n - 1 ? r : none,
-    );
-
-    return Material(
-      color: Colors.transparent,
-      clipBehavior: Clip.antiAlias,
-      borderRadius: borderRadius,
-      child: children[i],
-    );
-  });
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (title != null)
-        buildSettingSectionTitle(context, title, isLarge: isLargeTitle),
-      const SizedBox(height: 12),
-      Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(8),
-          border: showBorder
-              ? Border.all(
-                  color:
-                      borderColor ??
-                      Theme.of(
-                        context,
-                      ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-                  width: borderWidth ?? 1.0,
-                )
-              : null,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Column(children: shaped),
-        ),
-      ),
-    ],
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title != null) ...[
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: buildSettingSectionTitle(
+              context,
+              title,
+              isLarge: isLargeTitle,
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+        ...children,
+      ],
+    ),
   );
 }
