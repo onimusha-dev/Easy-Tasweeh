@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 
 class SearchField extends StatelessWidget {
   final TextEditingController controller;
@@ -38,7 +39,7 @@ class SearchField extends StatelessWidget {
             controller: controller,
             onChanged: onChanged,
             style: theme.textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w600,
+              fontWeight: AppTypography.weightSemiBold,
             ),
             decoration: InputDecoration(
               isDense: true,

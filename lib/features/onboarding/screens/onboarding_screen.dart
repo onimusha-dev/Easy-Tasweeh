@@ -1,6 +1,8 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -100,7 +102,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           key: ValueKey(_currentPage == 2),
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: AppTypography.weightBold,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -120,7 +122,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             'Skip for now',
                             style: TextStyle(
                               color: colorScheme.primary.withValues(alpha: 0.6),
-                              fontWeight: FontWeight.w600,
+                              fontWeight: AppTypography.weightSemiBold,
                             ),
                           ),
                         ),
@@ -185,7 +187,7 @@ class _OnboardingPage extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: AppTypography.weightSemiBold,
               color: colorScheme.onSurface,
               letterSpacing: -0.5,
             ),
@@ -266,7 +268,7 @@ class _NotificationPage extends ConsumerWidget {
                           'System Access Granted',
                           style: TextStyle(
                             color: Colors.green,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: AppTypography.weightSemiBold,
                           ),
                         ),
                       ],
@@ -296,7 +298,7 @@ class _NotificationPage extends ConsumerWidget {
                               Text(
                                 'Prayer Reminders',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: AppTypography.weightSemiBold,
                                   color: colorScheme.onSurface,
                                 ),
                               ),

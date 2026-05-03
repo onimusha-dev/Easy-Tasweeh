@@ -1,6 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/set_count_target/target_goal_sheet.dart';
@@ -77,7 +78,7 @@ class SingleModeCard extends ConsumerWidget {
                         Text(
                           'Single Mode',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: AppTypography.weightSemiBold,
                           ),
                         ),
                         Text(
@@ -133,7 +134,7 @@ class SingleModeCard extends ConsumerWidget {
                           Text(
                             singleDhikr.transliteration.split(' ').first,
                             style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: AppTypography.weightSemiBold,
                               color: colorScheme.onSurface,
                             ),
                           ),
@@ -164,7 +165,7 @@ class SingleModeCard extends ConsumerWidget {
                           Text(
                             currentTarget == 0 ? '∞' : '$currentTarget',
                             style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: AppTypography.weightSemiBold,
                               color: colorScheme.onSurface,
                             ),
                           ),

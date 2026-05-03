@@ -3,6 +3,7 @@ import 'package:easy_tasbeeh/core/utils/color_utils.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
 import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/features/history/widgets/combo_details_sheet.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -79,7 +80,7 @@ class HistoryItemCard extends ConsumerWidget {
                           (data.comboName ?? 'COMBO').toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: colorScheme.primary,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: AppTypography.weightSemiBold,
                             letterSpacing: 0.5,
                             fontSize: 9,
                           ),
@@ -115,7 +116,7 @@ class HistoryItemCard extends ConsumerWidget {
                             )
                             .arabic,
                   style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: AppTypography.weightSemiBold,
                     fontSize: data.sessionMode == 'combo' ? 15 : 17,
                   ),
                 ),
@@ -145,7 +146,7 @@ class HistoryItemCard extends ConsumerWidget {
                     '${data.currentCount}',
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: statusColor,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: AppTypography.weightSemiBold,
                     ),
                   ),
                   if (data.targetCount > 0)
@@ -163,7 +164,7 @@ class HistoryItemCard extends ConsumerWidget {
                   '${percentage.toInt()}%',
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: statusColor.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w900,
+                    fontWeight: AppTypography.weightSemiBold,
                     fontSize: 10,
                   ),
                 ),

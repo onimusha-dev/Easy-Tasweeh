@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 
 class PremiumDialog extends StatelessWidget {
   final IconData icon;
@@ -66,7 +67,7 @@ class PremiumDialog extends StatelessWidget {
                   child: Text(
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
+                      fontWeight: AppTypography.weightSemiBold,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -107,7 +108,7 @@ class PremiumDialog extends StatelessWidget {
                       cancelLabel,
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: AppTypography.weightSemiBold,
                         fontSize: 14,
                       ),
                     ),
@@ -132,7 +133,7 @@ class PremiumDialog extends StatelessWidget {
                     child: Text(
                       confirmLabel,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: AppTypography.weightBold,
                         fontSize: 14,
                       ),
                     ),
