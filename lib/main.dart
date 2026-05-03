@@ -38,6 +38,11 @@ void main() async {
   await Workmanager().initialize(callbackDispatcher);
   await NotificationService().init(); // Initialize notifications early
 
+  // Demo notification for testing (shows after 5 seconds)
+  Future.delayed(const Duration(seconds: 5), () {
+    NotificationService().showRateAppNotification();
+  });
+
   // Only schedule periodic backup if the user has enabled it.
   final periodicEnabled = prefs.getBool('periodicBackupEnabled') ?? false;
   if (periodicEnabled && prefs.getString('backupDirectory') != null) {
