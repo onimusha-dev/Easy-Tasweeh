@@ -97,30 +97,30 @@ class CounterProgress extends StatelessWidget {
   Widget _buildComboCheckmarks(BuildContext context) {
     if (targetCount <= 0) return const SizedBox.shrink();
 
-    if (settings.activeComboIndex < 0 || settings.activeComboIndex >= settings.comboPresets.length) {
+    if (settings.activeComboIndex < 0 ||
+        settings.activeComboIndex >= settings.comboPresets.length) {
       return const SizedBox.shrink();
     }
-    
+
     final preset = settings.comboPresets[settings.activeComboIndex];
     final counts = preset.counts;
-    if (counts.length != 3) return const SizedBox.shrink();
-    
-    final total1 = counts[0];
-    final total2 = total1 + counts[1];
-    final total3 = total2 + counts[2];
+    if (counts.isEmpty) return const SizedBox.shrink();
 
+    // Calculate segments progress
     int completedSegments = 0;
-    if (currentCountData >= total3) {
-      completedSegments = 3;
-    } else if (currentCountData >= total2) {
-      completedSegments = 2;
-    } else if (currentCountData >= total1) {
-      completedSegments = 1;
+    int cumulative = 0;
+    for (int i = 0; i < counts.length; i++) {
+      cumulative += counts[i];
+      if (currentCountData >= cumulative) {
+        completedSegments = i + 1;
+      } else {
+        break;
+      }
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (index) {
+      children: List.generate(counts.length, (index) {
         final isCompleted = index < completedSegments;
         final isActive = index == completedSegments;
 
@@ -132,26 +132,26 @@ class CounterProgress extends StatelessWidget {
               color: isCompleted
                   ? Colors.greenAccent.withValues(alpha: 0.2)
                   : (isActive
-                        ? colorScheme.primary.withValues(alpha: 0.2)
-                        : Colors.white.withValues(alpha: 0.05)),
+                      ? colorScheme.primary.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.05)),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isCompleted
                     ? Colors.greenAccent.withValues(alpha: 0.5)
                     : (isActive
-                          ? colorScheme.primary.withValues(alpha: 0.5)
-                          : Colors.white.withValues(alpha: 0.1)),
+                        ? colorScheme.primary.withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.1)),
                 width: 1,
               ),
             ),
             child: Icon(
               isCompleted ? Icons.check_rounded : Icons.circle,
-              size: 12,
+              size: 10, // Slightly smaller to fit more segments if needed
               color: isCompleted
                   ? Colors.greenAccent
                   : (isActive
-                        ? colorScheme.primary
-                        : Colors.white.withValues(alpha: 0.2)),
+                      ? colorScheme.primary
+                      : Colors.white.withValues(alpha: 0.2)),
             ),
           ),
         );

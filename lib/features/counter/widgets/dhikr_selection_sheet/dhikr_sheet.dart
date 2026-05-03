@@ -10,7 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DhikrSheet extends ConsumerWidget {
   final Function(DhikrItem)? onSelected;
-  const DhikrSheet({super.key, this.onSelected});
+  final int? sessionId;
+  const DhikrSheet({super.key, this.onSelected, this.sessionId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,7 +105,7 @@ class DhikrSheet extends ConsumerWidget {
                           ref
                               .read(settingsProvider.notifier)
                               .setLastDhikrId(item.id);
-                          repo.setDhikrId(item.id);
+                          repo.setDhikrId(item.id, sessionId: sessionId);
                           Navigator.pop(context); // Close bottom sheet
                         },
                       );
@@ -112,7 +113,7 @@ class DhikrSheet extends ConsumerWidget {
                       ref
                           .read(settingsProvider.notifier)
                           .setLastDhikrId(item.id);
-                      repo.setDhikrId(item.id);
+                      repo.setDhikrId(item.id, sessionId: sessionId);
                       Navigator.pop(context); // Close bottom sheet
                     }
                   },
@@ -128,12 +129,13 @@ class DhikrSheet extends ConsumerWidget {
   static Future<void> show(
     BuildContext context, {
     Function(DhikrItem)? onSelected,
+    int? sessionId,
   }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DhikrSheet(onSelected: onSelected),
+      builder: (context) => DhikrSheet(onSelected: onSelected, sessionId: sessionId),
     );
   }
 }

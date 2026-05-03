@@ -9,6 +9,7 @@ class TargetGrid extends ConsumerWidget {
   final AsyncValue<dynamic> countAsync;
   final Function(int)? onSelected;
   final bool showInfinite;
+  final int? sessionId;
 
   const TargetGrid({
     super.key,
@@ -17,6 +18,7 @@ class TargetGrid extends ConsumerWidget {
     required this.countAsync,
     this.onSelected,
     this.showInfinite = true,
+    this.sessionId,
   });
 
   @override
@@ -59,12 +61,12 @@ class TargetGrid extends ConsumerWidget {
                       'This will save your current progress to history.',
                   confirmLabel: 'Archive',
                   onConfirm: () {
-                    repo.setTarget(target);
+                    repo.setTarget(target, sessionId: sessionId);
                     Navigator.pop(context); // Close bottom sheet
                   },
                 );
               } else {
-                repo.setTarget(target);
+                repo.setTarget(target, sessionId: sessionId);
                 Navigator.pop(context); // Close bottom sheet
               }
             },

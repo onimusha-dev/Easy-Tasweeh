@@ -29,7 +29,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -64,8 +64,20 @@ class AppDatabase extends _$AppDatabase {
         );
         await migrator.createTable(comboPresetsTable);
       }
-      if (from == 5) {
+      if (from < 6) {
         await migrator.addColumn(comboPresetsTable, comboPresetsTable.position);
+      }
+      if (from < 7) {
+        await migrator.addColumn(
+          countHistoryTable,
+          countHistoryTable.isRestorable,
+        );
+      }
+      if (from < 8) {
+        await migrator.addColumn(
+          countHistoryTable,
+          countHistoryTable.comboIndex,
+        );
       }
     },
   );

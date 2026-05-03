@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -21,34 +23,50 @@ class NotificationService {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    tz.initializeTimeZones();
+    try {
+      // Initialize timezones
+      tz.initializeTimeZones();
+      try {
+        // Get the device's timezone string
+        final timeZoneInfo = await FlutterTimezone.getLocalTimezone();
+        tz.setLocalLocation(tz.getLocation(timeZoneInfo.identifier));
+      } catch (e) {
+        debugPrint('Could not set local location, falling back to UTC: $e');
+        tz.setLocalLocation(tz.getLocation('UTC'));
+      }
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-          requestSoundPermission: true,
-          requestBadgePermission: true,
-          requestAlertPermission: true,
-        );
+      const DarwinInitializationSettings initializationSettingsIOS =
+          DarwinInitializationSettings(
+            requestSoundPermission: true,
+            requestBadgePermission: true,
+            requestAlertPermission: true,
+          );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-          android: initializationSettingsAndroid,
-          iOS: initializationSettingsIOS,
-        );
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsIOS,
+          );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      settings: initializationSettings,
-      onDidReceiveNotificationResponse: _handleNotificationResponse,
-      onDidReceiveBackgroundNotificationResponse:
-          _handleNotificationResponseStatic,
-    );
+      await flutterLocalNotificationsPlugin.initialize(
+        settings: initializationSettings,
+        onDidReceiveNotificationResponse: _handleNotificationResponse,
+        onDidReceiveBackgroundNotificationResponse:
+            _handleNotificationResponseStatic,
+      );
 
-    requestPermissions(); // Ensure permissions are requested (non-blocking)
-
-    _isInitialized = true;
+      _isInitialized = true;
+      
+      // Request permissions in the background after initialization
+      requestPermissions().catchError((e) {
+        debugPrint('Background permission request failed: $e');
+      });
+    } catch (e) {
+      debugPrint('Error initializing NotificationService: $e');
+    }
   }
 
   static void _handleNotificationResponse(NotificationResponse response) {
@@ -72,7 +90,28 @@ class NotificationService {
               AndroidFlutterLocalNotificationsPlugin
             >();
 
+    // Request notification permission (Android 13+)
     await androidImplementation?.requestNotificationsPermission();
+
+    // Request exact alarm permission (Android 13+)
+    // Note: On Android 14+, this is required for exact notifications
+    try {
+      if (await Permission.scheduleExactAlarm.isDenied) {
+        await Permission.scheduleExactAlarm.request();
+      }
+    } catch (e) {
+      debugPrint('Error requesting exact alarm permission: $e');
+    }
+
+    // Request ignore battery optimizations (Android 6+)
+    // This helps prevent system from delaying or killing notifications
+    try {
+      if (await Permission.ignoreBatteryOptimizations.isDenied) {
+        await Permission.ignoreBatteryOptimizations.request();
+      }
+    } catch (e) {
+      debugPrint('Error requesting ignore battery optimization: $e');
+    }
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -87,11 +126,25 @@ class NotificationService {
     required String body,
     required int hour,
     required int minute,
+    String? channelId,
+    String? channelName,
+    String? payload,
   }) async {
     if (!_isInitialized) await init();
 
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate = tz.TZDateTime(
+    final now = DateTime.now();
+    
+    // Create a local DateTime to correctly compare with 'now' for wall clock scheduling
+    final scheduledDateLocal = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minute,
+    );
+
+    // Create the TZDateTime for the plugin, using the same components
+    var scheduledDate = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
@@ -100,27 +153,53 @@ class NotificationService {
       minute,
     );
 
-    if (scheduledDate.isBefore(now)) {
+    if (scheduledDateLocal.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: id,
-      title: title,
-      body: body,
-      scheduledDate: scheduledDate,
-      notificationDetails: const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'daily_reminder_channel_id',
-          'Daily Reminders',
-          importance: Importance.max,
-          priority: Priority.high,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            channelId ?? 'daily_reminder_channel_id',
+            channelName ?? 'Daily Reminders',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+          iOS: const DarwinNotificationDetails(),
         ),
-        iOS: DarwinNotificationDetails(),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: payload,
+      );
+    } catch (e) {
+      debugPrint(
+        'Error scheduling exact notification: $e. Falling back to inexact.',
+      );
+      // Fallback to inexact if exact is not allowed
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledDate,
+        notificationDetails: NotificationDetails(
+          android: AndroidNotificationDetails(
+            channelId ?? 'daily_reminder_channel_id',
+            channelName ?? 'Daily Reminders',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+          iOS: const DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: payload,
+      );
+    }
   }
 
   Future<void> showInstantBackupAndRestoreNotification({
@@ -131,19 +210,13 @@ class NotificationService {
   }) async {
     try {
       if (!_isInitialized) await init();
-      // Only request permissions if we haven't checked recently or if needed.
-      // However, for instant notifications, it's safer to ensure they are enabled.
-      // We'll skip the await for permissions here to avoid blocking the notification display
-      // if the permission was already granted.
-      requestPermissions(); 
 
-      final AndroidNotificationDetails androidPlatformChannelSpecifics =
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
             'instant_backup_and_restore_channel_id',
-            'Backup and restore',
+            'System Notifications',
             importance: Importance.max,
             priority: Priority.high,
-            actions: null,
           );
 
       const DarwinNotificationDetails iosNotificationDetails =
@@ -175,6 +248,7 @@ class NotificationService {
       body: 'Your data has been safely saved to your chosen location.',
     );
   }
+
 
   Future<void> showBackupErrorNotification(String error) async {
     await showInstantBackupAndRestoreNotification(
@@ -211,7 +285,6 @@ class NotificationService {
   }) async {
     try {
       if (!_isInitialized) await init();
-      requestPermissions();
 
       final AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
@@ -241,6 +314,14 @@ class NotificationService {
     } catch (e) {
       debugPrint('Error showing progress notification: $e');
     }
+  }
+
+  Future<void> cancelNotificationsWithPrefix(int startId, int endId) async {
+    final List<Future<void>> tasks = [];
+    for (int i = startId; i <= endId; i++) {
+      tasks.add(flutterLocalNotificationsPlugin.cancel(id: i));
+    }
+    await Future.wait(tasks);
   }
 
   Future<void> cancelNotification(int id) async {

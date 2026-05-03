@@ -117,7 +117,10 @@ class SingleModeCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: onSelect,
+                      onTap: isSelected
+                          ? () => DhikrSheet.show(context,
+                              sessionId: sessionIdSingle)
+                          : onSelect,
                       child: Column(
                         children: [
                           Text(
@@ -148,7 +151,9 @@ class SingleModeCard extends ConsumerWidget {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: onSelect,
+                      onTap: isSelected
+                          ? () => _showTargetGoalSheet(context)
+                          : onSelect,
                       child: Column(
                         children: [
                           Text(
@@ -181,6 +186,15 @@ class SingleModeCard extends ConsumerWidget {
     );
   }
 
+  void _showTargetGoalSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const TargetGoalSheet(sessionId: sessionIdSingle),
+    );
+  }
+
   void _showEditSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -199,7 +213,7 @@ class SingleModeCard extends ConsumerWidget {
               title: const Text('Change Dhikr'),
               onTap: () {
                 Navigator.pop(context);
-                DhikrSheet.show(context);
+                DhikrSheet.show(context, sessionId: sessionIdSingle);
               },
             ),
             ListTile(
@@ -207,12 +221,7 @@ class SingleModeCard extends ConsumerWidget {
               title: const Text('Set Count Target'),
               onTap: () {
                 Navigator.pop(context);
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => const TargetGoalSheet(),
-                );
+                _showTargetGoalSheet(context);
               },
             ),
             const SizedBox(height: 12),

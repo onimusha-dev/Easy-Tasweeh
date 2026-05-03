@@ -7,7 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class TargetGoalSheet extends ConsumerWidget {
   final Function(int)? onSelected;
   final bool showInfinite;
-  const TargetGoalSheet({super.key, this.onSelected, this.showInfinite = true});
+  final int? sessionId;
+
+  const TargetGoalSheet({
+    super.key,
+    this.onSelected,
+    this.showInfinite = true,
+    this.sessionId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,6 +103,7 @@ class TargetGoalSheet extends ConsumerWidget {
             countAsync: countAsync,
             onSelected: onSelected,
             showInfinite: showInfinite,
+            sessionId: sessionId,
           ),
           const SizedBox(height: 24),
         ],

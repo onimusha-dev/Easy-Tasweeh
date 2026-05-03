@@ -106,7 +106,28 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 
     await repo.increment();
 
-    // Milestone vibration
+    // 1. Combo Segment Milestone Vibration
+    if (settings.activeComboIndex >= 0 &&
+        settings.activeComboIndex < settings.comboPresets.length) {
+      final preset = settings.comboPresets[settings.activeComboIndex];
+      int cumulative = 0;
+      bool isSegmentFinished = false;
+
+      for (int i = 0; i < preset.counts.length - 1; i++) {
+        cumulative += preset.counts[i];
+        if (nextCount == cumulative) {
+          isSegmentFinished = true;
+          break;
+        }
+      }
+
+      if (isSegmentFinished && settings.hapticEnabled) {
+        HapticFeedback.mediumImpact();
+        Vibration.vibrate(duration: 150); // Distinct vibration for segment finish
+      }
+    }
+
+    // 2. Regular Milestone vibration
     if (settings.hapticEnabled &&
         settings.vibrateOnMilestone &&
         nextCount > 0 &&
@@ -116,6 +137,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
       Vibration.vibrate(duration: 60);
     }
 
+    // 3. Final Target Reached
     if (target > 0 && nextCount >= target) {
       if (mounted) {
         await repo.saveAndReset();

@@ -16,4 +16,7 @@ class CountHistoryTable extends Table {
   TextColumn get comboName => text().nullable()();
 
   TextColumn get sessionMode => text().withDefault(const Constant('single'))(); // 'single' or 'combo'
+
+  BoolColumn get isRestorable => boolean().withDefault(const Constant(true))();
+  IntColumn get comboIndex => integer().nullable()();
 }
