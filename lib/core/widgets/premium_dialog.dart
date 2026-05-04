@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 
 class PremiumDialog extends StatelessWidget {
   final IconData icon;
@@ -31,14 +32,16 @@ class PremiumDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
-          color: Theme.of(context).dialogTheme.backgroundColor ?? colorScheme.surface,
+          color:
+              Theme.of(context).dialogTheme.backgroundColor ??
+              colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: colorScheme.outlineVariant.withOpacity(0.2),
+            color: colorScheme.outlineVariant.withValues(alpha: 0.2),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -64,7 +67,7 @@ class PremiumDialog extends StatelessWidget {
                   child: Text(
                     title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
+                      fontWeight: AppTypography.weightSemiBold,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -105,7 +108,7 @@ class PremiumDialog extends StatelessWidget {
                       cancelLabel,
                       style: TextStyle(
                         color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: AppTypography.weightSemiBold,
                         fontSize: 14,
                       ),
                     ),
@@ -130,7 +133,7 @@ class PremiumDialog extends StatelessWidget {
                     child: Text(
                       confirmLabel,
                       style: const TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight: AppTypography.weightBold,
                         fontSize: 14,
                       ),
                     ),

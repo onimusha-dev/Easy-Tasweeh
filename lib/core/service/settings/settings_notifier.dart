@@ -33,12 +33,26 @@ class SettingsNotifier extends Notifier<SettingsState> {
 
   Future<void> refreshPermissionStatus() async {
     final status = await Permission.notification.status;
+    
+    // On Android 13+, we need both notification and (often) exact alarm permissions.
+    // If exactStatus is denied, it might still show notifications but they won't be exact.
+    // We consider it "granted" only if notification permission is granted.
     state = state.copyWith(notificationPermissionGranted: status.isGranted);
   }
 
   Future<bool> requestNotificationPermission() async {
     final status = await Permission.notification.request();
-    final granted = status.isGranted;
+    
+    // Also request exact alarm permission if needed
+    if (status.isGranted) {
+      final exactStatus = await Permission.scheduleExactAlarm.status;
+      if (exactStatus.isDenied || exactStatus.isPermanentlyDenied) {
+        await Permission.scheduleExactAlarm.request();
+      }
+    }
+
+    final finalStatus = await Permission.notification.status;
+    final granted = finalStatus.isGranted;
     state = state.copyWith(notificationPermissionGranted: granted);
     return granted;
   }

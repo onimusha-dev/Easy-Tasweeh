@@ -80,17 +80,17 @@ class AppTypography {
       // TITLE: UI components, card titles
       titleLarge: GoogleFonts.outfit(
         fontSize: sizeTitleLarge,
-        fontWeight: weightBold,
+        fontWeight: weightSemiBold,
         color: primary,
       ),
       titleMedium: GoogleFonts.outfit(
         fontSize: sizeTitleMedium,
-        fontWeight: weightBold,
+        fontWeight: weightSemiBold,
         color: primary,
       ),
       titleSmall: GoogleFonts.outfit(
         fontSize: sizeTitleSmall,
-        fontWeight: weightBold,
+        fontWeight: weightSemiBold,
         color: primary,
       ),
 
@@ -129,7 +129,7 @@ class AppTypography {
       ),
       labelSmall: GoogleFonts.outfit(
         fontSize: sizeLabelSmall,
-        fontWeight: weightBlack,
+        fontWeight: weightSemiBold,
         letterSpacing: 1.2,
         color: secondary,
       ),

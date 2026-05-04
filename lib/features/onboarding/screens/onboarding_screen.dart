@@ -1,6 +1,8 @@
 import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -100,7 +102,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           key: ValueKey(_currentPage == 2),
                           style: const TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: AppTypography.weightBold,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -120,7 +122,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             'Skip for now',
                             style: TextStyle(
                               color: colorScheme.primary.withValues(alpha: 0.6),
-                              fontWeight: FontWeight.w600,
+                              fontWeight: AppTypography.weightSemiBold,
                             ),
                           ),
                         ),
@@ -185,7 +187,7 @@ class _OnboardingPage extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
+              fontWeight: AppTypography.weightSemiBold,
               color: colorScheme.onSurface,
               letterSpacing: -0.5,
             ),
@@ -228,45 +230,102 @@ class _NotificationPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
     final granted = settings.notificationPermissionGranted;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return _OnboardingPage(
       icon: Icons.notifications_active_rounded,
       title: 'Stay Consistent',
       description:
-          'Enable notifications to receive gentle reminders for morning, evening, and after-prayer dhikr.',
+          'Enable notifications to receive gentle reminders for after-prayer dhikr and Prophet\'s sayings.',
       action: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: granted
-            ? Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
-                  borderRadius: AppLayout.brMedium,
-                  border: Border.all(
-                    color: Colors.green.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.check_circle_rounded,
-                      color: Colors.green,
-                      size: 20,
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Reminders Enabled',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w700,
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.1),
+                      borderRadius: AppLayout.brMedium,
+                      border: Border.all(
+                        color: Colors.green.withValues(alpha: 0.2),
                       ),
                     ),
-                  ],
-                ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.check_circle_rounded,
+                          color: Colors.green,
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'System Access Granted',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: AppTypography.weightSemiBold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.3,
+                      ),
+                      borderRadius: AppLayout.brLarge,
+                      border: Border.all(
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Prayer Reminders',
+                                style: TextStyle(
+                                  fontWeight: AppTypography.weightSemiBold,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                'Enable all 5 prayer dhikr alerts',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Switch(
+                          value: settings.reminders.afterSalahReminder,
+                          onChanged: (v) {
+                            ref
+                                .read(settingsProvider.notifier)
+                                .toggleAfterSalahReminder(v);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               )
             : OutlinedButton.icon(
                 onPressed: () => ref
