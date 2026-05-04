@@ -22,6 +22,17 @@ class ReminderTime {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReminderTime &&
+          runtimeType == other.runtimeType &&
+          hour == other.hour &&
+          minute == other.minute;
+
+  @override
+  int get hashCode => hour.hashCode ^ minute.hashCode;
+
+  @override
   String toString() => label;
 }
 

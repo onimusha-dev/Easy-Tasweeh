@@ -1,6 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
+import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/core/widgets/app_menu_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,7 +80,7 @@ class ComboPresetCard extends ConsumerWidget {
                         Text(
                           preset.name,
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: AppTypography.weightSemiBold,
                           ),
                         ),
                         Text(
@@ -174,7 +175,7 @@ class ComboPresetCard extends ConsumerWidget {
                               ? '${preset.counts[i]}'
                               : '-',
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
+                            fontWeight: AppTypography.weightSemiBold,
                             color: colorScheme.onSurface,
                           ),
                         ),
