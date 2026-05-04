@@ -2,7 +2,6 @@ import 'package:easy_tasbeeh/core/service/backup_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
-import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

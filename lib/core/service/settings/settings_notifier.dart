@@ -33,7 +33,7 @@ class SettingsNotifier extends Notifier<SettingsState> {
 
   Future<void> refreshPermissionStatus() async {
     final status = await Permission.notification.status;
-    
+
     // On Android 13+, we need both notification and (often) exact alarm permissions.
     // If exactStatus is denied, it might still show notifications but they won't be exact.
     // We consider it "granted" only if notification permission is granted.
@@ -42,7 +42,7 @@ class SettingsNotifier extends Notifier<SettingsState> {
 
   Future<bool> requestNotificationPermission() async {
     final status = await Permission.notification.request();
-    
+
     // Also request exact alarm permission if needed
     if (status.isGranted) {
       final exactStatus = await Permission.scheduleExactAlarm.status;
@@ -215,7 +215,14 @@ class SettingsNotifier extends Notifier<SettingsState> {
     );
   }
 
-  Future<void> setActiveComboIndex(int index) async {
+  Future<void> setActiveComboIndex(int index, {bool isRestoring = false}) async {
+    // 1. Save outgoing session to history before switching (mark as non-restorable to ensure clean start)
+    // Only if we are not in the middle of a restoration process
+    if (!isRestoring) {
+      await ref.read(countRepositoryProvider).saveAndReset(isRestorable: false);
+    }
+
+    // 2. Update active index
     await _service.setInt('activeComboIndex', index);
     state = state.copyWith(
       dhikr: state.dhikr.copyWith(
@@ -224,12 +231,17 @@ class SettingsNotifier extends Notifier<SettingsState> {
       ),
     );
 
-    // Sync database target with combo total if active
-    if (index >= 0 && index < state.dhikr.comboPresets.length) {
-      final total = state.dhikr.comboPresets[index].counts.reduce(
-        (a, b) => a + b,
-      );
-      await ref.read(countRepositoryProvider).setTarget(total);
+    if (!isRestoring) {
+      // 3. Sync database target with combo total if active
+      if (index >= 0 && index < state.dhikr.comboPresets.length) {
+        final total = state.dhikr.comboPresets[index].counts.reduce(
+          (a, b) => a + b,
+        );
+        await ref.read(countRepositoryProvider).setTarget(total);
+      }
+
+      // 4. Always reset the counter for the newly entered mode to ensure a clean start
+      await ref.read(countRepositoryProvider).reset();
     }
   }
 

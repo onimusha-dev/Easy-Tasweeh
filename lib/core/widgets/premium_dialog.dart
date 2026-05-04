@@ -32,8 +32,7 @@ class PremiumDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
-          color:
-              Theme.of(context).dialogTheme.backgroundColor ??
+          color: Theme.of(context).dialogTheme.backgroundColor ??
               colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(

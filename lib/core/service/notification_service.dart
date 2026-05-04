@@ -249,14 +249,6 @@ class NotificationService {
     );
   }
 
-  Future<void> showRateAppNotification() async {
-    await showInstantBackupAndRestoreNotification(
-      id: 999,
-      title: 'Enjoying Easy Tasbeeh?',
-      body: 'Tap to rate the app and help us improve!',
-      payload: 'rate_app_payload',
-    );
-  }
 
   Future<void> showBackupErrorNotification(String error) async {
     await showInstantBackupAndRestoreNotification(

@@ -1,14 +1,13 @@
-import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
+import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasbeeh/core/widgets/save_progress_dialog.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_preset_card.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/combo_selection_app_bar.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/empty_presets_state.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/preset_edit_sheet.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/combo_selection/single_mode_card.dart';
-import 'package:easy_tasbeeh/core/widgets/app_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -97,22 +96,28 @@ class ComboSelectionScreen extends ConsumerWidget {
     if (settings.activeComboIndex == newIndex) return;
 
     final countData = ref.read(currentCountStreamProvider).asData?.value;
-    if ((countData?.currentCount ?? 0) > 0) {
-      SaveProgressDialog.show(
-        context,
+    final hasProgress = (countData?.currentCount ?? 0) > 0;
+
+    showDialog(
+      context: context,
+      builder: (context) => PremiumDialog(
+        icon: Icons.swap_horiz_rounded,
         title: 'Switch Mode?',
-        description:
-            'You have active progress. Switching modes will save your current session to history.',
+        description: hasProgress
+            ? 'You have active progress. Switching modes will save your current session to history and start fresh at 0.'
+            : 'Are you sure you want to switch modes? Your progress in the new mode will start from 0.',
         confirmLabel: 'Switch',
         onConfirm: () async {
           await ref
               .read(settingsProvider.notifier)
               .setActiveComboIndex(newIndex);
+          if (context.mounted) {
+            // Close selection screen to return to counter
+            Navigator.pop(context);
+          }
         },
-      );
-    } else {
-      await ref.read(settingsProvider.notifier).setActiveComboIndex(newIndex);
-    }
+      ),
+    );
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, ComboPreset preset) {

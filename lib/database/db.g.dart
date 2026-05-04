@@ -614,6 +614,32 @@ class $CountHistoryTableTable extends CountHistoryTable
     requiredDuringInsert: false,
     defaultValue: const Constant('single'),
   );
+  static const VerificationMeta _isRestorableMeta = const VerificationMeta(
+    'isRestorable',
+  );
+  @override
+  late final GeneratedColumn<bool> isRestorable = GeneratedColumn<bool>(
+    'is_restorable',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_restorable" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _comboIndexMeta = const VerificationMeta(
+    'comboIndex',
+  );
+  @override
+  late final GeneratedColumn<int> comboIndex = GeneratedColumn<int>(
+    'combo_index',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -624,6 +650,8 @@ class $CountHistoryTableTable extends CountHistoryTable
     dhikrId,
     comboName,
     sessionMode,
+    isRestorable,
+    comboIndex,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -691,6 +719,21 @@ class $CountHistoryTableTable extends CountHistoryTable
         ),
       );
     }
+    if (data.containsKey('is_restorable')) {
+      context.handle(
+        _isRestorableMeta,
+        isRestorable.isAcceptableOrUnknown(
+          data['is_restorable']!,
+          _isRestorableMeta,
+        ),
+      );
+    }
+    if (data.containsKey('combo_index')) {
+      context.handle(
+        _comboIndexMeta,
+        comboIndex.isAcceptableOrUnknown(data['combo_index']!, _comboIndexMeta),
+      );
+    }
     return context;
   }
 
@@ -732,6 +775,14 @@ class $CountHistoryTableTable extends CountHistoryTable
         DriftSqlType.string,
         data['${effectivePrefix}session_mode'],
       )!,
+      isRestorable: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_restorable'],
+      )!,
+      comboIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}combo_index'],
+      ),
     );
   }
 
@@ -751,6 +802,8 @@ class CountHistoryTableData extends DataClass
   final String dhikrId;
   final String? comboName;
   final String sessionMode;
+  final bool isRestorable;
+  final int? comboIndex;
   const CountHistoryTableData({
     required this.id,
     required this.targetCount,
@@ -760,6 +813,8 @@ class CountHistoryTableData extends DataClass
     required this.dhikrId,
     this.comboName,
     required this.sessionMode,
+    required this.isRestorable,
+    this.comboIndex,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -774,6 +829,10 @@ class CountHistoryTableData extends DataClass
       map['combo_name'] = Variable<String>(comboName);
     }
     map['session_mode'] = Variable<String>(sessionMode);
+    map['is_restorable'] = Variable<bool>(isRestorable);
+    if (!nullToAbsent || comboIndex != null) {
+      map['combo_index'] = Variable<int>(comboIndex);
+    }
     return map;
   }
 
@@ -789,6 +848,10 @@ class CountHistoryTableData extends DataClass
           ? const Value.absent()
           : Value(comboName),
       sessionMode: Value(sessionMode),
+      isRestorable: Value(isRestorable),
+      comboIndex: comboIndex == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comboIndex),
     );
   }
 
@@ -806,6 +869,8 @@ class CountHistoryTableData extends DataClass
       dhikrId: serializer.fromJson<String>(json['dhikrId']),
       comboName: serializer.fromJson<String?>(json['comboName']),
       sessionMode: serializer.fromJson<String>(json['sessionMode']),
+      isRestorable: serializer.fromJson<bool>(json['isRestorable']),
+      comboIndex: serializer.fromJson<int?>(json['comboIndex']),
     );
   }
   @override
@@ -820,6 +885,8 @@ class CountHistoryTableData extends DataClass
       'dhikrId': serializer.toJson<String>(dhikrId),
       'comboName': serializer.toJson<String?>(comboName),
       'sessionMode': serializer.toJson<String>(sessionMode),
+      'isRestorable': serializer.toJson<bool>(isRestorable),
+      'comboIndex': serializer.toJson<int?>(comboIndex),
     };
   }
 
@@ -832,6 +899,8 @@ class CountHistoryTableData extends DataClass
     String? dhikrId,
     Value<String?> comboName = const Value.absent(),
     String? sessionMode,
+    bool? isRestorable,
+    Value<int?> comboIndex = const Value.absent(),
   }) => CountHistoryTableData(
     id: id ?? this.id,
     targetCount: targetCount ?? this.targetCount,
@@ -841,6 +910,8 @@ class CountHistoryTableData extends DataClass
     dhikrId: dhikrId ?? this.dhikrId,
     comboName: comboName.present ? comboName.value : this.comboName,
     sessionMode: sessionMode ?? this.sessionMode,
+    isRestorable: isRestorable ?? this.isRestorable,
+    comboIndex: comboIndex.present ? comboIndex.value : this.comboIndex,
   );
   CountHistoryTableData copyWithCompanion(CountHistoryTableCompanion data) {
     return CountHistoryTableData(
@@ -858,6 +929,12 @@ class CountHistoryTableData extends DataClass
       sessionMode: data.sessionMode.present
           ? data.sessionMode.value
           : this.sessionMode,
+      isRestorable: data.isRestorable.present
+          ? data.isRestorable.value
+          : this.isRestorable,
+      comboIndex: data.comboIndex.present
+          ? data.comboIndex.value
+          : this.comboIndex,
     );
   }
 
@@ -871,7 +948,9 @@ class CountHistoryTableData extends DataClass
           ..write('updatedAt: $updatedAt, ')
           ..write('dhikrId: $dhikrId, ')
           ..write('comboName: $comboName, ')
-          ..write('sessionMode: $sessionMode')
+          ..write('sessionMode: $sessionMode, ')
+          ..write('isRestorable: $isRestorable, ')
+          ..write('comboIndex: $comboIndex')
           ..write(')'))
         .toString();
   }
@@ -886,6 +965,8 @@ class CountHistoryTableData extends DataClass
     dhikrId,
     comboName,
     sessionMode,
+    isRestorable,
+    comboIndex,
   );
   @override
   bool operator ==(Object other) =>
@@ -898,7 +979,9 @@ class CountHistoryTableData extends DataClass
           other.updatedAt == this.updatedAt &&
           other.dhikrId == this.dhikrId &&
           other.comboName == this.comboName &&
-          other.sessionMode == this.sessionMode);
+          other.sessionMode == this.sessionMode &&
+          other.isRestorable == this.isRestorable &&
+          other.comboIndex == this.comboIndex);
 }
 
 class CountHistoryTableCompanion
@@ -911,6 +994,8 @@ class CountHistoryTableCompanion
   final Value<String> dhikrId;
   final Value<String?> comboName;
   final Value<String> sessionMode;
+  final Value<bool> isRestorable;
+  final Value<int?> comboIndex;
   const CountHistoryTableCompanion({
     this.id = const Value.absent(),
     this.targetCount = const Value.absent(),
@@ -920,6 +1005,8 @@ class CountHistoryTableCompanion
     this.dhikrId = const Value.absent(),
     this.comboName = const Value.absent(),
     this.sessionMode = const Value.absent(),
+    this.isRestorable = const Value.absent(),
+    this.comboIndex = const Value.absent(),
   });
   CountHistoryTableCompanion.insert({
     this.id = const Value.absent(),
@@ -930,6 +1017,8 @@ class CountHistoryTableCompanion
     this.dhikrId = const Value.absent(),
     this.comboName = const Value.absent(),
     this.sessionMode = const Value.absent(),
+    this.isRestorable = const Value.absent(),
+    this.comboIndex = const Value.absent(),
   });
   static Insertable<CountHistoryTableData> custom({
     Expression<int>? id,
@@ -940,6 +1029,8 @@ class CountHistoryTableCompanion
     Expression<String>? dhikrId,
     Expression<String>? comboName,
     Expression<String>? sessionMode,
+    Expression<bool>? isRestorable,
+    Expression<int>? comboIndex,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -950,6 +1041,8 @@ class CountHistoryTableCompanion
       if (dhikrId != null) 'dhikr_id': dhikrId,
       if (comboName != null) 'combo_name': comboName,
       if (sessionMode != null) 'session_mode': sessionMode,
+      if (isRestorable != null) 'is_restorable': isRestorable,
+      if (comboIndex != null) 'combo_index': comboIndex,
     });
   }
 
@@ -962,6 +1055,8 @@ class CountHistoryTableCompanion
     Value<String>? dhikrId,
     Value<String?>? comboName,
     Value<String>? sessionMode,
+    Value<bool>? isRestorable,
+    Value<int?>? comboIndex,
   }) {
     return CountHistoryTableCompanion(
       id: id ?? this.id,
@@ -972,6 +1067,8 @@ class CountHistoryTableCompanion
       dhikrId: dhikrId ?? this.dhikrId,
       comboName: comboName ?? this.comboName,
       sessionMode: sessionMode ?? this.sessionMode,
+      isRestorable: isRestorable ?? this.isRestorable,
+      comboIndex: comboIndex ?? this.comboIndex,
     );
   }
 
@@ -1002,6 +1099,12 @@ class CountHistoryTableCompanion
     if (sessionMode.present) {
       map['session_mode'] = Variable<String>(sessionMode.value);
     }
+    if (isRestorable.present) {
+      map['is_restorable'] = Variable<bool>(isRestorable.value);
+    }
+    if (comboIndex.present) {
+      map['combo_index'] = Variable<int>(comboIndex.value);
+    }
     return map;
   }
 
@@ -1015,7 +1118,9 @@ class CountHistoryTableCompanion
           ..write('updatedAt: $updatedAt, ')
           ..write('dhikrId: $dhikrId, ')
           ..write('comboName: $comboName, ')
-          ..write('sessionMode: $sessionMode')
+          ..write('sessionMode: $sessionMode, ')
+          ..write('isRestorable: $isRestorable, ')
+          ..write('comboIndex: $comboIndex')
           ..write(')'))
         .toString();
   }
@@ -1734,6 +1839,8 @@ typedef $$CountHistoryTableTableCreateCompanionBuilder =
       Value<String> dhikrId,
       Value<String?> comboName,
       Value<String> sessionMode,
+      Value<bool> isRestorable,
+      Value<int?> comboIndex,
     });
 typedef $$CountHistoryTableTableUpdateCompanionBuilder =
     CountHistoryTableCompanion Function({
@@ -1745,6 +1852,8 @@ typedef $$CountHistoryTableTableUpdateCompanionBuilder =
       Value<String> dhikrId,
       Value<String?> comboName,
       Value<String> sessionMode,
+      Value<bool> isRestorable,
+      Value<int?> comboIndex,
     });
 
 class $$CountHistoryTableTableFilterComposer
@@ -1793,6 +1902,16 @@ class $$CountHistoryTableTableFilterComposer
 
   ColumnFilters<String> get sessionMode => $composableBuilder(
     column: $table.sessionMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isRestorable => $composableBuilder(
+    column: $table.isRestorable,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get comboIndex => $composableBuilder(
+    column: $table.comboIndex,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1845,6 +1964,16 @@ class $$CountHistoryTableTableOrderingComposer
     column: $table.sessionMode,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get isRestorable => $composableBuilder(
+    column: $table.isRestorable,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get comboIndex => $composableBuilder(
+    column: $table.comboIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$CountHistoryTableTableAnnotationComposer
@@ -1883,6 +2012,16 @@ class $$CountHistoryTableTableAnnotationComposer
 
   GeneratedColumn<String> get sessionMode => $composableBuilder(
     column: $table.sessionMode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get isRestorable => $composableBuilder(
+    column: $table.isRestorable,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get comboIndex => $composableBuilder(
+    column: $table.comboIndex,
     builder: (column) => column,
   );
 }
@@ -1935,6 +2074,8 @@ class $$CountHistoryTableTableTableManager
                 Value<String> dhikrId = const Value.absent(),
                 Value<String?> comboName = const Value.absent(),
                 Value<String> sessionMode = const Value.absent(),
+                Value<bool> isRestorable = const Value.absent(),
+                Value<int?> comboIndex = const Value.absent(),
               }) => CountHistoryTableCompanion(
                 id: id,
                 targetCount: targetCount,
@@ -1944,6 +2085,8 @@ class $$CountHistoryTableTableTableManager
                 dhikrId: dhikrId,
                 comboName: comboName,
                 sessionMode: sessionMode,
+                isRestorable: isRestorable,
+                comboIndex: comboIndex,
               ),
           createCompanionCallback:
               ({
@@ -1955,6 +2098,8 @@ class $$CountHistoryTableTableTableManager
                 Value<String> dhikrId = const Value.absent(),
                 Value<String?> comboName = const Value.absent(),
                 Value<String> sessionMode = const Value.absent(),
+                Value<bool> isRestorable = const Value.absent(),
+                Value<int?> comboIndex = const Value.absent(),
               }) => CountHistoryTableCompanion.insert(
                 id: id,
                 targetCount: targetCount,
@@ -1964,6 +2109,8 @@ class $$CountHistoryTableTableTableManager
                 dhikrId: dhikrId,
                 comboName: comboName,
                 sessionMode: sessionMode,
+                isRestorable: isRestorable,
+                comboIndex: comboIndex,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
