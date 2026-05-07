@@ -118,32 +118,26 @@ class SingleModeCard extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: InkWell(
-                      onTap: isSelected
-                          ? () => DhikrSheet.show(context,
-                              sessionId: sessionIdSingle)
-                          : onSelect,
-                      child: Column(
-                        children: [
-                          Text(
-                            'DHIKR',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: colorScheme.outline,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'DHIKR',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            singleDhikr.transliteration.split(' ').first,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: AppTypography.weightSemiBold,
-                              color: colorScheme.onSurface,
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          singleDhikr.transliteration.split(' ').first,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: AppTypography.weightSemiBold,
+                            color: colorScheme.onSurface,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -152,31 +146,26 @@ class SingleModeCard extends ConsumerWidget {
                     color: colorScheme.outlineVariant.withValues(alpha: 0.3),
                   ),
                   Expanded(
-                    child: InkWell(
-                      onTap: isSelected
-                          ? () => _showTargetGoalSheet(context)
-                          : onSelect,
-                      child: Column(
-                        children: [
-                          Text(
-                            'GOAL',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: colorScheme.outline,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                            ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'GOAL',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: colorScheme.outline,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            currentTarget == 0 ? '∞' : '$currentTarget',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: AppTypography.weightSemiBold,
-                              color: colorScheme.onSurface,
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          currentTarget == 0 ? '∞' : '$currentTarget',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: AppTypography.weightSemiBold,
+                            color: colorScheme.onSurface,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

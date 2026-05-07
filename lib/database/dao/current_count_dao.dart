@@ -36,6 +36,15 @@ class CurrentCountDao extends DatabaseAccessor<AppDatabase> with _$CurrentCountD
     return (update(currentCountTable)..where((t) => t.id.equals(count.id.value))).write(count);
   }
 
+  // Atomic increment
+  Future<void> incrementCount(int id) {
+    final query = update(currentCountTable)..where((t) => t.id.equals(id));
+    return query.write(CurrentCountTableCompanion.custom(
+      currentCount: currentCountTable.currentCount + const Constant(1),
+      updatedAt: Constant(DateTime.now()),
+    ));
+  }
+
   // Delete everything to reset completely
   Future<int> deleteAll() {
     return (delete(currentCountTable)).go();

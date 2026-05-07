@@ -60,9 +60,10 @@ class TargetGrid extends ConsumerWidget {
                   description:
                       'This will save your current progress to history.',
                   confirmLabel: 'Archive',
-                  onConfirm: () {
-                    notifier.setTarget(target, sessionId: sessionId);
-                    Navigator.pop(context); // Close bottom sheet
+                  onConfirm: () async {
+                    await notifier.saveAndReset(sessionId: sessionId);
+                    await notifier.setTarget(target, sessionId: sessionId);
+                    if (context.mounted) Navigator.pop(context); // Close bottom sheet
                   },
                 );
               } else {

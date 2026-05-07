@@ -1,5 +1,5 @@
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
-import 'package:easy_tasbeeh/database/db.dart';
 import 'package:easy_tasbeeh/features/analytics/widgets/activity_heatmap.dart';
 import 'package:easy_tasbeeh/features/analytics/widgets/weekly_activity_bar.dart';
 import 'package:easy_tasbeeh/features/history/providers/history_provider.dart';
@@ -45,7 +45,9 @@ class AnalyticsScreen extends ConsumerWidget {
                   .indexed
                   .map(
                     (entry) => Padding(
-                      padding: const EdgeInsets.only(bottom: AppLayout.spaceTileGap),
+                      padding: const EdgeInsets.only(
+                        bottom: AppLayout.spaceTileGap,
+                      ),
                       child: HistoryItemCard(data: entry.$2, index: entry.$1),
                     ),
                   ),
@@ -88,7 +90,7 @@ class AnalyticsScreen extends ConsumerWidget {
     );
   }
 
-  _AnalyticsStats _calculateStats(List<CountHistoryTableData> history) {
+  _AnalyticsStats _calculateStats(List<HistoryRecord> history) {
     Map<String, int> dailyTotals = {};
     final now = DateTime.now();
     for (int i = 0; i < 35; i++) {

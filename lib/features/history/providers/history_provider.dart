@@ -1,18 +1,18 @@
-import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final historyStreamProvider = StreamProvider<List<CountHistoryTableData>>((ref) {
+final historyStreamProvider = StreamProvider<List<HistoryRecord>>((ref) {
   return ref.watch(countRepositoryProvider).watchAllHistory();
 });
 
-final historyProvider = NotifierProvider<HistoryNotifier, AsyncValue<List<CountHistoryTableData>>>(() {
+final historyProvider = NotifierProvider<HistoryNotifier, AsyncValue<List<HistoryRecord>>>(() {
   return HistoryNotifier();
 });
 
-class HistoryNotifier extends Notifier<AsyncValue<List<CountHistoryTableData>>> {
+class HistoryNotifier extends Notifier<AsyncValue<List<HistoryRecord>>> {
   @override
-  AsyncValue<List<CountHistoryTableData>> build() {
+  AsyncValue<List<HistoryRecord>> build() {
     return ref.watch(historyStreamProvider);
   }
 

@@ -64,7 +64,7 @@ class ComboSelectionScreen extends ConsumerWidget {
 
   // --- Logic Methods ---
 
-  void _addNewPreset(WidgetRef ref) {
+  Future<void> _addNewPreset(WidgetRef ref) async {
     final settings = ref.read(settingsProvider);
     final nextIndex = settings.comboPresets.length;
     final newPreset = ComboPreset(
@@ -73,8 +73,8 @@ class ComboSelectionScreen extends ConsumerWidget {
       dhikrIds: ['subhanallah', 'alhamdulillah', 'allahu_akbar'],
       counts: [33, 33, 33],
     );
-    ref.read(settingsProvider.notifier).saveComboPreset(newPreset);
-    ref.read(settingsProvider.notifier).setActiveComboIndex(nextIndex);
+    await ref.read(settingsProvider.notifier).saveComboPreset(newPreset);
+    await ref.read(settingsProvider.notifier).setActiveComboIndex(nextIndex);
   }
 
   void _editPreset(BuildContext context, ComboPreset preset) {

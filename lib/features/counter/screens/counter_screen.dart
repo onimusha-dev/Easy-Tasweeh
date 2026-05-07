@@ -1,8 +1,7 @@
 import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasbeeh/database/db.dart';
-import 'package:easy_tasbeeh/database/repository/count_repository.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/features/counter/providers/counter_provider.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_app_bar.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/counter_background.dart';
@@ -87,25 +86,29 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
     }
   }
 
-  Future<void> _incrementCounter(CurrentCountTableData? countData) async {
+  Future<void> _incrementCounter(CounterSession? countData) async {
     if (_isFrozen) return;
 
     setState(() => _isFrozen = true);
 
-    final nextCount = (countData?.currentCount ?? 0) + 1;
-    final target = countData?.targetCount ?? 0;
-    final targetReachedLocally = target > 0 && nextCount >= target;
+    final notifier = ref.read(counterProvider.notifier);
+    final settings = ref.read(settingsProvider);
 
-    if (!targetReachedLocally) {
+    final updatedSession = await notifier.increment();
+    if (updatedSession == null) {
+      if (mounted) setState(() => _isFrozen = false);
+      return;
+    }
+
+    final nextCount = updatedSession.currentCount;
+    final target = updatedSession.targetCount;
+    final isTargetReached = target > 0 && nextCount >= target;
+
+    if (!isTargetReached) {
       Future.delayed(const Duration(milliseconds: 100), () {
         if (mounted) setState(() => _isFrozen = false);
       });
     }
-
-    final notifier = ref.read(counterProvider.notifier);
-    final settings = ref.read(settingsProvider);
-
-    final isTargetReached = await notifier.increment();
 
     // 1. Combo Segment Milestone Vibration
     if (settings.activeComboIndex >= 0 &&
@@ -133,7 +136,7 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
         settings.vibrateOnMilestone &&
         nextCount > 0 &&
         nextCount % settings.milestoneValue == 0 &&
-        (target == 0 || nextCount < target)) {
+        (!isTargetReached)) {
       HapticFeedback.mediumImpact();
       Vibration.vibrate(duration: 60);
     }

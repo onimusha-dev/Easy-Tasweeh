@@ -9,24 +9,26 @@ final currentDhikrProvider = Provider<DhikrItem>((ref) {
   final countData = ref.watch(counterProvider).value;
 
   if (settings.activeComboIndex >= 0 &&
-      settings.activeComboIndex < settings.comboPresets.length &&
-      countData != null) {
-    final current = countData.currentCount;
+      settings.activeComboIndex < settings.comboPresets.length) {
     final preset = settings.comboPresets[settings.activeComboIndex];
     final counts = preset.counts;
     
-    int cumulative = 0;
-    int index = -1;
-    for (int i = 0; i < counts.length; i++) {
-      cumulative += counts[i];
-      if (current < cumulative) {
-        index = i;
-        break;
+    int index = 0;
+    if (countData != null) {
+      final current = countData.currentCount;
+      int cumulative = 0;
+      index = -1;
+      for (int i = 0; i < counts.length; i++) {
+        cumulative += counts[i];
+        if (current < cumulative) {
+          index = i;
+          break;
+        }
       }
-    }
 
-    if (index == -1 && counts.isNotEmpty) {
-      index = counts.length - 1;
+      if (index == -1 && counts.isNotEmpty) {
+        index = counts.length - 1;
+      }
     }
 
     if (index >= 0 && index < preset.dhikrIds.length) {

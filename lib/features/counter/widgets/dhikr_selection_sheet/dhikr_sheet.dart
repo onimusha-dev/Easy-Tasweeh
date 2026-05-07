@@ -1,8 +1,9 @@
-import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/dhikr_service.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/save_progress_dialog.dart';
+import 'package:easy_tasbeeh/database/repository/count_repository.dart';
 import 'package:easy_tasbeeh/features/counter/providers/counter_provider.dart';
 import 'package:easy_tasbeeh/features/counter/widgets/dhikr_selection_sheet/dhikr_tile.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,15 @@ class DhikrSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
     final currentDhikr = ref.watch(currentDhikrProvider);
-    final countAsync = ref.watch(counterProvider);
-    final currentCount = countAsync.value?.currentCount ?? 0;
+    
+    // Determine which session we are actually looking at
+    final targetSessionId = sessionId ??
+        (settings.activeComboIndex >= 0 ? sessionIdCombo : sessionIdSingle);
+
+    final sessionCountAsync = ref.watch(sessionStreamProvider(targetSessionId));
+    final currentCount = sessionCountAsync.value?.currentCount ?? 0;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -80,13 +87,17 @@ class DhikrSheet extends ConsumerWidget {
               itemCount: dhikrList.length,
               itemBuilder: (context, index) {
                 final item = dhikrList[index];
-                final isSelected = item.id == currentDhikr.id;
+
+                // Determine if this item is selected based on which session we are editing
+                final bool isSelected = sessionId == sessionIdSingle
+                    ? item.id == settings.lastDhikrId
+                    : item.id == currentDhikr.id;
 
                 return DhikrTile(
                   item: item,
                   index: index + 1,
                   isSelected: isSelected,
-                  onTap: () {
+                  onTap: () async {
                     if (onSelected != null) {
                       onSelected!(item);
                       return;
@@ -101,20 +112,25 @@ class DhikrSheet extends ConsumerWidget {
                         description:
                             'This will save your current progress to history.',
                         confirmLabel: 'Archive',
-                        onConfirm: () {
-                          ref
+                        onConfirm: () async {
+                          // Close dialog first
+                          Navigator.pop(context);
+                          
+                          await ref.read(countRepositoryProvider).saveAndReset(sessionId: sessionId);
+                          await ref
                               .read(settingsProvider.notifier)
                               .setLastDhikrId(item.id);
-                          notifier.setDhikrId(item.id, sessionId: sessionId);
-                          Navigator.pop(context); // Close bottom sheet
+                          await ref.read(countRepositoryProvider).setDhikrId(item.id,
+                              sessionId: sessionId);
+                          if (context.mounted) Navigator.pop(context);
                         },
                       );
                     } else {
-                      ref
+                      await ref
                           .read(settingsProvider.notifier)
                           .setLastDhikrId(item.id);
-                      notifier.setDhikrId(item.id, sessionId: sessionId);
-                      Navigator.pop(context); // Close bottom sheet
+                      await notifier.setDhikrId(item.id, sessionId: sessionId);
+                      if (context.mounted) Navigator.pop(context);
                     }
                   },
                 );
@@ -135,7 +151,8 @@ class DhikrSheet extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DhikrSheet(onSelected: onSelected, sessionId: sessionId),
+      builder: (context) =>
+          DhikrSheet(onSelected: onSelected, sessionId: sessionId),
     );
   }
 }

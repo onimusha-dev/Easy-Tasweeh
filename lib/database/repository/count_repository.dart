@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
 import 'package:easy_tasbeeh/database/dao/count_history_dao.dart';
 import 'package:easy_tasbeeh/database/dao/current_count_dao.dart';
@@ -9,9 +11,7 @@ part 'count_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 CountRepository countRepository(Ref ref) {
-  final currentCountDao = ref.watch(currentCountDaoProvider);
-  final countHistoryDao = ref.watch(countHistoryDaoProvider);
-  return CountRepository(ref, currentCountDao, countHistoryDao);
+  return CountRepository(ref);
 }
 
 const int sessionIdSingle = 1;
@@ -19,88 +19,165 @@ const int sessionIdCombo = 2;
 
 class CountRepository {
   final Ref _ref;
-  final CurrentCountDao _currentCountDao;
-  final CountHistoryDao _countHistoryDao;
 
-  CountRepository(this._ref, this._currentCountDao, this._countHistoryDao);
+  CountRepository(this._ref);
+
+  CurrentCountDao get _currentCountDao => _ref.read(currentCountDaoProvider);
+  CountHistoryDao get _countHistoryDao => _ref.read(countHistoryDaoProvider);
+
+  CounterSession _mapToSession(CurrentCountTableData data) {
+    return CounterSession(
+      id: data.id,
+      currentCount: data.currentCount,
+      targetCount: data.targetCount,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      dhikrId: data.dhikrId,
+      comboName: data.comboName,
+      sessionMode: data.sessionMode,
+    );
+  }
+
+  // --- Public API ---
+
+  // Watch current count progress by ID
+  Stream<CounterSession?> watchCountById(int id) {
+    return _currentCountDao.watchCountById(id).map((data) {
+      if (data == null) return null;
+      return _mapToSession(data);
+    });
+  }
+
+  // --- Session Management ---
 
   // Get or initialize the current count session based on the active mode
-  Future<CurrentCountTableData> getOrCreateCurrentCount() async {
+  Future<CounterSession> getOrCreateCurrentCount({int? sessionId}) async {
     final settings = _ref.read(settingsProvider);
-    final isCombo = settings.activeComboIndex >= 0;
-    final sessionId = isCombo ? sessionIdCombo : sessionIdSingle;
+    final isComboRequested = sessionId != null
+        ? sessionId == sessionIdCombo
+        : settings.dhikr.activeComboIndex >= 0;
+
+    final targetSessionId =
+        sessionId ?? (isComboRequested ? sessionIdCombo : sessionIdSingle);
 
     final counts = await _currentCountDao.getAllCounts();
-    final session = counts.firstWhere(
-      (c) => c.id == sessionId,
-      orElse: () => CurrentCountTableData(
-        id: sessionId,
-        targetCount: isCombo ? 99 : 33, // Default targets for combo/single
+    CurrentCountTableData? existing = counts.firstWhereOrNull(
+      (c) => c.id == targetSessionId,
+    );
+
+    final expectedMode = isComboRequested ? 'combo' : 'single';
+    final expectedDhikrId = isComboRequested
+        ? 'combo'
+        : settings.dhikr.lastDhikrId;
+    final expectedComboName = isComboRequested
+        ? (settings.dhikr.activeComboIndex >= 0 &&
+                  settings.dhikr.activeComboIndex <
+                      settings.dhikr.comboPresets.length
+              ? settings
+                    .dhikr
+                    .comboPresets[settings.dhikr.activeComboIndex]
+                    .name
+              : null)
+        : null;
+
+    if (existing == null) {
+      final newSession = CurrentCountTableData(
+        id: targetSessionId,
+        targetCount: isComboRequested ? 99 : 33,
         currentCount: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        dhikrId: 'subhanallah',
-        comboName: isCombo
-            ? settings.comboPresets[settings.activeComboIndex].name
-            : null,
-        sessionMode: isCombo ? 'combo' : 'single',
-      ),
-    );
+        dhikrId: expectedDhikrId,
+        comboName: expectedComboName,
+        sessionMode: expectedMode,
+      );
 
-    // If session doesn't exist in DB, insert it
-    if (!counts.any((c) => c.id == sessionId)) {
       await _currentCountDao.insertCount(
         CurrentCountTableCompanion(
-          id: Value(sessionId),
-          targetCount: Value(session.targetCount),
+          id: Value(targetSessionId),
+          targetCount: Value(newSession.targetCount),
           currentCount: Value(0),
-          dhikrId: Value(session.dhikrId),
-          comboName: Value(session.comboName),
-          sessionMode: Value(session.sessionMode),
+          dhikrId: Value(newSession.dhikrId),
+          comboName: Value(newSession.comboName),
+          sessionMode: Value(newSession.sessionMode),
         ),
       );
-    }
+      return _mapToSession(newSession);
+    } else {
+      // Sync existing session if metadata changed
+      bool needsUpdate =
+          existing.sessionMode != expectedMode ||
+          existing.comboName != expectedComboName ||
+          existing.dhikrId != expectedDhikrId;
 
-    return session;
+      if (needsUpdate) {
+        final updated = existing.copyWith(
+          sessionMode: expectedMode,
+          dhikrId: expectedDhikrId,
+          comboName: Value(expectedComboName),
+          updatedAt: DateTime.now(),
+        );
+        await _currentCountDao.updateCount(
+          CurrentCountTableCompanion(
+            id: Value(targetSessionId),
+            sessionMode: Value(expectedMode),
+            dhikrId: Value(expectedDhikrId),
+            comboName: Value(expectedComboName),
+            updatedAt: Value(updated.updatedAt),
+          ),
+        );
+        return _mapToSession(updated);
+      }
+      return _mapToSession(existing);
+    }
   }
 
-  // Increment the counter and update the database
-  Future<void> increment() async {
-    final current = await getOrCreateCurrentCount();
+  // Atomic increment for the active session
+  Future<CounterSession> increment() async {
+    final session = await getOrCreateCurrentCount();
+    await _currentCountDao.incrementCount(session.id);
+
+    // Fetch updated state for the notifier
+    final updated = (await _currentCountDao.getAllCounts()).firstWhere(
+      (c) => c.id == session.id,
+    );
+    return _mapToSession(updated);
+  }
+
+  // Reset the specified session (or current active) to 0
+  Future<void> reset({int? sessionId}) async {
+    final session = await getOrCreateCurrentCount(sessionId: sessionId);
     await _currentCountDao.updateCount(
       CurrentCountTableCompanion(
-        id: Value(current.id),
-        currentCount: Value(current.currentCount + 1),
+        id: Value(session.id),
+        currentCount: const Value(0),
         updatedAt: Value(DateTime.now()),
       ),
     );
   }
 
-  // Save the current progress to history and reset the counter for a specific session
+  // Save specified session (or current active) to history and reset it
   Future<void> saveAndReset({bool isRestorable = true, int? sessionId}) async {
-    final current = sessionId != null
-        ? (await _currentCountDao.getAllCounts()).firstWhere(
-            (c) => c.id == sessionId,
-            orElse: () => throw Exception('Session $sessionId not found'),
-          )
-        : await getOrCreateCurrentCount();
+    final current = await getOrCreateCurrentCount(sessionId: sessionId);
 
     if (current.currentCount > 0) {
       final isCombo = current.id == sessionIdCombo;
       final settings = _ref.read(settingsProvider);
 
+      // Determine comboIndex if in combo mode
       int? comboIndex;
       if (isCombo) {
-        comboIndex = settings.activeComboIndex;
+        comboIndex = settings.dhikr.activeComboIndex;
       }
 
       await _countHistoryDao.insertHistory(
         CountHistoryTableCompanion(
-          dhikrId: Value(current.dhikrId),
           targetCount: Value(current.targetCount),
           currentCount: Value(current.currentCount),
           createdAt: Value(DateTime.now()),
-          sessionMode: Value(isCombo ? 'combo' : 'single'),
+          dhikrId: Value(current.dhikrId),
+          comboName: Value(current.comboName),
+          sessionMode: Value(current.sessionMode),
           isRestorable: Value(isRestorable),
           comboIndex: Value(comboIndex),
         ),
@@ -109,31 +186,72 @@ class CountRepository {
       // Reset the current count in DB
       await reset(sessionId: current.id);
     } else {
-      // Even if count is 0, we might want to reset the session state
+      // Even if count is 0, we ensure it's clean
       await reset(sessionId: current.id);
     }
   }
 
-  // Reset progress for a specific session
-  Future<void> reset({int? sessionId}) async {
-    final finalSessionId = sessionId ?? (await getOrCreateCurrentCount()).id;
+  // Restore the most recent history record into the active session
+  Future<bool> restoreLastSession() async {
+    final history = await _countHistoryDao.watchAllHistory().first;
+    if (history.isEmpty) return false;
+
+    // Filter for the last restorable record that meets the user's conditions:
+    // 1. Under today
+    // 2. Not completed (if target > 0)
+    // 3. Not 0
+    final now = DateTime.now();
+    final last = history.firstWhereOrNull((h) {
+      if (h.isRestorable != true) return false;
+
+      final date = h.createdAt.toLocal();
+      final isToday =
+          date.year == now.year &&
+          date.month == now.month &&
+          date.day == now.day;
+      if (!isToday) return false;
+
+      final isZero = h.currentCount <= 0;
+      if (isZero) return false;
+
+      final isCompleted = h.targetCount > 0 && h.currentCount >= h.targetCount;
+      if (isCompleted) return false;
+
+      return true;
+    });
+
+    if (last == null) return false;
+
+    final isCombo = last.sessionMode == 'combo';
+    final sessionId = isCombo ? sessionIdCombo : sessionIdSingle;
+
+    // Ensure session exists
+    await getOrCreateCurrentCount(sessionId: sessionId);
+
     await _currentCountDao.updateCount(
       CurrentCountTableCompanion(
-        id: Value(finalSessionId),
-        currentCount: const Value(0),
+        id: Value(sessionId),
+        currentCount: Value(last.currentCount),
+        targetCount: Value(last.targetCount),
+        dhikrId: Value(last.dhikrId),
+        comboName: Value(last.comboName),
+        sessionMode: Value(last.sessionMode),
         updatedAt: Value(DateTime.now()),
       ),
     );
+
+    // Delete the history record after restoration
+    await _countHistoryDao.deleteById(last.id);
+    return true;
   }
 
-  // Update target goal for a specific session
+  // Update target for specified session (or current active)
   Future<void> setTarget(int target, {int? sessionId}) async {
-    final finalSessionId = sessionId ?? (await getOrCreateCurrentCount()).id;
+    final session = await getOrCreateCurrentCount(sessionId: sessionId);
     await _currentCountDao.updateCount(
       CurrentCountTableCompanion(
-        id: Value(finalSessionId),
+        id: Value(session.id),
         targetCount: Value(target),
-        currentCount: const Value(0),
         updatedAt: Value(DateTime.now()),
       ),
     );
@@ -141,155 +259,37 @@ class CountRepository {
 
   // Update Dhikr ID for a specific session
   Future<void> setDhikrId(String dhikrId, {int? sessionId}) async {
-    final finalSessionId = sessionId ?? (await getOrCreateCurrentCount()).id;
+    final session = await getOrCreateCurrentCount(sessionId: sessionId);
     await _currentCountDao.updateCount(
       CurrentCountTableCompanion(
-        id: Value(finalSessionId),
+        id: Value(session.id),
         dhikrId: Value(dhikrId),
-        currentCount: const Value(0),
         updatedAt: Value(DateTime.now()),
       ),
     );
   }
 
   // Watch all history records
-  Stream<List<CountHistoryTableData>> watchAllHistory() {
-    return _countHistoryDao.watchAllHistory();
+  Stream<List<HistoryRecord>> watchAllHistory() {
+    return _countHistoryDao.watchAllHistory().map((list) {
+      return list
+          .map(
+            (data) => HistoryRecord(
+              id: data.id,
+              targetCount: data.targetCount,
+              currentCount: data.currentCount,
+              createdAt: data.createdAt,
+              dhikrId: data.dhikrId,
+              comboName: data.comboName,
+              sessionMode: data.sessionMode,
+              isRestorable: data.isRestorable,
+              comboIndex: data.comboIndex,
+            ),
+          )
+          .toList();
+    });
   }
 
-  // Watch current count progress by ID
-  Stream<CurrentCountTableData?> watchCountById(int id) {
-    return _currentCountDao.watchCountById(id);
-  }
-
-  bool _hasRestoredThisSession = false;
-
-  // Restore the last incomplete session from history (only if it was from today)
-  Future<bool> restoreLastSession() async {
-    // Prevent multiple restores in a row to protect history
-    if (_hasRestoredThisSession) return false;
-
-    // Only allow restore if current session has no progress
-    final current = await getOrCreateCurrentCount();
-    if (current.currentCount > 0) return false;
-
-    final history = await _countHistoryDao.watchAllHistory().first;
-    if (history.isEmpty) return false;
-
-    // Only allow restoration of the absolute latest session in history
-    final last = history.first;
-    if (!last.isRestorable) return false;
-
-    final now = DateTime.now();
-    final isToday =
-        last.createdAt.year == now.year &&
-        last.createdAt.month == now.month &&
-        last.createdAt.day == now.day;
-
-    // Check if the last session is from today, has progress, and was NOT completed
-    // A session is completed if targetCount > 0 and currentCount >= targetCount
-    final isCompleted =
-        last.targetCount > 0 && last.currentCount >= last.targetCount;
-    final isRestorable = last.currentCount > 0 && !isCompleted;
-
-    if (isToday && isRestorable) {
-      // Determine which session record to restore into
-      final restoredSessionId = last.sessionMode == 'combo'
-          ? sessionIdCombo
-          : sessionIdSingle;
-
-      // Restore the last session data into the correct record
-      await _currentCountDao.updateCount(
-        CurrentCountTableCompanion(
-          id: Value(restoredSessionId),
-          targetCount: Value(last.targetCount),
-          currentCount: Value(last.currentCount),
-          dhikrId: Value(last.dhikrId),
-          comboName: Value(last.comboName),
-          sessionMode: Value(last.sessionMode),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
-
-      // Sync settings with the restored session
-      await _ref.read(settingsProvider.notifier).setLastDhikrId(last.dhikrId);
-
-      if (last.sessionMode == 'combo' && last.comboName != null) {
-        final settings = _ref.read(settingsProvider);
-        final comboIndex = settings.comboPresets.indexWhere(
-          (p) => p.name == last.comboName,
-        );
-        // If combo still exists, switch to it, otherwise default to Single mode
-        await _ref
-            .read(settingsProvider.notifier)
-            .setActiveComboIndex(comboIndex, isRestoring: true);
-      } else {
-        await _ref
-            .read(settingsProvider.notifier)
-            .setActiveComboIndex(-1, isRestoring: true);
-      }
-
-      // Remove from history
-      await _countHistoryDao.deleteById(last.id);
-
-      // Lock restoration until next save
-      _hasRestoredThisSession = true;
-      return true;
-    }
-    return false;
-  }
-  // Delete all history records
-  Future<void> deleteAllHistory() async {
-    await _countHistoryDao.deleteAll();
-  }
-
-  // Delete a specific history record
-  Future<void> deleteHistoryById(int id) async {
-    await _countHistoryDao.deleteById(id);
-  }
-}
-
-extension CountProgressExtension on CurrentCountTableData {
-  double calculateProgress(DhikrSettings settings) {
-    if (targetCount <= 0) return 0.0;
-
-    if (id == sessionIdCombo && comboName != null) {
-      final preset = settings.comboPresets.firstWhere(
-        (p) => p.name == comboName,
-        orElse: () => settings.comboPresets.isNotEmpty
-            ? settings.comboPresets.first
-            : const ComboPreset(id: '', name: '', dhikrIds: [], counts: []),
-      );
-
-      if (preset.counts.isEmpty) return 0.0;
-
-      final counts = preset.counts;
-      int cumulativeTarget = 0;
-      int segmentTarget = 0;
-      int segmentCurrent = 0;
-      bool found = false;
-
-      for (int i = 0; i < counts.length; i++) {
-        int nextCumulative = cumulativeTarget + counts[i];
-        if (currentCount < nextCumulative) {
-          segmentTarget = counts[i];
-          segmentCurrent = currentCount - cumulativeTarget;
-          found = true;
-          break;
-        }
-        cumulativeTarget = nextCumulative;
-      }
-
-      if (!found && counts.isNotEmpty) {
-        segmentTarget = counts.last;
-        segmentCurrent = counts.last;
-      }
-
-      return segmentTarget > 0
-          ? (segmentCurrent / segmentTarget).clamp(0.0, 1.0)
-          : 0.0;
-    } else {
-      return (currentCount / targetCount).clamp(0.0, 1.0);
-    }
-  }
+  Future<void> deleteHistoryById(int id) => _countHistoryDao.deleteById(id);
+  Future<void> deleteAllHistory() => _countHistoryDao.deleteAll();
 }

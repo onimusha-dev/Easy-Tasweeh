@@ -1,7 +1,7 @@
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_tasbeeh/core/widgets/premium_dialog.dart';
-import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/features/history/providers/history_provider.dart';
 import 'package:easy_tasbeeh/features/history/widgets/empty_history_view.dart';
 import 'package:easy_tasbeeh/features/history/widgets/history_item_card.dart';
@@ -53,7 +53,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           }).toList();
 
           // Group by date
-          final grouped = groupBy(historyList, (CountHistoryTableData data) {
+          final grouped = groupBy(historyList, (HistoryRecord data) {
             return DateFormat('yyyy-MM-dd').format(data.createdAt);
           });
 

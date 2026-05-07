@@ -1,10 +1,10 @@
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
-import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter/material.dart';
 
 class HistoryTotalsCard extends StatelessWidget {
-  final List<CountHistoryTableData> history;
+  final List<HistoryRecord> history;
 
   const HistoryTotalsCard({super.key, required this.history});
 

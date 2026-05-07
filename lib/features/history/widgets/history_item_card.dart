@@ -1,7 +1,7 @@
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/utils/color_utils.dart';
 import 'package:easy_tasbeeh/core/widgets/app_card.dart';
-import 'package:easy_tasbeeh/database/db.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/features/history/widgets/combo_details_sheet.dart';
 import 'package:easy_tasbeeh/core/theme/app_typography.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class HistoryItemCard extends ConsumerWidget {
-  final CountHistoryTableData data;
+  final HistoryRecord data;
   final int index;
   final bool isLast;
   final bool showDivider;

@@ -1,13 +1,13 @@
 import 'package:easy_tasbeeh/core/theme/app_layout.dart';
 import 'package:easy_tasbeeh/core/models/dhikr_model.dart';
 import 'package:easy_tasbeeh/core/service/settings_provider.dart';
+import 'package:easy_tasbeeh/core/models/counter_models.dart';
 import 'package:easy_tasbeeh/core/utils/color_utils.dart';
-import 'package:easy_tasbeeh/database/db.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ComboDetailsSheet extends ConsumerWidget {
-  final CountHistoryTableData data;
+  final HistoryRecord data;
 
   const ComboDetailsSheet({super.key, required this.data});
 
@@ -254,7 +254,7 @@ class ComboDetailsSheet extends ConsumerWidget {
     );
   }
 
-  static void show(BuildContext context, CountHistoryTableData data) {
+  static void show(BuildContext context, HistoryRecord data) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
